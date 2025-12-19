@@ -3,36 +3,43 @@
 @tailwind utilities;
 
 /* ========================================
-   SUMMIT58 DESIGN SYSTEM
+   SUMMIT58 DESIGN SYSTEM V2
    ======================================== */
 
-/* Color Palette as CSS Custom Properties */
 :root {
   /* Primary - Mountain Blue */
   --color-mountain-blue: #1a365d;
   --color-mountain-blue-light: #2c5282;
   --color-mountain-blue-dark: #0f2440;
+  --color-mountain-navy: #0c1929;
+  --color-mountain-mist: #3d5a80;
 
   /* Secondary - Slate */
   --color-slate: #2d3748;
   --color-slate-light: #4a5568;
   --color-slate-dark: #1a202c;
 
-  /* Accent - Sunrise Orange */
+  /* Accent - Sunrise */
   --color-sunrise: #ed8936;
   --color-sunrise-light: #f6ad55;
   --color-sunrise-dark: #dd6b20;
-
-  /* Status Colors */
-  --color-success: #38a169;
-  --color-warning: #d69e2e;
-  --color-danger: #e53e3e;
+  --color-sunrise-gold: #fbbf24;
 
   /* Difficulty Class Colors */
   --color-class-1: #38a169;
   --color-class-2: #3182ce;
   --color-class-3: #d69e2e;
   --color-class-4: #e53e3e;
+
+  /* Gradients */
+  --gradient-alpine: linear-gradient(135deg, #0c1929 0%, #1e3a5f 50%, #3d5a80 100%);
+  --gradient-sunrise: linear-gradient(135deg, #ed8936 0%, #f6ad55 50%, #fbbf24 100%);
+  --gradient-adventure: linear-gradient(180deg, #0c1929 0%, #1a365d 40%, #ed8936 100%);
+
+  /* Glass morphism */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
   /* Light Mode Backgrounds & Text */
   --bg-primary: #ffffff;
@@ -45,8 +52,11 @@
   --border-strong: #cbd5e0;
 }
 
-/* Dark Mode Colors */
 .dark {
+  --glass-bg: rgba(30, 41, 59, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
   --bg-primary: #1a202c;
   --bg-secondary: #2d3748;
   --bg-tertiary: #4a5568;
@@ -76,6 +86,23 @@
   .dark body {
     @apply bg-slate-900 text-slate-100;
   }
+
+  /* Display Typography */
+  .heading-hero {
+    @apply font-display text-5xl tracking-tight sm:text-6xl lg:text-7xl;
+  }
+
+  .heading-page {
+    @apply font-display text-3xl tracking-tight sm:text-4xl lg:text-5xl;
+  }
+
+  .heading-section {
+    @apply text-2xl font-bold tracking-tight sm:text-3xl;
+  }
+
+  .stat-display {
+    @apply font-display text-4xl tracking-tight sm:text-5xl;
+  }
 }
 
 /* ========================================
@@ -91,7 +118,7 @@
 
   /* Gradient placeholder for peak images */
   .peak-gradient {
-    @apply bg-gradient-to-br from-mountain-blue via-slate-600 to-mountain-blue-dark;
+    @apply bg-gradient-to-br from-mountain-navy via-mountain-blue to-mountain-mist;
   }
 
   /* Class-specific background gradients */
@@ -121,6 +148,52 @@
   .tap-target {
     @apply min-h-[44px] min-w-[44px];
   }
+
+  /* Glass morphism effect */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* Staggered children animation delays */
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 75ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 150ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 225ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 375ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 450ms; }
+  .stagger-children > *:nth-child(8) { animation-delay: 525ms; }
+  .stagger-children > *:nth-child(9) { animation-delay: 600ms; }
+  .stagger-children > *:nth-child(10) { animation-delay: 675ms; }
+
+  /* Initial state for animated elements */
+  .will-animate {
+    opacity: 0;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in,
+    .animate-fade-in-up,
+    .animate-fade-in-down,
+    .animate-slide-in-right,
+    .animate-scale-in,
+    .animate-float,
+    .animate-pulse-subtle,
+    .animate-shimmer {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .will-animate {
+      opacity: 1;
+    }
+  }
 }
 
 /* ========================================
@@ -130,7 +203,7 @@
 @layer components {
   /* Stats Bar Container */
   .stats-bar {
-    @apply grid grid-cols-4 gap-2 rounded-card border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800;
+    @apply grid grid-cols-4 gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800;
   }
 
   .stats-bar-item {
@@ -147,31 +220,40 @@
 
   /* Peak Card Hover Effect */
   .peak-card {
-    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg;
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover;
   }
 
-  /* Badge Variants */
+  /* Badge Variants - Enhanced */
   .badge {
-    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium;
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold transition-all duration-200;
   }
 
   .badge-class-1 {
-    @apply border-class-1/20 bg-class-1/10 text-class-1;
+    @apply border-class-1/30 bg-class-1/15 text-class-1;
   }
 
   .badge-class-2 {
-    @apply border-class-2/20 bg-class-2/10 text-class-2;
+    @apply border-class-2/30 bg-class-2/15 text-class-2;
   }
 
   .badge-class-3 {
-    @apply border-class-3/20 bg-class-3/10 text-class-3;
+    @apply border-class-3/30 bg-class-3/15 text-class-3;
   }
 
   .badge-class-4 {
-    @apply border-class-4/20 bg-class-4/10 text-class-4;
+    @apply border-class-4/30 bg-class-4/15 text-class-4;
   }
 
   .badge-default {
     @apply border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200;
+  }
+
+  /* CTA Button */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full bg-sunrise px-6 py-3 font-semibold text-white shadow-glow-sunrise transition-all duration-300 hover:bg-sunrise-dark hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 rounded-full border-2 border-mountain-blue bg-transparent px-6 py-3 font-semibold text-mountain-blue transition-all duration-300 hover:bg-mountain-blue hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-mountain-blue;
   }
 }
