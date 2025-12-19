@@ -10,9 +10,30 @@
 |-------|-------|
 | **Project** | Summit58 - Modern Colorado 14ers guide |
 | **Stack** | SvelteKit 5 + Supabase (cloud) + Tailwind CSS 3 + Railway |
-| **Status** | Phase 1 MVP Complete, Cloud DB Connected |
+| **Status** | V2 UI Polish Complete, Deployed to Production |
 | **Dev Port** | 4466 |
-| **Domain** | summit58.co |
+| **Production** | https://summit58-production.up.railway.app |
+| **Domain** | summit58.co (pending DNS config) |
+
+---
+
+## Railway Deployment
+
+| Item | Value |
+|------|-------|
+| Project ID | `00b2ac99-4a09-4959-992f-169c7f981b96` |
+| Service | `summit58` |
+| Environment | `production` |
+| URL | https://summit58-production.up.railway.app |
+
+**CLI Commands:**
+```bash
+railway link -p 00b2ac99-4a09-4959-992f-169c7f981b96
+railway service summit58
+railway up -d                 # Deploy
+railway logs                  # View logs
+railway variables --kv        # Check env vars
+```
 
 ---
 
@@ -51,6 +72,8 @@ npm run dev    # http://localhost:4466
 ```
 src/
 ├── lib/
+│   ├── actions/
+│   │   └── animate-on-scroll.ts  # IntersectionObserver animations
 │   ├── components/
 │   │   ├── ui/           # Container, Badge
 │   │   ├── layout/       # Header, Footer, ThemeToggle
@@ -67,7 +90,9 @@ src/
 │   ├── peaks/[slug]/+page.svelte # Peak detail
 │   └── peaks/[slug]/[route]/     # Route detail
 supabase/
-├── migrations/00001_initial_schema.sql
+├── migrations/
+│   ├── 00001_initial_schema.sql
+│   └── 20241220000000_add_hero_images.sql
 └── seed.sql                      # 10 pilot peaks
 ```
 
@@ -77,7 +102,7 @@ supabase/
 
 **Tables:** `peaks`, `routes`
 
-**Current Data:** 10 pilot peaks with standard routes
+**Current Data:** 10 pilot peaks with standard routes + hero images
 - Class 1: Quandary, Elbert, Grays, Handies
 - Class 2: Bierstadt, Torreys, Democrat
 - Class 3: Longs, Sneffels
@@ -87,17 +112,27 @@ supabase/
 
 ---
 
-## Design System
+## Design System (V2)
 
-**Colors (CSS vars in app.css):**
-- Primary: `--color-mountain-blue` (#1a365d)
-- Accent: `--color-sunrise` (#ed8936)
-- Class 1-4: green → blue → yellow → red
+**Colors:**
+- Primary: `mountain-blue`, `mountain-navy`, `mountain-mist`
+- Accent: `sunrise`, `sunrise-gold`, `sunrise-coral`
+- Alpine: `alpine-pine`, `alpine-meadow`, `alpine-rock`
+- Class 1-4: green → blue → yellow → red (with glow effects)
+
+**Typography:**
+- Display: Instrument Serif (headings, stats)
+- Body: Inter
+
+**Shadows:** `shadow-card`, `shadow-card-hover`, `shadow-card-elevated`, `shadow-glow-*`
+
+**Animations:** `animate-fade-in-up`, `animate-float`, `animate-pulse-subtle`
 
 **Key Components:**
-- `StatsBar` - 4-col grid: miles | gain | class | hours
-- `PeakCard` - Card with gradient placeholder, stats, class badge
-- `Badge` - Color-coded difficulty
+- `StatsBar` - Glassmorphism, icons, gradient difficulty
+- `PeakCard` - Color-coded border, rank badge, animated chevron
+- `PeakHero` - Multi-layer gradients, sunrise glow
+- `Badge` - Size variants, glow effects, animated dots
 
 **Dark mode:** Supported via `.dark` class.
 
@@ -108,6 +143,8 @@ supabase/
 | Phase | Status | Focus |
 |-------|--------|-------|
 | 1. MVP | ✅ Complete | Core pages, 10 peaks, cloud DB |
+| 1.5 UI Polish | ✅ Complete | V2 design system, animations, hero images |
+| 1.6 Deploy | ✅ Complete | Railway production deployment |
 | 2. Users | Next | Auth, peak tracking, conditions |
 | 3. Content | Planned | All 58 peaks, PWA, printables |
 | 4. Scale | Planned | Membership, weather, monetization |
@@ -117,9 +154,10 @@ supabase/
 ## Agent Instructions
 
 **Do:**
-- Mobile-first, Svelte 5 runes (`$props()`, `$state()`)
+- Mobile-first, Svelte 5 runes (`$props()`, `$state()`, `$derived()`)
 - Use `src/lib/server/peaks.ts` for data queries
 - Dark mode support in all UI
+- Use V2 design system (glassmorphism, animations, glow effects)
 
 **Don't:**
 - Over-engineer
@@ -139,9 +177,9 @@ export async function load({ cookies }) {
 
 ## Next Actions
 
-1. Deploy to Railway
-2. Add real peak images
-3. Begin Phase 2: User auth + peak tracking
+1. Connect custom domain (summit58.co)
+2. Begin Phase 2: User auth + peak tracking
+3. Add remaining 48 peaks to database
 
 ---
 
@@ -149,3 +187,4 @@ export async function load({ cookies }) {
 
 - **2025-12-15** - Project created, planning complete
 - **2025-12-18** - Phase 1 MVP complete, cloud Supabase connected
+- **2025-12-19** - V2 UI Polish complete, hero images added, deployed to Railway
