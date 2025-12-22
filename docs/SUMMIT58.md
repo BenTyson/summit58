@@ -1,190 +1,206 @@
-# Summit58 - Session Start
+# Summit58 - Full Reference
 
-> Read this first. Everything needed to continue development.
+> **Quick start?** See [session-start/README.md](./session-start/README.md) for fast onboarding.
 
----
-
-## Quick Context
-
-| Field | Value |
-|-------|-------|
-| **Project** | Summit58 - Modern Colorado 14ers guide |
-| **Stack** | SvelteKit 5 + Supabase (cloud) + Tailwind CSS 3 + Railway |
-| **Status** | V2 UI Polish Complete, Deployed to Production |
-| **Dev Port** | 4466 |
-| **Production** | https://summit58-production.up.railway.app |
-| **Domain** | summit58.co (pending DNS config) |
+Comprehensive reference for Summit58 development.
 
 ---
 
-## Railway Deployment
+## Quick Reference
 
-| Item | Value |
-|------|-------|
-| Project ID | `00b2ac99-4a09-4959-992f-169c7f981b96` |
-| Service | `summit58` |
-| Environment | `production` |
-| URL | https://summit58-production.up.railway.app |
+| Key | Value |
+|-----|-------|
+| **Stack** | SvelteKit 5 + Supabase (cloud) + Tailwind 3 + Railway |
+| **Status** | Phase 2 complete (Auth, Peak Bagger, Reviews, Ranges) |
+| **Dev** | `npm run dev` → http://localhost:4466 |
+| **Prod** | https://summit58-production.up.railway.app |
+| **Deploy** | `railway up -d` |
+| **DB Push** | `supabase db push` |
 
-**CLI Commands:**
+---
+
+## Infrastructure
+
 ```bash
+# Railway
 railway link -p 00b2ac99-4a09-4959-992f-169c7f981b96
-railway service summit58
 railway up -d                 # Deploy
-railway logs                  # View logs
-railway variables --kv        # Check env vars
-```
+railway logs                  # Logs
 
----
-
-## Supabase Cloud
-
-| Item | Value |
-|------|-------|
-| Project Ref | `seywnbufuewbiwoouwkk` |
-| Region | West US (Oregon) |
-| Dashboard | https://supabase.com/dashboard/project/seywnbufuewbiwoouwkk |
-| URL | `https://seywnbufuewbiwoouwkk.supabase.co` |
-
-**CLI Commands (cloud-connected, no Docker needed):**
-```bash
-supabase login                    # Authenticate
+# Supabase (cloud - no Docker)
 supabase link --project-ref seywnbufuewbiwoouwkk
-supabase db push                  # Push migrations
-supabase gen types typescript --linked > src/lib/types/database.ts
-```
-
----
-
-## Running Locally
-
-```bash
-npm install
-npm run dev    # http://localhost:4466
-```
-
-`.env` is configured for cloud Supabase.
-
----
-
-## Project Structure
-
-```
-src/
-├── lib/
-│   ├── actions/
-│   │   └── animate-on-scroll.ts  # IntersectionObserver animations
-│   ├── components/
-│   │   ├── ui/           # Container, Badge
-│   │   ├── layout/       # Header, Footer, ThemeToggle
-│   │   ├── peak/         # PeakCard, PeakHero, StatsBar
-│   │   └── route/        # RouteCard
-│   ├── server/
-│   │   ├── supabase.ts   # SSR client
-│   │   └── peaks.ts      # Data queries
-│   └── types/
-│       └── database.ts   # Generated from Supabase
-├── routes/
-│   ├── +page.svelte              # Homepage
-│   ├── peaks/+page.svelte        # All peaks list
-│   ├── peaks/[slug]/+page.svelte # Peak detail
-│   └── peaks/[slug]/[route]/     # Route detail
-supabase/
-├── migrations/
-│   ├── 00001_initial_schema.sql
-│   └── 20241220000000_add_hero_images.sql
-└── seed.sql                      # 10 pilot peaks
+supabase db push              # Push migrations
+supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/database.ts
 ```
 
 ---
 
 ## Database
 
-**Tables:** `peaks`, `routes`
+### Core Tables
+- **peaks** - All 58 Colorado 14ers (name, slug, elevation, rank, range, coordinates, etc.)
+- **routes** - Climbing routes for each peak (distance, elevation gain, difficulty class, etc.)
 
-**Current Data:** 10 pilot peaks with standard routes + hero images
-- Class 1: Quandary, Elbert, Grays, Handies
-- Class 2: Bierstadt, Torreys, Democrat
-- Class 3: Longs, Sneffels
-- Class 4: Capitol
+### User Tables
+- **profiles** - User profiles (extends auth.users) - display_name, avatar_url, bio, location
+- **user_summits** - Summit logs (user_id, peak_id, date_summited, route_id, conditions, notes)
+- **user_reviews** - Peak reviews (user_id, peak_id, rating 1-5, title, body, date_climbed, conditions)
 
-**RLS:** Public read access enabled.
-
----
-
-## Design System (V2)
-
-**Colors:**
-- Primary: `mountain-blue`, `mountain-navy`, `mountain-mist`
-- Accent: `sunrise`, `sunrise-gold`, `sunrise-coral`
-- Alpine: `alpine-pine`, `alpine-meadow`, `alpine-rock`
-- Class 1-4: green → blue → yellow → red (with glow effects)
-
-**Typography:**
-- Display: Instrument Serif (headings, stats)
-- Body: Inter
-
-**Shadows:** `shadow-card`, `shadow-card-hover`, `shadow-card-elevated`, `shadow-glow-*`
-
-**Animations:** `animate-fade-in-up`, `animate-float`, `animate-pulse-subtle`
-
-**Key Components:**
-- `StatsBar` - Glassmorphism, icons, gradient difficulty
-- `PeakCard` - Color-coded border, rank badge, animated chevron
-- `PeakHero` - Multi-layer gradients, sunrise glow
-- `Badge` - Size variants, glow effects, animated dots
-
-**Dark mode:** Supported via `.dark` class.
+### RLS Policies
+- Peaks/routes: public read
+- Profiles: public read, users update own
+- Summits: public read, users CRUD own
+- Reviews: public read, users CRUD own (one review per peak)
 
 ---
 
-## Implementation Phases
+## Project Structure
 
-| Phase | Status | Focus |
-|-------|--------|-------|
-| 1. MVP | ✅ Complete | Core pages, 10 peaks, cloud DB |
-| 1.5 UI Polish | ✅ Complete | V2 design system, animations, hero images |
-| 1.6 Deploy | ✅ Complete | Railway production deployment |
-| 2. Users | Next | Auth, peak tracking, conditions |
-| 3. Content | Planned | All 58 peaks, PWA, printables |
-| 4. Scale | Planned | Membership, weather, monetization |
+```
+src/lib/
+├── components/
+│   ├── ui/        → Container, Badge
+│   ├── layout/    → Header, Footer, ThemeToggle
+│   ├── peak/      → PeakCard, PeakHero, StatsBar, QuickFacts
+│   ├── route/     → RouteCard
+│   ├── summit/    → SummitButton, SummitModal (Peak Bagger)
+│   └── review/    → StarRating, ReviewCard, ReviewForm, ReviewSection
+├── data/
+│   └── ranges.ts  → Mountain range metadata (descriptions, best season, etc.)
+├── server/
+│   ├── supabase.ts → SSR client
+│   ├── peaks.ts    → Peak data queries
+│   ├── summits.ts  → Summit CRUD operations
+│   └── reviews.ts  → Review CRUD operations
+└── types/database.ts → Generated types
 
----
+src/routes/
+├── +page.svelte              → Homepage
+├── auth/+page.svelte         → Login/signup
+├── peaks/+page.svelte        → All peaks (filterable)
+├── peaks/[slug]/+page.svelte → Peak detail (with reviews)
+├── peaks/[slug]/[route]/     → Route detail
+├── ranges/+page.svelte       → All mountain ranges
+├── ranges/[slug]/+page.svelte → Range detail (peaks in range)
+└── profile/+page.svelte      → "My 58" dashboard
 
-## Agent Instructions
-
-**Do:**
-- Mobile-first, Svelte 5 runes (`$props()`, `$state()`, `$derived()`)
-- Use `src/lib/server/peaks.ts` for data queries
-- Dark mode support in all UI
-- Use V2 design system (glassmorphism, animations, glow effects)
-
-**Don't:**
-- Over-engineer
-- Add features outside current phase
-- Use Docker for Supabase (cloud-connected mode)
-
-**Patterns:**
-```typescript
-// +page.server.ts
-export async function load({ cookies }) {
-  const supabase = createSupabaseServerClient(cookies);
-  return { peaks: await getAllPeaks(supabase) };
-}
+static/images/peaks/          → Custom peak images
 ```
 
 ---
 
-## Next Actions
+## Key Features
 
-1. Connect custom domain (summit58.co)
-2. Begin Phase 2: User auth + peak tracking
-3. Add remaining 48 peaks to database
+### Peak Bagger ("My 58")
+- Summit logging with date, route, conditions, notes
+- Multiple summits per peak allowed
+- Profile dashboard with "The 58" grid visualization
+- Progress bars by class and range
+- Prominent "My 58" nav link for logged-in users
+
+### User Reviews
+- 1-5 star ratings per peak
+- Optional title, body, date climbed, conditions
+- One review per user per peak
+- Average rating displayed on peak pages
+- Sort by newest/highest/lowest
+
+### Mountain Ranges
+- 7 ranges: Sawatch, Elk, San Juan, Sangre de Cristo, Mosquito, Front, Tenmile
+- Rich metadata: description, best season, character, nearest towns
+- Range detail pages with filtered peaks
+- User progress tracking per range
+
+---
+
+## Svelte 5 Patterns
+
+```typescript
+// Props
+let { peak, featured = false }: Props = $props();
+
+// Reactive state
+let count = $state(0);
+
+// Derived (MUST use for prop-dependent values)
+const difficultyClass = $derived(peak.standard_route?.difficulty_class ?? 1);
+
+// Derived function (for sorting/filtering)
+const sortedPeaks = $derived(() => {
+  return [...peaks].sort((a, b) => b.elevation - a.elevation);
+});
+
+// Server load with auth
+export async function load({ cookies }) {
+  const supabase = createSupabaseServerClient(cookies);
+  const { data: { session } } = await supabase.auth.getSession();
+  return { peaks: await getAllPeaks(supabase), isLoggedIn: !!session };
+}
+
+// Form actions
+export const actions: Actions = {
+  logSummit: async ({ request, cookies }) => {
+    // Handle form submission
+  }
+};
+```
+
+---
+
+## Design System
+
+| Element | Classes |
+|---------|---------|
+| Class 1-4 colors | `class-1` (green), `class-2` (blue), `class-3` (yellow), `class-4` (red) |
+| Cards | `shadow-card`, `shadow-card-hover`, `shadow-card-elevated` |
+| Glows | `shadow-glow-class-1` through `shadow-glow-class-4` |
+| Animations | `animate-fade-in-up`, `animate-float`, `animate-pulse-subtle` |
+| Gradients | `bg-gradient-to-r from-sunrise to-sunrise-coral` |
+| Fonts | Display: Instrument Serif, Body: Inter |
+
+Dark mode: `.dark` class on html element.
+
+---
+
+## Phases
+
+| Phase | Status |
+|-------|--------|
+| 1. MVP + UI Polish | ✅ Complete |
+| 1.5 All 58 Peaks | ✅ Complete |
+| 2. User Auth & Peak Bagger | ✅ Complete |
+| 2.5 Reviews & Ranges | ✅ Complete |
+| 3. Image Gallery | 🔲 Next |
+| 4. Topo Maps | 🔲 Planned |
+| 5. Custom Domain (summit58.co) | 🔲 Planned |
+
+---
+
+## Agent Rules
+
+**Do:** Mobile-first, Svelte 5 runes, dark mode support, use existing components, graceful error handling
+**Don't:** Over-engineer, add unplanned features, use Docker for Supabase, throw errors that break pages
 
 ---
 
 ## Session Log
 
-- **2025-12-15** - Project created, planning complete
-- **2025-12-18** - Phase 1 MVP complete, cloud Supabase connected
-- **2025-12-19** - V2 UI Polish complete, hero images added, deployed to Railway
+- 2025-12-15: Project created
+- 2025-12-18: MVP complete, Supabase cloud connected
+- 2025-12-19: V2 UI, Railway deploy
+- 2025-12-20: All 58 peaks added, QuickFacts component, parallax hero, content expansion schema
+- 2025-12-20: User authentication, profiles table, Peak Bagger feature with summit logging
+- 2025-12-21: "My 58" dashboard with grid visualization, progress tracking
+- 2025-12-21: Mountain Ranges pages with rich metadata and user progress
+- 2025-12-21: User Reviews system with star ratings, CRUD operations
+- 2025-12-22: Fixed range detail page layout, review query error handling
+- 2025-12-22: Created session-start/ quick reference docs
+
+---
+
+## Related Docs
+
+- [Quick Start](./session-start/README.md) - Fast agent onboarding
+- [Stack & Infrastructure](./session-start/stack.md)
+- [Database Schema](./session-start/database.md)
+- [Code Patterns](./session-start/patterns.md)
