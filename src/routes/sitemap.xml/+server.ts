@@ -6,6 +6,7 @@ const BASE_URL = 'https://summit58.co';
 interface PeakRow {
   slug: string;
   updated_at: string;
+  range: string;
   routes: Array<{ slug: string; updated_at: string }>;
 }
 
@@ -16,6 +17,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
   const { data } = await supabase.from('peaks').select(`
       slug,
       updated_at,
+      range,
       routes (
         slug,
         updated_at
@@ -24,10 +26,24 @@ export const GET: RequestHandler = async ({ cookies }) => {
 
   const peaks = (data || []) as PeakRow[];
 
+  // Get unique ranges
+  const ranges = [...new Set(peaks.map(p => p.range))];
+
   const urls: Array<{ loc: string; priority: string; lastmod?: string }> = [
     { loc: '/', priority: '1.0' },
-    { loc: '/peaks', priority: '0.9' }
+    { loc: '/peaks', priority: '0.9' },
+    { loc: '/ranges', priority: '0.9' },
+    { loc: '/map', priority: '0.8' }
   ];
+
+  // Add range URLs
+  ranges.forEach((range) => {
+    const slug = range.toLowerCase().replace(/\s+/g, '-');
+    urls.push({
+      loc: `/ranges/${slug}`,
+      priority: '0.8'
+    });
+  });
 
   // Add peak and route URLs
   peaks.forEach((peak) => {

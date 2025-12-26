@@ -1,7 +1,25 @@
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, Actions } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getPeakBySlug } from '$lib/server/peaks';
-import { error } from '@sveltejs/kit';
+import { getUserSummitsForPeak, createSummit, deleteSummit } from '$lib/server/summits';
+import {
+  getPeakReviews,
+  getUserReviewForPeak,
+  getPeakReviewStats,
+  createReview,
+  updateReview,
+  deleteReview
+} from '$lib/server/reviews';
+import {
+  getImagesForPeak,
+  uploadPeakImage,
+  deletePeakImage,
+  isAdmin
+} from '$lib/server/images';
+import { getConditionsForPeak } from '$lib/server/conditions';
+import { getRecentTrailReports, createTrailReport } from '$lib/server/trailReports';
+import { checkAndAwardAchievements } from '$lib/server/achievements';
+import { error, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
   const supabase = createSupabaseServerClient(cookies);
@@ -14,5 +32,314 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     });
   }
 
-  return { peak };
+  // Get current user session
+  const { data: { session } } = await supabase.auth.getSession();
+
+  // Get user's summits for this peak if logged in
+  let userSummits: Awaited<ReturnType<typeof getUserSummitsForPeak>> = [];
+  let userReview: Awaited<ReturnType<typeof getUserReviewForPeak>> = null;
+
+  if (session?.user) {
+    userSummits = await getUserSummitsForPeak(supabase, session.user.id, peak.id);
+    userReview = await getUserReviewForPeak(supabase, session.user.id, peak.id);
+  }
+
+  // Get all reviews, stats, images, weather conditions, and trail reports
+  const [reviews, reviewStats, images, conditions, trailReports] = await Promise.all([
+    getPeakReviews(supabase, peak.id),
+    getPeakReviewStats(supabase, peak.id),
+    getImagesForPeak(supabase, peak.id),
+    getConditionsForPeak(supabase, peak.id),
+    getRecentTrailReports(supabase, peak.id)
+  ]);
+
+  return {
+    peak,
+    userSummits,
+    isLoggedIn: !!session,
+    currentUserId: session?.user?.id,
+    isAdmin: isAdmin(session?.user?.id),
+    reviews,
+    userReview,
+    avgRating: reviewStats.avgRating,
+    totalReviews: reviewStats.totalReviews,
+    images,
+    conditions,
+    trailReports
+  };
+};
+
+export const actions: Actions = {
+  logSummit: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in to log a summit' });
+    }
+
+    const formData = await request.formData();
+    const peakId = formData.get('peak_id') as string;
+    const dateSummited = formData.get('date_summited') as string;
+    const routeId = formData.get('route_id') as string | null;
+    const conditions = formData.get('conditions') as string | null;
+    const notes = formData.get('notes') as string | null;
+    const startTime = formData.get('start_time') as string | null;
+    const summitTime = formData.get('summit_time') as string | null;
+    const partySize = formData.get('party_size') as string | null;
+
+    if (!peakId || !dateSummited) {
+      return fail(400, { message: 'Peak ID and date are required' });
+    }
+
+    try {
+      await createSummit(supabase, {
+        user_id: session.user.id,
+        peak_id: peakId,
+        date_summited: dateSummited,
+        route_id: routeId || null,
+        conditions: conditions || null,
+        notes: notes || null,
+        start_time: startTime || null,
+        summit_time: summitTime || null,
+        party_size: partySize ? parseInt(partySize, 10) : null
+      });
+
+      // Check for new achievements
+      const newAchievements = await checkAndAwardAchievements(supabase, session.user.id, 'summit');
+
+      return { success: true, newAchievements };
+    } catch (e) {
+      console.error('Error logging summit:', e);
+      return fail(500, { message: 'Failed to log summit' });
+    }
+  },
+
+  deleteSummit: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in' });
+    }
+
+    const formData = await request.formData();
+    const summitId = formData.get('summit_id') as string;
+
+    if (!summitId) {
+      return fail(400, { message: 'Summit ID required' });
+    }
+
+    try {
+      await deleteSummit(supabase, summitId);
+      return { success: true };
+    } catch (e) {
+      console.error('Error deleting summit:', e);
+      return fail(500, { message: 'Failed to delete summit' });
+    }
+  },
+
+  // Review actions
+  submitReview: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in to submit a review' });
+    }
+
+    const formData = await request.formData();
+    const peakId = formData.get('peak_id') as string;
+    const rating = parseInt(formData.get('rating') as string, 10);
+    const title = formData.get('title') as string | null;
+    const body = formData.get('body') as string | null;
+    const dateClimbed = formData.get('date_climbed') as string | null;
+    const conditions = formData.get('conditions') as string | null;
+
+    if (!peakId || !rating || rating < 1 || rating > 5) {
+      return fail(400, { message: 'Peak ID and valid rating (1-5) required' });
+    }
+
+    try {
+      await createReview(supabase, {
+        user_id: session.user.id,
+        peak_id: peakId,
+        rating,
+        title: title || null,
+        body: body || null,
+        date_climbed: dateClimbed || null,
+        conditions: conditions || null
+      });
+
+      // Check for new achievements
+      const newAchievements = await checkAndAwardAchievements(supabase, session.user.id, 'review');
+
+      return { success: true, newAchievements };
+    } catch (e: any) {
+      console.error('Error submitting review:', e);
+      if (e.code === '23505') {
+        return fail(400, { message: 'You have already reviewed this peak' });
+      }
+      return fail(500, { message: 'Failed to submit review' });
+    }
+  },
+
+  updateReview: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in' });
+    }
+
+    const formData = await request.formData();
+    const reviewId = formData.get('review_id') as string;
+    const rating = parseInt(formData.get('rating') as string, 10);
+    const title = formData.get('title') as string | null;
+    const body = formData.get('body') as string | null;
+    const dateClimbed = formData.get('date_climbed') as string | null;
+    const conditions = formData.get('conditions') as string | null;
+
+    if (!reviewId || !rating || rating < 1 || rating > 5) {
+      return fail(400, { message: 'Review ID and valid rating required' });
+    }
+
+    try {
+      await updateReview(supabase, reviewId, {
+        rating,
+        title: title || null,
+        body: body || null,
+        date_climbed: dateClimbed || null,
+        conditions: conditions || null
+      });
+
+      return { success: true };
+    } catch (e) {
+      console.error('Error updating review:', e);
+      return fail(500, { message: 'Failed to update review' });
+    }
+  },
+
+  deleteReview: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in' });
+    }
+
+    const formData = await request.formData();
+    const reviewId = formData.get('review_id') as string;
+
+    if (!reviewId) {
+      return fail(400, { message: 'Review ID required' });
+    }
+
+    try {
+      await deleteReview(supabase, reviewId);
+      return { success: true };
+    } catch (e) {
+      console.error('Error deleting review:', e);
+      return fail(500, { message: 'Failed to delete review' });
+    }
+  },
+
+  // Image actions (admin only)
+  uploadImage: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user || !isAdmin(session.user.id)) {
+      return fail(403, { message: 'Admin access required' });
+    }
+
+    const formData = await request.formData();
+    const peakId = formData.get('peak_id') as string;
+    const file = formData.get('file') as File;
+    const caption = formData.get('caption') as string | null;
+
+    if (!peakId || !file) {
+      return fail(400, { message: 'Peak ID and file required' });
+    }
+
+    try {
+      await uploadPeakImage(supabase, peakId, session.user.id, file, caption || undefined);
+      return { success: true };
+    } catch (e) {
+      console.error('Error uploading image:', e);
+      return fail(500, { message: 'Failed to upload image' });
+    }
+  },
+
+  deleteImage: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user || !isAdmin(session.user.id)) {
+      return fail(403, { message: 'Admin access required' });
+    }
+
+    const formData = await request.formData();
+    const imageId = formData.get('image_id') as string;
+
+    if (!imageId) {
+      return fail(400, { message: 'Image ID required' });
+    }
+
+    try {
+      await deletePeakImage(supabase, imageId);
+      return { success: true };
+    } catch (e) {
+      console.error('Error deleting image:', e);
+      return fail(500, { message: 'Failed to delete image' });
+    }
+  },
+
+  // Trail report actions
+  submitTrailReport: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in to submit a trail report' });
+    }
+
+    const formData = await request.formData();
+    const peakId = formData.get('peak_id') as string;
+    const hikeDate = formData.get('hike_date') as string;
+    const trailStatus = formData.get('trail_status') as string;
+    const snowDepthStr = formData.get('snow_depth_inches') as string | null;
+    const crowdLevel = formData.get('crowd_level') as string;
+    const roadStatus = formData.get('road_status') as string;
+    const parkingNotes = formData.get('parking_notes') as string | null;
+    const hazardsStr = formData.get('hazards') as string | null;
+    const notes = formData.get('notes') as string | null;
+
+    if (!peakId || !hikeDate) {
+      return fail(400, { message: 'Peak ID and hike date are required' });
+    }
+
+    try {
+      await createTrailReport(supabase, {
+        user_id: session.user.id,
+        peak_id: peakId,
+        hike_date: hikeDate,
+        trail_status: trailStatus || null,
+        snow_depth_inches: snowDepthStr ? parseInt(snowDepthStr, 10) : null,
+        crowd_level: crowdLevel || null,
+        road_status: roadStatus || null,
+        parking_notes: parkingNotes || null,
+        hazards: hazardsStr ? JSON.parse(hazardsStr) : [],
+        notes: notes || null
+      });
+
+      // Check for new achievements
+      const newAchievements = await checkAndAwardAchievements(supabase, session.user.id, 'trail_report');
+
+      return { success: true, newAchievements };
+    } catch (e) {
+      console.error('Error submitting trail report:', e);
+      return fail(500, { message: 'Failed to submit trail report' });
+    }
+  }
 };

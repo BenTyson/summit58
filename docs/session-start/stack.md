@@ -9,6 +9,11 @@
 | Framework | SvelteKit 5 |
 | Database | Supabase (cloud) |
 | Styling | Tailwind 3 |
+| Maps | Leaflet + OpenTopoMap (topographic) |
+| GPX | @tmcw/togeojson + xmldom |
+| Weather | Open-Meteo API |
+| PWA | vite-plugin-pwa + Workbox |
+| Cron | cron-job.org |
 | Hosting | Railway |
 | Fonts | Instrument Serif + Inter |
 

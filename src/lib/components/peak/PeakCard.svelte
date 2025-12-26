@@ -10,7 +10,8 @@
 
   let { peak, featured = false, class: className = '' }: Props = $props();
 
-  const difficultyClass = peak.standard_route?.difficulty_class ?? 1;
+  // Use $derived for reactive values that depend on props
+  const difficultyClass = $derived(peak.standard_route?.difficulty_class ?? 1);
 
   const classAccents: Record<number, string> = {
     1: 'border-l-class-1',

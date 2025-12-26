@@ -63,6 +63,33 @@ export const actions: Actions = {
 | PeakHero | `components/peak/` | Peak detail header |
 | SummitButton | `components/summit/` | Log summit CTA |
 | ReviewSection | `components/review/` | Reviews display + form |
+| ImageGallery | `components/gallery/` | Photo grid + lightbox |
+| ImageUploader | `components/gallery/` | Admin photo upload |
+| SearchModal | `components/search/` | Global search (⌘K) |
+| PeakMap | `components/map/` | Main map with peaks + trail overlay |
+| TrailMap | `components/map/` | Route detail trail polyline |
+| ElevationProfile | `components/map/` | Canvas-based elevation chart |
+| TrailMapSection | `components/map/` | Combined map + elevation profile |
+| Achievements | `components/profile/` | Badge system with SVG icons |
+| AchievementIcon | `components/ui/` | SVG icons for achievements |
+| TrailReportForm | `components/trail/` | Submit trail conditions |
+| TrailReportCard | `components/trail/` | Display trail reports |
+| ReloadPrompt | `components/pwa/` | PWA update notification |
+| WeatherCard | `components/weather/` | 7-day summit forecast |
+
+## Key Routes
+
+| Route | Purpose |
+|-------|---------|
+| `/peaks` | Browse all 58 peaks |
+| `/peaks/[slug]` | Peak detail + trail reports |
+| `/peaks/[slug]/[route]` | Route detail + trail map + elevation profile |
+| `/ranges` | Browse by range |
+| `/leaderboard` | Global rankings + activity feed |
+| `/map` | Full interactive map (peaks + trail overlay toggle) |
+| `/profile` | User dashboard + achievements |
+| `/users/[id]` | Public user profile |
+| `/auth` | Login/signup |
 
 ---
 

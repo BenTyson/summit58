@@ -10,29 +10,77 @@
   let { data }: Props = $props();
 
   // Filter state
+  let searchQuery = $state('');
   let selectedClass = $state<number | null>(null);
   let selectedRange = $state<string | null>(null);
+  let hideSummited = $state(false);
+  let sortBy = $state<'elevation-desc' | 'elevation-asc' | 'name' | 'difficulty'>('elevation-desc');
 
   // Get unique ranges
-  const ranges = [...new Set(data.peaks.map((p) => p.range))].sort();
+  const ranges = $derived([...new Set(data.peaks.map((p) => p.range))].sort());
 
-  // Filtered peaks
-  let filteredPeaks = $derived(
-    data.peaks.filter((peak) => {
+  // Summited peak set for quick lookup
+  const summitedSet = $derived(new Set(data.summitedPeakIds));
+
+  // Filtered and sorted peaks
+  let filteredPeaks = $derived(() => {
+    let result = data.peaks.filter((peak) => {
+      // Text search
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = peak.name.toLowerCase().includes(query);
+        const matchesRange = peak.range.toLowerCase().includes(query);
+        if (!matchesName && !matchesRange) return false;
+      }
+
+      // Class filter
       if (selectedClass && peak.standard_route?.difficulty_class !== selectedClass) {
         return false;
       }
+
+      // Range filter
       if (selectedRange && peak.range !== selectedRange) {
         return false;
       }
+
+      // Hide summited
+      if (hideSummited && summitedSet.has(peak.id)) {
+        return false;
+      }
+
       return true;
-    })
-  );
+    });
+
+    // Sort
+    result = [...result].sort((a, b) => {
+      switch (sortBy) {
+        case 'elevation-desc':
+          return b.elevation - a.elevation;
+        case 'elevation-asc':
+          return a.elevation - b.elevation;
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'difficulty':
+          return (a.standard_route?.difficulty_class ?? 0) - (b.standard_route?.difficulty_class ?? 0);
+        default:
+          return 0;
+      }
+    });
+
+    return result;
+  });
 
   function clearFilters() {
+    searchQuery = '';
     selectedClass = null;
     selectedRange = null;
+    hideSummited = false;
+    sortBy = 'elevation-desc';
   }
+
+  const hasActiveFilters = $derived(
+    searchQuery || selectedClass || selectedRange || hideSummited || sortBy !== 'elevation-desc'
+  );
 
   const classOptions = [
     { value: null, label: 'All' },
@@ -40,6 +88,13 @@
     { value: 2, label: 'Class 2' },
     { value: 3, label: 'Class 3' },
     { value: 4, label: 'Class 4' }
+  ];
+
+  const sortOptions = [
+    { value: 'elevation-desc', label: 'Elevation (High to Low)' },
+    { value: 'elevation-asc', label: 'Elevation (Low to High)' },
+    { value: 'name', label: 'Name (A-Z)' },
+    { value: 'difficulty', label: 'Difficulty (Easy to Hard)' }
   ];
 </script>
 
@@ -62,46 +117,80 @@
     </p>
   </div>
 
+  <!-- Search Bar -->
+  <div class="mb-6">
+    <div class="relative">
+      <svg class="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input
+        type="text"
+        bind:value={searchQuery}
+        placeholder="Search peaks by name or range..."
+        class="
+          w-full pl-12 pr-4 py-3 rounded-xl
+          border border-slate-200 dark:border-slate-600
+          bg-white dark:bg-slate-800
+          text-slate-900 dark:text-white
+          placeholder-slate-400 dark:placeholder-slate-500
+          focus:border-sunrise focus:outline-none focus:ring-2 focus:ring-sunrise/20
+          transition-all duration-200
+        "
+      />
+      {#if searchQuery}
+        <button
+          onclick={() => searchQuery = ''}
+          class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+        >
+          <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      {/if}
+    </div>
+  </div>
+
   <!-- Filters -->
   <div
     class="
-      mb-8 p-4 rounded-xl
+      mb-8 p-4 sm:p-5 rounded-xl
       bg-slate-50 dark:bg-slate-800/50
       border border-slate-200 dark:border-slate-700
     "
   >
-    <div class="flex flex-wrap items-end gap-6">
-      <!-- Class Filter - Chip Style -->
-      <div>
-        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
-          Difficulty
-        </label>
-        <div class="flex flex-wrap gap-2">
-          {#each classOptions as option}
-            <button
-              onclick={() => (selectedClass = option.value)}
-              class="
-                px-4 py-2 rounded-full text-sm font-medium
-                transition-all duration-200
-                border
-                {selectedClass === option.value
-                  ? option.value
-                    ? `bg-class-${option.value} text-white border-class-${option.value} shadow-glow-class-${option.value}`
-                    : 'bg-mountain-blue text-white border-mountain-blue'
-                  : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600'}
-              "
-            >
-              {option.label}
-            </button>
-          {/each}
-        </div>
+    <!-- Row 1: Class chips -->
+    <div class="mb-5">
+      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+        Difficulty
+      </label>
+      <div class="flex flex-wrap gap-2">
+        {#each classOptions as option}
+          <button
+            onclick={() => (selectedClass = option.value)}
+            class="
+              px-4 py-2 rounded-full text-sm font-medium
+              transition-all duration-200
+              border
+              {selectedClass === option.value
+                ? option.value
+                  ? `bg-class-${option.value} text-white border-class-${option.value} shadow-glow-class-${option.value}`
+                  : 'bg-mountain-blue text-white border-mountain-blue'
+                : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600'}
+            "
+          >
+            {option.label}
+          </button>
+        {/each}
       </div>
+    </div>
 
+    <!-- Row 2: Dropdowns and toggles -->
+    <div class="flex flex-wrap items-end gap-4">
       <!-- Range Filter -->
-      <div class="flex-1 min-w-[200px]">
+      <div class="flex-1 min-w-[180px]">
         <label
           for="range-filter"
-          class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3"
+          class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
         >
           Mountain Range
         </label>
@@ -125,8 +214,64 @@
         </select>
       </div>
 
+      <!-- Sort By -->
+      <div class="flex-1 min-w-[180px]">
+        <label
+          for="sort-filter"
+          class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+        >
+          Sort By
+        </label>
+        <select
+          id="sort-filter"
+          bind:value={sortBy}
+          class="
+            w-full tap-target rounded-lg
+            border border-slate-200 dark:border-slate-600
+            bg-white dark:bg-slate-700
+            px-4 py-2.5 text-sm
+            text-slate-900 dark:text-white
+            focus:border-sunrise focus:outline-none focus:ring-2 focus:ring-sunrise/20
+            transition-all duration-200
+          "
+        >
+          {#each sortOptions as option}
+            <option value={option.value}>{option.label}</option>
+          {/each}
+        </select>
+      </div>
+
+      <!-- Hide Summited Toggle (only for logged-in users) -->
+      {#if data.isLoggedIn}
+        <div class="flex items-center gap-3 py-2">
+          <button
+            onclick={() => hideSummited = !hideSummited}
+            class="
+              relative w-11 h-6 rounded-full transition-colors duration-200
+              {hideSummited ? 'bg-sunrise' : 'bg-slate-300 dark:bg-slate-600'}
+            "
+            role="switch"
+            aria-checked={hideSummited}
+          >
+            <span
+              class="
+                absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm
+                transition-transform duration-200
+                {hideSummited ? 'translate-x-5' : 'translate-x-0'}
+              "
+            ></span>
+          </button>
+          <span class="text-sm font-medium text-slate-700 dark:text-slate-300">
+            Hide summited
+            {#if hideSummited}
+              <span class="text-slate-500 dark:text-slate-400">({summitedSet.size})</span>
+            {/if}
+          </span>
+        </div>
+      {/if}
+
       <!-- Clear Filters -->
-      {#if selectedClass || selectedRange}
+      {#if hasActiveFilters}
         <button
           onclick={clearFilters}
           class="
@@ -154,14 +299,14 @@
 
   <!-- Results count -->
   <p class="mb-6 text-sm text-slate-600 dark:text-slate-400">
-    Showing <span class="font-semibold text-slate-900 dark:text-white">{filteredPeaks.length}</span>
+    Showing <span class="font-semibold text-slate-900 dark:text-white">{filteredPeaks().length}</span>
     of {data.peaks.length} peaks
   </p>
 
   <!-- Peak List -->
-  {#if filteredPeaks.length > 0}
+  {#if filteredPeaks().length > 0}
     <div class="space-y-4 stagger-children">
-      {#each filteredPeaks as peak, i}
+      {#each filteredPeaks() as peak, i}
         <div
           class="animate-fade-in-up"
           style="animation-delay: {Math.min(i * 50, 500)}ms"

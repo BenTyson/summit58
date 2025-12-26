@@ -11,7 +11,7 @@ Comprehensive reference for Summit58 development.
 | Key | Value |
 |-----|-------|
 | **Stack** | SvelteKit 5 + Supabase (cloud) + Tailwind 3 + Railway |
-| **Status** | Phase 2 complete (Auth, Peak Bagger, Reviews, Ranges) |
+| **Status** | All phases complete (Custom Domain, Advanced Search, Trail GPX) |
 | **Dev** | `npm run dev` → http://localhost:4466 |
 | **Prod** | https://summit58-production.up.railway.app |
 | **Deploy** | `railway up -d` |
@@ -39,18 +39,23 @@ supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/
 
 ### Core Tables
 - **peaks** - All 58 Colorado 14ers (name, slug, elevation, rank, range, coordinates, etc.)
-- **routes** - Climbing routes for each peak (distance, elevation gain, difficulty class, etc.)
+- **routes** - Climbing routes for each peak (distance, elevation gain, difficulty class, trail_geometry, etc.)
+  - `trail_geometry` - GeoJSON LineString with coordinates [[lon, lat, elevation], ...] and properties
 
 ### User Tables
 - **profiles** - User profiles (extends auth.users) - display_name, avatar_url, bio, location
 - **user_summits** - Summit logs (user_id, peak_id, date_summited, route_id, conditions, notes)
 - **user_reviews** - Peak reviews (user_id, peak_id, rating 1-5, title, body, date_climbed, conditions)
+- **user_achievements** - Earned achievements (user_id, achievement_id, earned_at, notified)
+- **trail_reports** - Trail conditions (user_id, peak_id, hike_date, trail_status, snow_depth, hazards)
 
 ### RLS Policies
 - Peaks/routes: public read
 - Profiles: public read, users update own
 - Summits: public read, users CRUD own
 - Reviews: public read, users CRUD own (one review per peak)
+- Achievements: public read, users insert own
+- Trail reports: public read, users CRUD own
 
 ---
 
@@ -59,30 +64,48 @@ supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/
 ```
 src/lib/
 ├── components/
-│   ├── ui/        → Container, Badge
+│   ├── ui/        → Container, Badge, AchievementIcon
 │   ├── layout/    → Header, Footer, ThemeToggle
 │   ├── peak/      → PeakCard, PeakHero, StatsBar, QuickFacts
 │   ├── route/     → RouteCard
 │   ├── summit/    → SummitButton, SummitModal (Peak Bagger)
-│   └── review/    → StarRating, ReviewCard, ReviewForm, ReviewSection
+│   ├── review/    → StarRating, ReviewCard, ReviewForm, ReviewSection
+│   ├── trail/     → TrailReportForm, TrailReportCard
+│   ├── profile/   → Achievements
+│   ├── gallery/   → ImageGallery, ImageUploader
+│   ├── weather/   → WeatherCard
+│   ├── map/       → PeakMap, TrailMap, ElevationProfile, TrailMapSection
+│   └── search/    → SearchModal
 ├── data/
-│   └── ranges.ts  → Mountain range metadata (descriptions, best season, etc.)
+│   ├── ranges.ts      → Mountain range metadata
+│   └── achievements.ts → 23 achievement definitions
 ├── server/
-│   ├── supabase.ts → SSR client
-│   ├── peaks.ts    → Peak data queries
-│   ├── summits.ts  → Summit CRUD operations
-│   └── reviews.ts  → Review CRUD operations
+│   ├── supabase.ts     → SSR client
+│   ├── peaks.ts        → Peak data queries
+│   ├── summits.ts      → Summit CRUD + stats
+│   ├── reviews.ts      → Review CRUD
+│   ├── trailReports.ts → Trail report CRUD
+│   ├── achievements.ts → Achievement checking + awarding
+│   ├── leaderboard.ts  → Leaderboard aggregation
+│   ├── images.ts       → Image gallery CRUD
+│   ├── conditions.ts   → Weather fetch + queries
+│   └── gpx.ts          → GPX to GeoJSON parsing
+├── utils/
+│   └── geo.ts          → Geographic utilities (distance, elevation)
 └── types/database.ts → Generated types
 
 src/routes/
 ├── +page.svelte              → Homepage
 ├── auth/+page.svelte         → Login/signup
 ├── peaks/+page.svelte        → All peaks (filterable)
-├── peaks/[slug]/+page.svelte → Peak detail (with reviews)
-├── peaks/[slug]/[route]/     → Route detail
+├── peaks/[slug]/+page.svelte → Peak detail (reviews, trail reports, weather)
+├── peaks/[slug]/[route]/     → Route detail (trail map + elevation profile)
 ├── ranges/+page.svelte       → All mountain ranges
-├── ranges/[slug]/+page.svelte → Range detail (peaks in range)
-└── profile/+page.svelte      → "My 58" dashboard
+├── ranges/[slug]/+page.svelte → Range detail
+├── leaderboard/+page.svelte  → Global rankings + activity
+├── map/+page.svelte          → Full interactive map (peaks + trail overlay)
+├── users/[id]/+page.svelte   → Public user profile
+└── profile/+page.svelte      → "My 58" dashboard + achievements
 
 static/images/peaks/          → Custom peak images
 ```
@@ -110,6 +133,48 @@ static/images/peaks/          → Custom peak images
 - Rich metadata: description, best season, character, nearest towns
 - Range detail pages with filtered peaks
 - User progress tracking per range
+
+### Trail Reports
+- User-submitted trail conditions
+- Trail status: clear, muddy, snowy, icy, mixed
+- Snow depth tracking (inches)
+- Crowd level and road access status
+- Hazard selection: ice, rockfall, wildlife, weather, etc.
+- Recent reports shown on peak detail pages
+
+### Achievements
+- 23 achievements across 5 categories
+- **Milestones**: First summit, 10, 25, 29, 50, 58 peaks
+- **Range completion**: One per mountain range (7 total)
+- **Class mastery**: All Class 1, 2, 3, or 4 peaks
+- **Community**: Reviews and trail reports
+- **Seasonal**: Winter and summer summits
+- Auto-awarded on summit/review/trail report actions
+- SVG icons (no emoji) for premium aesthetic
+- Progress tracking for in-progress achievements
+
+### Leaderboard
+- Global rankings by unique peaks summited
+- Stats overview: total climbers, summits logged, peak baggers
+- Tie handling for equal stats
+- Recent activity feed sidebar
+- "Peak Bagger" badge for users who've completed all 58
+
+### Trail GPX Mapping
+- Interactive trail visualization on topographic maps (OpenTopoMap tiles)
+- Trail polylines for all 58 peaks with difficulty-based coloring
+- Canvas-based elevation profiles with hover interaction
+- Synchronized hover between map and elevation chart
+- Route detail pages: TrailMapSection with map + elevation profile
+- Main map page: "Show Trails" toggle to display all trail overlays
+- GeoJSON storage with elevation data at each waypoint
+- Trailhead and summit markers with popup details
+
+### Public User Profiles
+- Viewable user profiles at `/users/[id]`
+- Privacy toggle (is_public) for profile visibility
+- Display name, bio, location, and summit stats
+- Clickable usernames on leaderboard link to profiles
 
 ---
 
@@ -170,9 +235,15 @@ Dark mode: `.dark` class on html element.
 | 1.5 All 58 Peaks | ✅ Complete |
 | 2. User Auth & Peak Bagger | ✅ Complete |
 | 2.5 Reviews & Ranges | ✅ Complete |
-| 3. Image Gallery | 🔲 Next |
-| 4. Topo Maps | 🔲 Planned |
-| 5. Custom Domain (summit58.co) | 🔲 Planned |
+| 3. Image Gallery | ✅ Complete |
+| 3.5 Weather & Conditions | ✅ Complete |
+| 4. Trail Reports | ✅ Complete |
+| 4.5 Achievements System | ✅ Complete |
+| 5. Leaderboard | ✅ Complete |
+| 6. Public User Profiles | ✅ Complete |
+| 7. Trail GPX Mapping | ✅ Complete |
+| 8. Custom Domain | ✅ Complete |
+| 9. Advanced Search | ✅ Complete |
 
 ---
 
@@ -195,6 +266,14 @@ Dark mode: `.dark` class on html element.
 - 2025-12-21: User Reviews system with star ratings, CRUD operations
 - 2025-12-22: Fixed range detail page layout, review query error handling
 - 2025-12-22: Created session-start/ quick reference docs
+- 2025-12-24: Image Gallery with lightbox, Weather Conditions with 7-day forecast
+- 2025-12-24: Trail Reports system with hazards, conditions, and crowd tracking
+- 2025-12-25: Achievements system with 23 badges, database persistence
+- 2025-12-26: V2 UI Polish - replaced emoji icons with custom SVG icons
+- 2025-12-26: Leaderboard with global rankings and recent activity feed
+- 2025-12-26: Public User Profiles with privacy toggle, clickable leaderboard links
+- 2025-12-26: Trail GPX Mapping - interactive trail visualization on topographic maps
+- 2025-12-26: Comprehensive trail geometry for all 58 peaks with elevation profiles
 
 ---
 

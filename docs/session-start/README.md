@@ -13,7 +13,19 @@ Colorado 14ers tracking app. Users log summits, write reviews, track progress ac
 | MVP + All 58 Peaks | Done |
 | Auth + Peak Bagger | Done |
 | Reviews + Ranges | Done |
-| **Image Gallery** | **Next** |
+| Image Gallery | Done |
+| Search + Dashboard | Done |
+| Map View | Done |
+| PWA (Offline/Mobile) | Done |
+| SEO & Social Sharing | Done |
+| Weather Conditions | Done |
+| Trail Reports | Done |
+| Achievements System | Done |
+| Leaderboard | Done |
+| Public User Profiles | Done |
+| Trail GPX Mapping | Done |
+| Custom Domain | Done |
+| Advanced Search | Done |
 
 ## Commands
 

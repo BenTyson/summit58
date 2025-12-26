@@ -8,16 +8,26 @@
   }
 
   let { peak, showOverlay = true, class: className = '' }: Props = $props();
+
+  let scrollY = $state(0);
+
+  // Parallax calculation - image moves slower than scroll
+  const parallaxOffset = $derived(scrollY * 0.4);
 </script>
+
+<svelte:window bind:scrollY />
 
 <div class="relative h-64 sm:h-80 lg:h-96 overflow-hidden {className}">
   {#if peak.hero_image_url}
-    <!-- Real image with parallax-ready styling -->
-    <div class="absolute inset-0 scale-105">
+    <!-- Parallax image container -->
+    <div
+      class="absolute inset-0 -top-20 -bottom-20"
+      style="transform: translateY({parallaxOffset}px)"
+    >
       <img
         src={peak.hero_image_url}
         alt={peak.name}
-        class="h-full w-full object-cover"
+        class="h-[140%] w-full object-cover object-top"
       />
     </div>
   {:else}
