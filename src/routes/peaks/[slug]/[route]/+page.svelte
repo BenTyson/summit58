@@ -3,6 +3,7 @@
   import Badge from '$lib/components/ui/Badge.svelte';
   import StatsBar from '$lib/components/peak/StatsBar.svelte';
   import TrailMapSection from '$lib/components/map/TrailMapSection.svelte';
+  import ParkingCard from '$lib/components/parking/ParkingCard.svelte';
   import type { PageData } from './$types';
 
   interface Props {
@@ -370,6 +371,9 @@
           {/if}
         </div>
       {/if}
+
+      <!-- Parking Card -->
+      <ParkingCard {route} recentReports={data.recentParkingReports || []} />
     </div>
   </div>
 

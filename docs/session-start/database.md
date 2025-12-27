@@ -9,7 +9,25 @@
 | Table | Purpose | Key Fields |
 |-------|---------|------------|
 | `peaks` | All 58 14ers | slug, name, elevation, rank, range, coordinates |
-| `routes` | Climbing routes | peak_id, name, distance, elevation_gain, difficulty_class, trail_geometry |
+| | | *Updated to 2024 NGS survey data; Mt. Evans → Mt. Blue Sky* |
+| `routes` | 66 climbing routes | peak_id, name, distance, elevation_gain, difficulty_class, trail_geometry |
+| | | *58 standard + 8 alternate routes (Longs, Elbert, Torreys, Quandary, Bierstadt)* |
+
+### Parking Fields (routes table)
+
+| Field | Type | Values |
+|-------|------|--------|
+| `parking_type` | text | free_lot, paid_lot, dispersed, pullout, permit_required, private_lot |
+| `parking_capacity` | text | very_limited, limited, moderate, large, unlimited |
+| `parking_fee_type` | text | free, paid_daily, paid_annual, permit_required |
+| `parking_fee_amount` | decimal | Fee in USD (e.g., 8.00, 142.00, 150.00) |
+| `shuttle_available` | boolean | TRUE if shuttle service exists |
+| `shuttle_info` | text | Shuttle details and booking info |
+| `recommended_arrival_time` | text | e.g., "Before 4:30 AM on weekends" |
+| `parking_notes` | text | General parking information |
+| `overflow_options` | text | Alternative parking when lot is full |
+| `restroom_available` | boolean | TRUE if restrooms at trailhead |
+| `cell_service` | text | none, weak, moderate, good |
 
 ### Trail Geometry (GeoJSON)
 

@@ -219,6 +219,7 @@ export type Database = {
       }
       routes: {
         Row: {
+          cell_service: string | null
           created_at: string | null
           description: string | null
           difficulty_class: number
@@ -231,9 +232,20 @@ export type Database = {
           id: string
           is_standard: boolean | null
           name: string
+          overflow_options: string | null
+          parking_capacity: string | null
+          parking_fee_amount: number | null
+          parking_fee_notes: string | null
+          parking_fee_type: string | null
+          parking_notes: string | null
+          parking_type: string | null
           peak_id: string
+          recommended_arrival_time: string | null
+          restroom_available: boolean | null
           route_notes: string | null
           route_type: string | null
+          shuttle_available: boolean | null
+          shuttle_info: string | null
           slug: string
           trail_geometry: Json | null
           trailhead_elevation: number | null
@@ -244,6 +256,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          cell_service?: string | null
           created_at?: string | null
           description?: string | null
           difficulty_class: number
@@ -256,9 +269,20 @@ export type Database = {
           id?: string
           is_standard?: boolean | null
           name: string
+          overflow_options?: string | null
+          parking_capacity?: string | null
+          parking_fee_amount?: number | null
+          parking_fee_notes?: string | null
+          parking_fee_type?: string | null
+          parking_notes?: string | null
+          parking_type?: string | null
           peak_id: string
+          recommended_arrival_time?: string | null
+          restroom_available?: boolean | null
           route_notes?: string | null
           route_type?: string | null
+          shuttle_available?: boolean | null
+          shuttle_info?: string | null
           slug: string
           trail_geometry?: Json | null
           trailhead_elevation?: number | null
@@ -269,6 +293,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          cell_service?: string | null
           created_at?: string | null
           description?: string | null
           difficulty_class?: number
@@ -281,9 +306,20 @@ export type Database = {
           id?: string
           is_standard?: boolean | null
           name?: string
+          overflow_options?: string | null
+          parking_capacity?: string | null
+          parking_fee_amount?: number | null
+          parking_fee_notes?: string | null
+          parking_fee_type?: string | null
+          parking_notes?: string | null
+          parking_type?: string | null
           peak_id?: string
+          recommended_arrival_time?: string | null
+          restroom_available?: boolean | null
           route_notes?: string | null
           route_type?: string | null
+          shuttle_available?: boolean | null
+          shuttle_info?: string | null
           slug?: string
           trail_geometry?: Json | null
           trailhead_elevation?: number | null
@@ -305,6 +341,7 @@ export type Database = {
       }
       trail_reports: {
         Row: {
+          arrival_time: string | null
           created_at: string | null
           crowd_level: string | null
           hazards: string[] | null
@@ -312,6 +349,7 @@ export type Database = {
           id: string
           notes: string | null
           parking_notes: string | null
+          parking_status: string | null
           peak_id: string
           road_status: string | null
           snow_depth_inches: number | null
@@ -320,6 +358,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          arrival_time?: string | null
           created_at?: string | null
           crowd_level?: string | null
           hazards?: string[] | null
@@ -327,6 +366,7 @@ export type Database = {
           id?: string
           notes?: string | null
           parking_notes?: string | null
+          parking_status?: string | null
           peak_id: string
           road_status?: string | null
           snow_depth_inches?: number | null
@@ -335,6 +375,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          arrival_time?: string | null
           created_at?: string | null
           crowd_level?: string | null
           hazards?: string[] | null
@@ -342,6 +383,7 @@ export type Database = {
           id?: string
           notes?: string | null
           parking_notes?: string | null
+          parking_status?: string | null
           peak_id?: string
           road_status?: string | null
           snow_depth_inches?: number | null
@@ -657,5 +699,3 @@ export const Constants = {
     Enums: {},
   },
 } as const
-A new version of Supabase CLI is available: v2.67.1 (currently installed v2.65.5)
-We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli

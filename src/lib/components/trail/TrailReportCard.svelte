@@ -48,6 +48,14 @@
     closed: { label: 'Closed', color: 'text-red-600' }
   };
 
+  const parkingConfig: Record<string, { label: string; color: string }> = {
+    empty: { label: 'Empty', color: 'text-emerald-600 dark:text-emerald-400' },
+    filling: { label: 'Filling', color: 'text-green-600 dark:text-green-400' },
+    nearly_full: { label: 'Nearly Full', color: 'text-amber-600 dark:text-amber-400' },
+    full: { label: 'Full', color: 'text-red-600 dark:text-red-400' },
+    overflow: { label: 'Overflow', color: 'text-red-600 dark:text-red-400' }
+  };
+
   const hazardLabels: Record<string, string> = {
     fallen_trees: 'Fallen Trees',
     stream_crossing: 'Stream Crossing',
@@ -59,6 +67,15 @@
   const trailInfo = $derived(report.trail_status ? trailStatusConfig[report.trail_status] : null);
   const crowdInfo = $derived(report.crowd_level ? crowdConfig[report.crowd_level] : null);
   const roadInfo = $derived(report.road_status ? roadConfig[report.road_status] : null);
+  const parkingInfo = $derived(report.parking_status ? parkingConfig[report.parking_status] : null);
+
+  function formatTime(timeStr: string): string {
+    const [hours, minutes] = timeStr.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  }
 </script>
 
 <div class="p-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
@@ -115,6 +132,15 @@
       <div>
         <span class="text-xs text-slate-500 dark:text-slate-400 block">Snow</span>
         <span class="font-medium text-sky-600 dark:text-sky-400">{report.snow_depth_inches}"</span>
+      </div>
+    {/if}
+
+    {#if parkingInfo}
+      <div>
+        <span class="text-xs text-slate-500 dark:text-slate-400 block">
+          Parking{#if report.arrival_time} @ {formatTime(report.arrival_time)}{/if}
+        </span>
+        <span class="font-medium {parkingInfo.color}">{parkingInfo.label}</span>
       </div>
     {/if}
   </div>

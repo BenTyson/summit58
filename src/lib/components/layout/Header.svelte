@@ -24,7 +24,8 @@
     { href: '/peaks', label: 'Peaks' },
     { href: '/ranges', label: 'Ranges' },
     { href: '/leaderboard', label: 'Leaderboard' },
-    { href: '/map', label: 'Map' }
+    { href: '/map', label: 'Map' },
+    { href: '/learn', label: 'Learn' }
   ];
 
   function closeMobileMenu() {

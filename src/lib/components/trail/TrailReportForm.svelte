@@ -10,6 +10,8 @@
     snow_depth_inches: number | null;
     crowd_level: string;
     road_status: string;
+    parking_status: string | null;
+    arrival_time: string | null;
     parking_notes: string;
     hazards: string[];
     notes: string;
@@ -22,6 +24,8 @@
   let snowDepth = $state<number | null>(null);
   let crowdLevel = $state('moderate');
   let roadStatus = $state('open');
+  let parkingStatus = $state<string | null>(null);
+  let arrivalTime = $state<string | null>(null);
   let parkingNotes = $state('');
   let hazards = $state<string[]>([]);
   let notes = $state('');
@@ -51,6 +55,14 @@
     { value: 'closed', label: 'Closed' }
   ];
 
+  const parkingStatusOptions = [
+    { value: 'empty', label: 'Empty', description: 'Plenty of spots' },
+    { value: 'filling', label: 'Filling', description: 'Some spots taken' },
+    { value: 'nearly_full', label: 'Nearly Full', description: 'Few spots left' },
+    { value: 'full', label: 'Full', description: 'Main lot full' },
+    { value: 'overflow', label: 'Overflow', description: 'Used overflow' }
+  ];
+
   const hazardOptions = [
     { value: 'fallen_trees', label: 'Fallen Trees' },
     { value: 'stream_crossing', label: 'Stream Crossing' },
@@ -78,6 +90,8 @@
         snow_depth_inches: trailStatus === 'snowy' || trailStatus === 'icy' ? snowDepth : null,
         crowd_level: crowdLevel,
         road_status: roadStatus,
+        parking_status: parkingStatus,
+        arrival_time: arrivalTime,
         parking_notes: parkingNotes || '',
         hazards,
         notes: notes || ''
@@ -87,6 +101,8 @@
       isExpanded = false;
       notes = '';
       parkingNotes = '';
+      parkingStatus = null;
+      arrivalTime = null;
       hazards = [];
     } finally {
       isSubmitting = false;
@@ -211,6 +227,49 @@
               {option.label}
             </button>
           {/each}
+        </div>
+      </div>
+
+      <!-- Parking Status -->
+      <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600">
+        <div class="flex items-center gap-2 mb-3">
+          <svg class="h-4 w-4 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17h.01M16 17h.01M9 11h6M5 11l1.5-4.5A2 2 0 018.38 5h7.24a2 2 0 011.88 1.316L19 11M5 11h14v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6z" />
+          </svg>
+          <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Parking Info (optional)</span>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs text-slate-500 dark:text-slate-400 mb-1.5">
+              Parking lot status when you arrived
+            </label>
+            <div class="flex flex-wrap gap-1.5">
+              {#each parkingStatusOptions as option}
+                <button
+                  type="button"
+                  onclick={() => (parkingStatus = parkingStatus === option.value ? null : option.value)}
+                  class="px-2.5 py-1 rounded text-xs font-medium transition-colors
+                    {parkingStatus === option.value
+                      ? 'bg-sunrise text-white'
+                      : 'bg-white dark:bg-slate-600 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-500 hover:border-sunrise'}"
+                >
+                  {option.label}
+                </button>
+              {/each}
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-500 dark:text-slate-400 mb-1.5">
+              What time did you arrive at the trailhead?
+            </label>
+            <input
+              type="time"
+              bind:value={arrivalTime}
+              class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-sunrise focus:border-transparent"
+            />
+          </div>
         </div>
       </div>
 

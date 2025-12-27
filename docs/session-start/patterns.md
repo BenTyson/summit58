@@ -74,6 +74,7 @@ export const actions: Actions = {
 | AchievementIcon | `components/ui/` | SVG icons for achievements |
 | TrailReportForm | `components/trail/` | Submit trail conditions |
 | TrailReportCard | `components/trail/` | Display trail reports |
+| ParkingCard | `components/parking/` | Trailhead parking info |
 | ReloadPrompt | `components/pwa/` | PWA update notification |
 | WeatherCard | `components/weather/` | 7-day summit forecast |
 
@@ -81,14 +82,15 @@ export const actions: Actions = {
 
 | Route | Purpose |
 |-------|---------|
-| `/peaks` | Browse all 58 peaks |
-| `/peaks/[slug]` | Peak detail + trail reports |
-| `/peaks/[slug]/[route]` | Route detail + trail map + elevation profile |
+| `/peaks` | Browse all 58 peaks (66 routes including alternates) |
+| `/peaks/[slug]` | Peak detail + trail reports + parking info |
+| `/peaks/[slug]/[route]` | Route detail + trail map + elevation profile + parking card |
 | `/ranges` | Browse by range |
 | `/leaderboard` | Global rankings + activity feed |
 | `/map` | Full interactive map (peaks + trail overlay toggle) |
 | `/profile` | User dashboard + achievements |
 | `/users/[id]` | Public user profile |
+| `/learn/parking` | Trailhead parking guide |
 | `/auth` | Login/signup |
 
 ---

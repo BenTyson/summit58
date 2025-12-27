@@ -14,5 +14,17 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     });
   }
 
-  return result;
+  // Fetch recent parking reports for this peak
+  const { data: recentParkingReports } = await supabase
+    .from('trail_reports')
+    .select('parking_status, arrival_time, hike_date')
+    .eq('peak_id', result.peak.id)
+    .not('parking_status', 'is', null)
+    .order('hike_date', { ascending: false })
+    .limit(5);
+
+  return {
+    ...result,
+    recentParkingReports: recentParkingReports || []
+  };
 };

@@ -39,7 +39,12 @@ supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/
 
 ### Core Tables
 - **peaks** - All 58 Colorado 14ers (name, slug, elevation, rank, range, coordinates, etc.)
-- **routes** - Climbing routes for each peak (distance, elevation gain, difficulty class, trail_geometry, etc.)
+  - Elevations updated to 2024 National Geodetic Survey measurements
+  - Mt. Evans renamed to Mt. Blue Sky (2022 official name change)
+- **routes** - 66 climbing routes (58 standard + 8 alternate routes)
+  - Core: distance, elevation_gain, difficulty_class, trail_geometry
+  - Trailhead: name, latitude, longitude, elevation
+  - Parking: type, capacity, fee_type, fee_amount, shuttle_available, overflow_options, recommended_arrival_time, parking_notes, restroom_available, cell_service
   - `trail_geometry` - GeoJSON LineString with coordinates [[lon, lat, elevation], ...] and properties
 
 ### User Tables
@@ -71,6 +76,7 @@ src/lib/
 │   ├── summit/    → SummitButton, SummitModal (Peak Bagger)
 │   ├── review/    → StarRating, ReviewCard, ReviewForm, ReviewSection
 │   ├── trail/     → TrailReportForm, TrailReportCard
+│   ├── parking/   → ParkingCard
 │   ├── profile/   → Achievements
 │   ├── gallery/   → ImageGallery, ImageUploader
 │   ├── weather/   → WeatherCard
@@ -99,11 +105,12 @@ src/routes/
 ├── auth/+page.svelte         → Login/signup
 ├── peaks/+page.svelte        → All peaks (filterable)
 ├── peaks/[slug]/+page.svelte → Peak detail (reviews, trail reports, weather)
-├── peaks/[slug]/[route]/     → Route detail (trail map + elevation profile)
+├── peaks/[slug]/[route]/     → Route detail (trail map + elevation profile + parking)
 ├── ranges/+page.svelte       → All mountain ranges
 ├── ranges/[slug]/+page.svelte → Range detail
 ├── leaderboard/+page.svelte  → Global rankings + activity
 ├── map/+page.svelte          → Full interactive map (peaks + trail overlay)
+├── learn/parking/+page.svelte → Trailhead parking guide
 ├── users/[id]/+page.svelte   → Public user profile
 └── profile/+page.svelte      → "My 58" dashboard + achievements
 
@@ -169,6 +176,28 @@ static/images/peaks/          → Custom peak images
 - Main map page: "Show Trails" toggle to display all trail overlays
 - GeoJSON storage with elevation data at each waypoint
 - Trailhead and summit markers with popup details
+
+### Trailhead Parking
+- Comprehensive parking info for all 66 routes
+- Parking type: free lot, paid lot, dispersed, permit required, private
+- Capacity indicators: very limited → unlimited
+- Fee information with pass acceptance notes
+- Shuttle availability and booking info
+- Recommended arrival times for busy weekends
+- Restroom and cell service availability
+- Overflow parking options
+- ParkingCard component on route detail pages
+- Dedicated Learn page at /learn/parking
+
+### Data Accuracy (2024 NGS Survey)
+- All peak elevations verified against 2024 National Geodetic Survey
+- 14 peaks with elevation corrections >5 feet
+- All 58 peak ranks corrected based on new survey data
+- Mt. Evans renamed to Mt. Blue Sky (2022 official name change)
+- Route data verified against 14ers.com: distance, elevation gain, difficulty class
+- 9 difficulty class corrections (6 were underrated - safety critical)
+- All 58 trailhead coordinates verified and corrected
+- Data sources: 14ers.com, National Geodetic Survey, 5280.com
 
 ### Public User Profiles
 - Viewable user profiles at `/users/[id]`
@@ -244,6 +273,7 @@ Dark mode: `.dark` class on html element.
 | 7. Trail GPX Mapping | ✅ Complete |
 | 8. Custom Domain | ✅ Complete |
 | 9. Advanced Search | ✅ Complete |
+| 10. Data Accuracy Audit | ✅ Complete |
 
 ---
 
@@ -274,6 +304,14 @@ Dark mode: `.dark` class on html element.
 - 2025-12-26: Public User Profiles with privacy toggle, clickable leaderboard links
 - 2025-12-26: Trail GPX Mapping - interactive trail visualization on topographic maps
 - 2025-12-26: Comprehensive trail geometry for all 58 peaks with elevation profiles
+- 2025-12-27: Trailhead Parking feature - parking cards, trail report parking status, Learn page
+- 2025-12-27: Data Accuracy Audit - comprehensive verification against 14ers.com
+  - Peak data updated to 2024 NGS survey (14 elevation corrections, all 58 ranks)
+  - Mt. Evans renamed to Mt. Blue Sky (2022 official name change)
+  - Route data corrected: 9 difficulty class fixes (6 were underrated safety risk)
+  - Trailhead coordinates verified and corrected for all 58 routes
+  - Complete parking data added: fees, capacity, restrooms, cell service, arrival times
+  - 8 high-priority alternate routes added (Longs, Elbert, Torreys, Quandary, Bierstadt)
 
 ---
 
