@@ -77,23 +77,23 @@
         </div>
 
         <!-- Legend -->
-        <div class="flex flex-wrap items-center gap-3 text-sm">
-          <span class="text-slate-500 dark:text-slate-400">Difficulty:</span>
-          <div class="flex items-center gap-1.5">
-            <div class="w-3 h-3 rounded-full bg-class-1"></div>
-            <span class="text-slate-600 dark:text-slate-300">1</span>
+        <div class="flex flex-wrap items-center gap-4 text-sm">
+          <span class="text-slate-500 dark:text-slate-400">Class:</span>
+          <div class="flex items-center gap-1">
+            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#22c55e" stroke="white" stroke-width="1.5"/></svg>
+            <span class="text-slate-600 dark:text-slate-300 font-medium">1</span>
           </div>
-          <div class="flex items-center gap-1.5">
-            <div class="w-3 h-3 rounded-full bg-class-2"></div>
-            <span class="text-slate-600 dark:text-slate-300">2</span>
+          <div class="flex items-center gap-1">
+            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#3b82f6" stroke="white" stroke-width="1.5"/></svg>
+            <span class="text-slate-600 dark:text-slate-300 font-medium">2</span>
           </div>
-          <div class="flex items-center gap-1.5">
-            <div class="w-3 h-3 rounded-full bg-class-3"></div>
-            <span class="text-slate-600 dark:text-slate-300">3</span>
+          <div class="flex items-center gap-1">
+            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#eab308" stroke="white" stroke-width="1.5"/></svg>
+            <span class="text-slate-600 dark:text-slate-300 font-medium">3</span>
           </div>
-          <div class="flex items-center gap-1.5">
-            <div class="w-3 h-3 rounded-full bg-class-4"></div>
-            <span class="text-slate-600 dark:text-slate-300">4</span>
+          <div class="flex items-center gap-1">
+            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#ef4444" stroke="white" stroke-width="1.5"/></svg>
+            <span class="text-slate-600 dark:text-slate-300 font-medium">4</span>
           </div>
         </div>
       </div>
