@@ -173,14 +173,18 @@ static/images/peaks/              → Custom peak hero images
 - "Peak Bagger" badge for users who've completed all 58
 
 ### Trail GPX Mapping
-- Interactive trail visualization on topographic maps (OpenTopoMap tiles)
+- Interactive trail visualization on topographic maps
+- Map type toggle: Topo (OpenTopoMap), Satellite (Esri), Street (OSM)
+- Mountain-shaped markers with drop shadows and class colors
+- Summited peaks show checkmark, unsummited show class number
 - Trail polylines for all 58 peaks with difficulty-based coloring
 - Canvas-based elevation profiles with hover interaction
 - Synchronized hover between map and elevation chart
 - Route detail pages: TrailMapSection with map + elevation profile
 - Main map page: "Show Trails" toggle to display all trail overlays
 - GeoJSON storage with elevation data at each waypoint
-- Trailhead and summit markers with popup details
+- Styled popups with dark mode support and gradient CTAs
+- Custom zoom controls with dark mode styling
 
 ### Trailhead Parking
 - Comprehensive parking info for all 66 routes
@@ -280,6 +284,7 @@ Dark mode: `.dark` class on html element.
 | 9. Advanced Search | ✅ Complete |
 | 10. Data Accuracy Audit | ✅ Complete |
 | 11. Launch Prep & Rebrand | ✅ Complete |
+| 12. V2/V3 UI Polish | ✅ Complete |
 
 ---
 
@@ -330,6 +335,17 @@ Dark mode: `.dark` class on html element.
   - Created Skeleton.svelte loading component
   - Integrated sharp image optimizer for user uploads
   - Fixed PWA build by excluding large peak images from precaching
+- 2025-12-27: V2/V3 UI Polish
+  - Map icons redesigned: mountain-shaped with drop shadows, class colors
+  - Summited peaks show checkmark, unsummited show class number in marker
+  - Map type toggle added: Topo, Satellite, Street views
+  - Popup styling improved with dark mode support, gradient buttons
+  - Zoom controls and attribution styled for dark mode
+  - Route page layout: 3-column info cards grid, 2-column description grid
+  - Peak page V3: route-focused header with "STANDARD ROUTE" label
+  - Peak name shown as context below route name (different treatment than hero)
+  - Quick stats pills (distance, gain, class) added to peak header
+  - Mobile hero text cutoff fixed with increased padding
 
 ---
 

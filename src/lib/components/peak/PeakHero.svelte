@@ -17,7 +17,7 @@
 
 <svelte:window bind:scrollY />
 
-<div class="relative h-64 sm:h-80 lg:h-96 overflow-hidden {className}">
+<div class="relative h-72 sm:h-80 lg:h-96 overflow-hidden {className}">
   {#if peak.hero_image_url}
     <!-- Parallax image container -->
     <div
@@ -86,7 +86,7 @@
 
   {#if showOverlay}
     <!-- Peak info overlay -->
-    <div class="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+    <div class="absolute inset-x-0 bottom-0 p-6 pb-24 sm:p-8 sm:pb-28">
       <div class="animate-fade-in-up" style="animation-delay: 200ms">
         <p
           class="text-white/60 text-sm uppercase tracking-widest mb-2"

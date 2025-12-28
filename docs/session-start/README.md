@@ -32,7 +32,8 @@ Colorado 14ers tracking app. Users log summits, write reviews, track progress ac
 | Advanced Search | Done |
 | Trailhead Parking | Done |
 | Data Accuracy Audit | Done |
-| **Launch Prep & Rebrand** | **Done** |
+| Launch Prep & Rebrand | Done |
+| **V2/V3 UI Polish** | **Done** |
 
 ## Commands
 

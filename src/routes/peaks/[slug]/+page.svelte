@@ -264,61 +264,77 @@
     ></div>
 
     <div class="p-6 sm:p-8">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <!-- Top row: Breadcrumb + Summit button -->
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+        <nav class="flex flex-wrap items-center gap-x-2 text-sm text-slate-500 dark:text-slate-400">
+          <a href="/peaks" class="hover:text-sunrise transition-colors">Peaks</a>
+          <span>›</span>
+          <a
+            href="/ranges/{peak.range?.toLowerCase().replace(/\s+/g, '-')}"
+            class="hover:text-sunrise transition-colors"
+          >
+            {peak.range}
+          </a>
+        </nav>
+        <SummitButton
+          summits={userSummits}
+          {isLoggedIn}
+          onLogSummit={openModal}
+        />
+      </div>
+
+      <!-- Hero section: Route name + Peak stats -->
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
         <div>
-          <!-- Breadcrumb -->
-          <nav class="mb-3 text-sm text-slate-500 dark:text-slate-400">
-            <a
-              href="/peaks"
-              class="hover:text-mountain-blue dark:hover:text-sunrise transition-colors"
-            >
-              Peaks
-            </a>
-            <span class="mx-2">›</span>
-            <span class="text-slate-700 dark:text-slate-200">{peak.name}</span>
-          </nav>
-
-          <h1 class="heading-page text-slate-900 dark:text-white">
-            {peak.name}
-          </h1>
-
-          <div class="mt-3 flex flex-wrap items-center gap-3 text-slate-600 dark:text-slate-400">
-            <span class="stat-display text-2xl text-sunrise">{peak.elevation.toLocaleString()}'</span>
-            <span class="text-slate-300 dark:text-slate-600">·</span>
-            <span class="flex items-center gap-1.5">
-              <svg class="h-4 w-4 text-sunrise" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-              </svg>
-              Rank #{peak.rank}
+          {#if standardRoute}
+            <p class="text-xs uppercase tracking-widest text-sunrise font-semibold mb-2">
+              Standard Route
+            </p>
+            <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
+              {standardRoute.name}
+            </h2>
+          {/if}
+          <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <span class="text-lg font-medium text-slate-700 dark:text-slate-300">
+              {peak.name}
             </span>
-            <span class="text-slate-300 dark:text-slate-600">·</span>
-            <span class="flex items-center gap-1.5">
-              <svg class="h-4 w-4 text-mountain-blue dark:text-mountain-mist" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              {peak.range}
-            </span>
+            <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+              <span class="flex items-center gap-1.5">
+                <svg class="h-4 w-4 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+                <span class="font-semibold text-slate-700 dark:text-slate-200">{peak.elevation.toLocaleString()}'</span>
+              </span>
+              <span class="text-slate-300 dark:text-slate-600">·</span>
+              <span class="flex items-center gap-1.5">
+                <svg class="h-4 w-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span class="font-semibold text-slate-700 dark:text-slate-200">#{peak.rank}</span>
+              </span>
+            </div>
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3">
-          {#if standardRoute}
-            <Badge variant="class-{standardRoute.difficulty_class}" size="lg" glow class="flex-shrink-0">
+        <!-- Quick stats pills -->
+        {#if standardRoute}
+          <div class="flex flex-wrap gap-2">
+            <div class="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-700/50 text-sm font-medium text-slate-700 dark:text-slate-300">
+              {standardRoute.distance_miles} mi
+            </div>
+            <div class="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-700/50 text-sm font-medium text-slate-700 dark:text-slate-300">
+              {standardRoute.elevation_gain_ft.toLocaleString()}' gain
+            </div>
+            <div class="px-4 py-2 rounded-full bg-class-{standardRoute.difficulty_class}/10 text-sm font-semibold text-class-{standardRoute.difficulty_class}">
               Class {standardRoute.difficulty_class}
-            </Badge>
-          {/if}
-          <SummitButton
-            summits={userSummits}
-            {isLoggedIn}
-            onLogSummit={openModal}
-          />
-        </div>
+            </div>
+          </div>
+        {/if}
       </div>
 
       <!-- Stats Bar -->
       {#if standardRoute}
-        <div class="mt-8">
+        <div class="mt-8 pt-6 border-t border-slate-200/50 dark:border-slate-700/50">
           <StatsBar route={standardRoute} />
         </div>
       {/if}
