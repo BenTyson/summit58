@@ -43,8 +43,12 @@
 </script>
 
 <svelte:head>
-  <title>{rangeInfo.name} | Summit58</title>
+  <title>{rangeInfo.name} | Cairn58</title>
   <meta name="description" content="{rangeInfo.description}" />
+  <meta property="og:title" content="{rangeInfo.name} - Colorado 14ers | Cairn58" />
+  <meta property="og:description" content="{rangeInfo.description}" />
+  <meta property="og:type" content="website" />
+  <link rel="canonical" href="https://cairn58.com/ranges/{rangeInfo.slug}" />
 </svelte:head>
 
 <!-- Hero Section -->

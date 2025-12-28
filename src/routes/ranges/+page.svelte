@@ -35,7 +35,7 @@
 </script>
 
 <svelte:head>
-  <title>Mountain Ranges | Summit58</title>
+  <title>Mountain Ranges | Cairn58</title>
   <meta name="description" content="Explore Colorado's 14er mountain ranges - from the gentle giants of the Sawatch to the rugged peaks of the San Juans." />
 </svelte:head>
 

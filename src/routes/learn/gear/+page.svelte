@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-  <title>Gear & Preparation | Learn | Summit58</title>
+  <title>Gear & Preparation | Learn | Cairn58</title>
   <meta
     name="description"
     content="What to wear, what to pack, and how to prepare for climbing Colorado 14ers. Layering systems, gear lists, and preparation tips."

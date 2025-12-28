@@ -8,8 +8,8 @@ export default defineConfig({
     SvelteKitPWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Summit58',
-        short_name: 'Summit58',
+        name: 'Cairn58',
+        short_name: 'Cairn58',
         description: 'Track your Colorado 14er summits',
         theme_color: '#f97316',
         background_color: '#0f172a',
@@ -37,7 +37,8 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+        globIgnores: ['**/images/peaks/**'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*/i,

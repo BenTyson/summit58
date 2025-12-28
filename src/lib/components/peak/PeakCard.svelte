@@ -49,9 +49,11 @@
       {#if peak.hero_image_url}
         <img
           src={peak.hero_image_url}
-          alt={peak.name}
+          alt="{peak.name} - Colorado 14er"
           class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           loading="lazy"
+          width="144"
+          height="144"
         />
         <!-- Gradient overlay on hover -->
         <div

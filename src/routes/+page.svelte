@@ -18,11 +18,26 @@
 </script>
 
 <svelte:head>
-  <title>Summit58 - The Modern Guide to Colorado's 14ers</title>
+  <title>Cairn58 - The Modern Guide to Colorado's 14ers</title>
   <meta
     name="description"
     content="Beautiful, mobile-first guide to all 58 Colorado fourteeners. Stats at a glance, conditions reports, and everything you need to summit."
   />
+  <link rel="canonical" href="https://cairn58.com" />
+  {@html `<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Cairn58",
+      "url": "https://cairn58.com",
+      "description": "The modern guide to Colorado's 58 fourteeners",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://cairn58.com/peaks?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>`}
 </svelte:head>
 
 <!-- Hero Section -->
@@ -86,7 +101,7 @@
         Colorado's Finest
       </p>
       <h1 class="heading-hero text-white">
-        Summit<span class="text-sunrise">58</span>
+        Cairn<span class="text-sunrise">58</span>
       </h1>
       <p class="mx-auto mt-6 max-w-2xl text-xl text-slate-300 sm:text-2xl">
         The modern guide to Colorado's 14ers

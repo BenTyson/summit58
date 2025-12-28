@@ -1,4 +1,4 @@
-# Summit58 - Quick Start
+# Cairn58 - Quick Start
 
 > Read this first. Links to details below.
 
@@ -42,4 +42,4 @@ supabase db push     # Push migrations
 - [Stack & Infrastructure](./stack.md)
 - [Database Schema](./database.md)
 - [Code Patterns](./patterns.md)
-- [Full Reference](../SUMMIT58.md)
+- [Full Reference](../CAIRN58.md)

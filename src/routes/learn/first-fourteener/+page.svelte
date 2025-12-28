@@ -24,7 +24,7 @@
 </script>
 
 <svelte:head>
-  <title>Your First 14er | Learn | Summit58</title>
+  <title>Your First 14er | Learn | Cairn58</title>
   <meta
     name="description"
     content="A complete guide to climbing your first Colorado 14er. What to expect, when to go, and an interactive quiz to find the perfect peak for you."

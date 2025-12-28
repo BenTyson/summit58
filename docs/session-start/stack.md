@@ -20,7 +20,7 @@
 ## URLs
 
 - **Dev:** http://localhost:4466
-- **Prod:** https://summit58-production.up.railway.app
+- **Prod:** https://cairn58.com
 
 ## Commands
 

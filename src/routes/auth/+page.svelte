@@ -65,14 +65,15 @@
 </script>
 
 <svelte:head>
-  <title>{mode === 'login' ? 'Log In' : 'Sign Up'} | Summit58</title>
+  <title>{mode === 'login' ? 'Log In' : 'Sign Up'} | Cairn58</title>
+  <meta name="description" content="Sign in or create an account to track your Colorado 14er summits, log reviews, and earn achievements." />
 </svelte:head>
 
 <Container class="py-12 sm:py-20">
   <div class="mx-auto max-w-md">
     <div class="text-center mb-8 animate-fade-in-up">
       <h1 class="heading-page text-slate-900 dark:text-white">
-        {mode === 'login' ? 'Welcome Back' : 'Join Summit58'}
+        {mode === 'login' ? 'Welcome Back' : 'Join Cairn58'}
       </h1>
       <p class="mt-3 text-slate-600 dark:text-slate-400">
         {mode === 'login' ? 'Log in to track your summits' : 'Create an account to start bagging peaks'}

@@ -69,6 +69,10 @@
       inputRef.focus();
       query = '';
       selectedIndex = 0;
+      // Trap focus in modal
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
   });
 
@@ -91,10 +95,13 @@
 
 {#if open}
   <!-- Backdrop -->
-  <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
   <div
     class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-fade-in"
     onclick={handleBackdropClick}
+    onkeydown={(e) => e.key === 'Escape' && onClose()}
+    role="button"
+    tabindex="-1"
+    aria-label="Close search"
   >
     <!-- Modal -->
     <div

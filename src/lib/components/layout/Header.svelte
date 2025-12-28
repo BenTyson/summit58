@@ -78,7 +78,7 @@
         >
           <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
         </svg>
-        <span class="font-display text-2xl tracking-tight">Summit58</span>
+        <span class="font-display text-2xl tracking-tight">Cairn58</span>
       </a>
 
       <!-- Desktop Nav -->

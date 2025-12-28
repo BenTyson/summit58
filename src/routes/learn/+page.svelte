@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-  <title>Learn | Summit58</title>
+  <title>Learn | Cairn58</title>
   <meta
     name="description"
     content="Everything you need to summit your first Colorado 14er. Guides on safety, gear, planning, and finding the right peak for you."

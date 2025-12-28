@@ -37,7 +37,7 @@
           <span
             class="font-display text-xl font-semibold text-slate-700 dark:text-slate-200"
           >
-            Summit58
+            Cairn58
           </span>
         </a>
         <span class="hidden sm:inline text-slate-300 dark:text-slate-600">|</span>
@@ -48,7 +48,7 @@
 
       <!-- Copyright -->
       <p class="text-sm text-slate-500 dark:text-slate-400">
-        &copy; {currentYear} Summit58. All rights reserved.
+        &copy; {currentYear} Cairn58. All rights reserved.
       </p>
     </div>
 

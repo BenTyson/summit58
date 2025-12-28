@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-  <title>Mountain Safety | Learn | Summit58</title>
+  <title>Mountain Safety | Learn | Cairn58</title>
   <meta
     name="description"
     content="Essential safety knowledge for climbing Colorado 14ers. Weather, altitude sickness, and knowing when to turn back."

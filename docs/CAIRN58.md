@@ -1,8 +1,8 @@
-# Summit58 - Full Reference
+# Cairn58 - Full Reference
 
 > **Quick start?** See [session-start/README.md](./session-start/README.md) for fast onboarding.
 
-Comprehensive reference for Summit58 development.
+Comprehensive reference for Cairn58 development.
 
 ---
 
@@ -13,7 +13,7 @@ Comprehensive reference for Summit58 development.
 | **Stack** | SvelteKit 5 + Supabase (cloud) + Tailwind 3 + Railway |
 | **Status** | All phases complete (Custom Domain, Advanced Search, Trail GPX) |
 | **Dev** | `npm run dev` → http://localhost:4466 |
-| **Prod** | https://summit58-production.up.railway.app |
+| **Prod** | https://cairn58.com |
 | **Deploy** | `railway up -d` |
 | **DB Push** | `supabase db push` |
 

@@ -79,7 +79,7 @@
         </p>
         <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
           {#if offlineReady}
-            Summit58 is now available offline.
+            Cairn58 is now available offline.
           {:else}
             A new version is available. Reload to update.
           {/if}

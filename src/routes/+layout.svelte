@@ -14,9 +14,16 @@
   let { children, data }: Props = $props();
 </script>
 
+<a
+  href="#main-content"
+  class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-sunrise focus:text-white focus:rounded-lg focus:font-medium"
+>
+  Skip to main content
+</a>
+
 <div class="flex min-h-screen flex-col">
   <Header session={data.session} profile={data.profile} peaks={data.peaks} />
-  <main class="flex-1">
+  <main id="main-content" class="flex-1">
     {@render children()}
   </main>
   <Footer />

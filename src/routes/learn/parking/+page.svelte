@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-  <title>Trailhead Parking Guide | Learn | Summit58</title>
+  <title>Trailhead Parking Guide | Learn | Cairn58</title>
   <meta
     name="description"
     content="A complete guide to trailhead parking at Colorado 14ers. Timing strategies, permit requirements, shuttle options, and what to do when the lot is full."

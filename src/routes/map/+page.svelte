@@ -48,8 +48,11 @@
 </script>
 
 <svelte:head>
-  <title>Peak Map | Summit58</title>
-  <meta name="description" content="Interactive map of all 58 Colorado 14ers" />
+  <title>Peak Map | Cairn58</title>
+  <meta name="description" content="Interactive topographic map of all 58 Colorado 14ers. Filter by difficulty, range, and track your summited peaks." />
+  <meta property="og:title" content="Interactive Peak Map | Cairn58" />
+  <meta property="og:description" content="Explore all 58 Colorado 14ers on an interactive topographic map." />
+  <link rel="canonical" href="https://cairn58.com/map" />
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50 dark:bg-slate-900">

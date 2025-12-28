@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database, Tables, TablesInsert } from '$lib/types/database';
+import { optimizeImage } from './imageOptimizer';
 
 export type PeakImage = Tables<'peak_images'>;
 export type PeakImageInsert = TablesInsert<'peak_images'>;
@@ -50,15 +51,23 @@ export async function uploadPeakImage(
   file: File,
   caption?: string
 ): Promise<PeakImage> {
-  // Generate unique filename
-  const ext = file.name.split('.').pop() || 'jpg';
-  const filename = `${peakId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  // Convert file to buffer and optimize
+  const arrayBuffer = await file.arrayBuffer();
+  const optimizedBuffer = await optimizeImage(arrayBuffer, {
+    maxWidth: 1600,
+    maxHeight: 1200,
+    quality: 80
+  });
 
-  // Upload to storage
+  // Generate unique filename (always .jpg after optimization)
+  const filename = `${peakId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+
+  // Upload optimized image to storage
   const { error: uploadError } = await supabase.storage
     .from(STORAGE_BUCKET)
-    .upload(filename, file, {
-      cacheControl: '3600',
+    .upload(filename, optimizedBuffer, {
+      cacheControl: '31536000', // 1 year cache for optimized images
+      contentType: 'image/jpeg',
       upsert: false
     });
 

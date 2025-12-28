@@ -99,7 +99,7 @@
 </script>
 
 <svelte:head>
-  <title>All 58 Colorado 14ers | Summit58</title>
+  <title>All 58 Colorado 14ers | Cairn58</title>
   <meta
     name="description"
     content="Browse all 58 Colorado fourteeners sorted by elevation. Filter by difficulty class and mountain range. Find your next summit."

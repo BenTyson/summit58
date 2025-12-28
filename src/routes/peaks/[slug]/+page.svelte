@@ -188,22 +188,22 @@
 
   // SEO meta values
   const ogDescription = $derived(`${peak.name} is Colorado's #${peak.rank} highest peak at ${peak.elevation.toLocaleString()} feet. ${peak.description?.slice(0, 100) || ''}`);
-  const ogImage = $derived(peak.hero_image_url || `https://summit58.co/images/peaks/${peak.slug}.jpg`);
-  const canonicalUrl = $derived(`https://summit58.co/peaks/${peak.slug}`);
+  const ogImage = $derived(peak.hero_image_url || `https://cairn58.com/images/peaks/${peak.slug}.jpg`);
+  const canonicalUrl = $derived(`https://cairn58.com/peaks/${peak.slug}`);
 </script>
 
 <svelte:head>
-  <title>{peak.name} ({peak.elevation.toLocaleString()}') | Summit58</title>
+  <title>{peak.name} ({peak.elevation.toLocaleString()}') | Cairn58</title>
   <meta name="description" content={ogDescription} />
   <link rel="canonical" href={canonicalUrl} />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content={canonicalUrl} />
-  <meta property="og:title" content="{peak.name} - {peak.elevation.toLocaleString()}' | Summit58" />
+  <meta property="og:title" content="{peak.name} - {peak.elevation.toLocaleString()}' | Cairn58" />
   <meta property="og:description" content={ogDescription} />
   <meta property="og:image" content={ogImage} />
-  <meta property="og:site_name" content="Summit58" />
+  <meta property="og:site_name" content="Cairn58" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />

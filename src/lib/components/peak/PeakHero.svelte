@@ -26,7 +26,7 @@
     >
       <img
         src={peak.hero_image_url}
-        alt={peak.name}
+        alt="{peak.name}, a Colorado 14er at {peak.elevation.toLocaleString()} feet"
         class="h-[140%] w-full object-cover object-top"
       />
     </div>

@@ -1,7 +1,7 @@
 import type { RequestHandler } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 
-const BASE_URL = 'https://summit58.co';
+const BASE_URL = 'https://cairn58.com';
 
 interface PeakRow {
   slug: string;
