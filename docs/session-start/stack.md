@@ -12,6 +12,7 @@
 | Maps | Leaflet + OpenTopoMap (topographic) |
 | GPX | @tmcw/togeojson + xmldom |
 | Weather | Open-Meteo API |
+| Images | sharp (optimization on upload) |
 | PWA | vite-plugin-pwa + Workbox |
 | Cron | cron-job.org |
 | Hosting | Railway |

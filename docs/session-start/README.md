@@ -6,7 +6,11 @@
 
 Colorado 14ers tracking app. Users log summits, write reviews, track progress across all 58 peaks.
 
+**Live:** https://cairn58.com
+
 ## Status
+
+**Production Ready** - All features complete, launch audit done.
 
 | Phase | Status |
 |-------|--------|
@@ -28,6 +32,7 @@ Colorado 14ers tracking app. Users log summits, write reviews, track progress ac
 | Advanced Search | Done |
 | Trailhead Parking | Done |
 | Data Accuracy Audit | Done |
+| **Launch Prep & Rebrand** | **Done** |
 
 ## Commands
 

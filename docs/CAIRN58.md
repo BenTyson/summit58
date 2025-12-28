@@ -11,7 +11,7 @@ Comprehensive reference for Cairn58 development.
 | Key | Value |
 |-----|-------|
 | **Stack** | SvelteKit 5 + Supabase (cloud) + Tailwind 3 + Railway |
-| **Status** | All phases complete (Custom Domain, Advanced Search, Trail GPX) |
+| **Status** | Production ready - all features + launch audit complete |
 | **Dev** | `npm run dev` → http://localhost:4466 |
 | **Prod** | https://cairn58.com |
 | **Deploy** | `railway up -d` |
@@ -67,54 +67,59 @@ supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/
 ## Project Structure
 
 ```
-src/lib/
-├── components/
-│   ├── ui/        → Container, Badge, AchievementIcon
-│   ├── layout/    → Header, Footer, ThemeToggle
-│   ├── peak/      → PeakCard, PeakHero, StatsBar, QuickFacts
-│   ├── route/     → RouteCard
-│   ├── summit/    → SummitButton, SummitModal (Peak Bagger)
-│   ├── review/    → StarRating, ReviewCard, ReviewForm, ReviewSection
-│   ├── trail/     → TrailReportForm, TrailReportCard
-│   ├── parking/   → ParkingCard
-│   ├── profile/   → Achievements
-│   ├── gallery/   → ImageGallery, ImageUploader
-│   ├── weather/   → WeatherCard
-│   ├── map/       → PeakMap, TrailMap, ElevationProfile, TrailMapSection
-│   └── search/    → SearchModal
-├── data/
-│   ├── ranges.ts      → Mountain range metadata
-│   └── achievements.ts → 23 achievement definitions
-├── server/
-│   ├── supabase.ts     → SSR client
-│   ├── peaks.ts        → Peak data queries
-│   ├── summits.ts      → Summit CRUD + stats
-│   ├── reviews.ts      → Review CRUD
-│   ├── trailReports.ts → Trail report CRUD
-│   ├── achievements.ts → Achievement checking + awarding
-│   ├── leaderboard.ts  → Leaderboard aggregation
-│   ├── images.ts       → Image gallery CRUD
-│   ├── conditions.ts   → Weather fetch + queries
-│   └── gpx.ts          → GPX to GeoJSON parsing
-├── utils/
-│   └── geo.ts          → Geographic utilities (distance, elevation)
-└── types/database.ts → Generated types
+src/
+├── hooks.server.ts           → Security headers (X-Frame-Options, etc.)
+│
+├── lib/
+│   ├── components/
+│   │   ├── ui/        → Container, Badge, AchievementIcon, Skeleton
+│   │   ├── layout/    → Header, Footer, ThemeToggle
+│   │   ├── peak/      → PeakCard, PeakHero, StatsBar, QuickFacts
+│   │   ├── route/     → RouteCard
+│   │   ├── summit/    → SummitButton, SummitModal (Peak Bagger)
+│   │   ├── review/    → StarRating, ReviewCard, ReviewForm, ReviewSection
+│   │   ├── trail/     → TrailReportForm, TrailReportCard
+│   │   ├── parking/   → ParkingCard
+│   │   ├── profile/   → Achievements
+│   │   ├── gallery/   → ImageGallery, ImageUploader
+│   │   ├── weather/   → WeatherCard
+│   │   ├── map/       → PeakMap, TrailMap, ElevationProfile, TrailMapSection
+│   │   └── search/    → SearchModal
+│   ├── data/
+│   │   ├── ranges.ts      → Mountain range metadata
+│   │   └── achievements.ts → 23 achievement definitions
+│   ├── server/
+│   │   ├── supabase.ts       → SSR client
+│   │   ├── peaks.ts          → Peak data queries
+│   │   ├── summits.ts        → Summit CRUD + stats
+│   │   ├── reviews.ts        → Review CRUD
+│   │   ├── trailReports.ts   → Trail report CRUD
+│   │   ├── achievements.ts   → Achievement checking + awarding
+│   │   ├── leaderboard.ts    → Leaderboard aggregation
+│   │   ├── images.ts         → Image gallery CRUD + optimization
+│   │   ├── imageOptimizer.ts → Sharp-based image processing
+│   │   ├── conditions.ts     → Weather fetch + queries
+│   │   └── gpx.ts            → GPX to GeoJSON parsing
+│   ├── utils/
+│   │   └── geo.ts          → Geographic utilities (distance, elevation)
+│   └── types/database.ts → Generated types
+│
+├── routes/
+│   ├── +error.svelte             → Custom error page (404/500)
+│   ├── +page.svelte              → Homepage
+│   ├── auth/+page.svelte         → Login/signup
+│   ├── peaks/+page.svelte        → All peaks (filterable)
+│   ├── peaks/[slug]/+page.svelte → Peak detail (reviews, trail reports, weather)
+│   ├── peaks/[slug]/[route]/     → Route detail (trail map + elevation profile + parking)
+│   ├── ranges/+page.svelte       → All mountain ranges
+│   ├── ranges/[slug]/+page.svelte → Range detail
+│   ├── leaderboard/+page.svelte  → Global rankings + activity
+│   ├── map/+page.svelte          → Full interactive map (peaks + trail overlay)
+│   ├── learn/                    → Educational guides (first-fourteener, safety, gear, parking)
+│   ├── users/[id]/+page.svelte   → Public user profile
+│   └── profile/+page.svelte      → "My 58" dashboard + achievements
 
-src/routes/
-├── +page.svelte              → Homepage
-├── auth/+page.svelte         → Login/signup
-├── peaks/+page.svelte        → All peaks (filterable)
-├── peaks/[slug]/+page.svelte → Peak detail (reviews, trail reports, weather)
-├── peaks/[slug]/[route]/     → Route detail (trail map + elevation profile + parking)
-├── ranges/+page.svelte       → All mountain ranges
-├── ranges/[slug]/+page.svelte → Range detail
-├── leaderboard/+page.svelte  → Global rankings + activity
-├── map/+page.svelte          → Full interactive map (peaks + trail overlay)
-├── learn/parking/+page.svelte → Trailhead parking guide
-├── users/[id]/+page.svelte   → Public user profile
-└── profile/+page.svelte      → "My 58" dashboard + achievements
-
-static/images/peaks/          → Custom peak images
+static/images/peaks/              → Custom peak hero images
 ```
 
 ---
@@ -274,6 +279,7 @@ Dark mode: `.dark` class on html element.
 | 8. Custom Domain | ✅ Complete |
 | 9. Advanced Search | ✅ Complete |
 | 10. Data Accuracy Audit | ✅ Complete |
+| 11. Launch Prep & Rebrand | ✅ Complete |
 
 ---
 
@@ -312,6 +318,18 @@ Dark mode: `.dark` class on html element.
   - Trailhead coordinates verified and corrected for all 58 routes
   - Complete parking data added: fees, capacity, restrooms, cell service, arrival times
   - 8 high-priority alternate routes added (Longs, Elbert, Torreys, Quandary, Bierstadt)
+- 2025-12-27: Launch Prep & Rebrand - Summit58 → Cairn58
+  - Renamed project sitewide: package.json, vite.config.ts, supabase/config.toml
+  - Updated domain references: summit58.co → cairn58.com
+  - Updated all page titles and UI components (Header, Footer, ReloadPrompt)
+  - Created custom error page (+error.svelte) with 404/500 handling
+  - Added security headers in hooks.server.ts (X-Frame-Options, X-Content-Type-Options, etc.)
+  - Added accessibility improvements: skip-to-main-content link, focus trap for modals
+  - Added SEO meta tags to remaining pages (map, auth, ranges)
+  - Added JSON-LD WebSite schema to homepage
+  - Created Skeleton.svelte loading component
+  - Integrated sharp image optimizer for user uploads
+  - Fixed PWA build by excluding large peak images from precaching
 
 ---
 
