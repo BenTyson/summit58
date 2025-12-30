@@ -208,6 +208,13 @@ static/images/peaks/              → Custom peak hero images
 - All 58 trailhead coordinates verified and corrected
 - Data sources: 14ers.com, National Geodetic Survey, 5280.com
 
+### Custom Peak Images
+- 43 of 58 peaks have custom hero images
+- Images stored in `static/images/peaks/` (served as `/images/peaks/`)
+- Database fields: `peaks.hero_image_url`, `peaks.thumbnail_url`
+- Migration: `supabase/migrations/20241227500000_custom_hero_images.sql`
+- Use `/hero-image` skill to add new images
+
 ### Public User Profiles
 - Viewable user profiles at `/users/[id]`
 - Privacy toggle (is_public) for profile visibility
@@ -346,6 +353,16 @@ Dark mode: `.dark` class on html element.
   - Peak name shown as context below route name (different treatment than hero)
   - Quick stats pills (distance, gain, class) added to peak header
   - Mobile hero text cutoff fixed with increased padding
+- 2025-12-28/29: Homepage Storytelling & Peak Images
+  - Homepage content sections: storytelling approach with SVG illustrations
+  - "Seven Ranges" section: compelling narrative about Colorado's mountain ranges
+  - "Track Your Journey" section: peak bagger feature showcase with mock dashboard
+  - "New to 14ers" section: beginner-friendly with checklist visual
+  - Final CTA section with dark gradient background
+  - Navbar cleanup: removed Home/My 58 buttons, streamlined user dropdown
+  - Search button made more compact with ⌘K shortcut badge
+  - Custom peak hero images: 43 of 58 peaks now have custom images
+  - Migration file for hero images: `supabase/migrations/20241227500000_custom_hero_images.sql`
 
 ---
 

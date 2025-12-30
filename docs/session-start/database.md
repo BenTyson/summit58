@@ -8,8 +8,8 @@
 
 | Table | Purpose | Key Fields |
 |-------|---------|------------|
-| `peaks` | All 58 14ers | slug, name, elevation, rank, range, coordinates |
-| | | *Updated to 2024 NGS survey data; Mt. Evans → Mt. Blue Sky* |
+| `peaks` | All 58 14ers | slug, name, elevation, rank, range, coordinates, hero_image_url, thumbnail_url |
+| | | *Updated to 2024 NGS survey data; Mt. Evans → Mt. Blue Sky; 43 custom hero images* |
 | `routes` | 66 climbing routes | peak_id, name, distance, elevation_gain, difficulty_class, trail_geometry |
 | | | *58 standard + 8 alternate routes (Longs, Elbert, Torreys, Quandary, Bierstadt)* |
 

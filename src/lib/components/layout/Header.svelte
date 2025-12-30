@@ -20,7 +20,6 @@
   let searchOpen = $state(false);
 
   const navLinks = [
-    { href: '/', label: 'Home' },
     { href: '/peaks', label: 'Peaks' },
     { href: '/ranges', label: 'Ranges' },
     { href: '/leaderboard', label: 'Leaderboard' },
@@ -82,16 +81,14 @@
       </a>
 
       <!-- Desktop Nav -->
-      <div class="hidden items-center gap-6 md:flex">
+      <div class="hidden items-center gap-1 md:flex">
         <!-- Search Button -->
         <button
           onclick={openSearch}
           class="
-            flex items-center gap-2 px-3 py-1.5 rounded-lg
-            border border-slate-200 dark:border-slate-600
-            bg-slate-50 dark:bg-slate-800
+            flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg mr-2
             text-slate-500 dark:text-slate-400
-            hover:border-slate-300 dark:hover:border-slate-500
+            hover:bg-slate-100 dark:hover:bg-slate-800
             hover:text-slate-700 dark:hover:text-slate-200
             transition-colors
           "
@@ -99,21 +96,22 @@
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          <span class="text-sm">Search</span>
-          <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-xs">
-            <span class="text-xs">⌘</span>K
+          <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-[10px] font-medium text-slate-500 dark:text-slate-400">
+            <span>⌘</span>K
           </kbd>
         </button>
+
+        <div class="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
 
         {#each navLinks as link}
           <a
             href={link.href}
             class="
-              relative px-1 py-2 text-slate-600 font-medium
+              relative px-2.5 py-2 text-slate-600 font-medium text-sm
               transition-colors duration-200
               hover:text-mountain-blue
               dark:text-slate-300 dark:hover:text-white
-              after:absolute after:inset-x-0 after:bottom-0 after:h-0.5
+              after:absolute after:inset-x-1 after:bottom-0.5 after:h-0.5
               after:bg-sunrise after:scale-x-0 after:transition-transform after:duration-300
               hover:after:scale-x-100
             "
@@ -122,26 +120,7 @@
           </a>
         {/each}
 
-        <!-- My 58 - Prominent for logged in users -->
-        {#if session}
-          <a
-            href="/profile"
-            class="
-              flex items-center gap-1.5 px-3 py-1.5 rounded-full
-              bg-gradient-to-r from-sunrise/10 to-sunrise-coral/10
-              border border-sunrise/30
-              text-sunrise font-semibold
-              hover:from-sunrise/20 hover:to-sunrise-coral/20
-              hover:border-sunrise/50
-              transition-all duration-200
-            "
-          >
-            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
-            </svg>
-            My 58
-          </a>
-        {/if}
+        <div class="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
 
         <ThemeToggle />
 
@@ -151,22 +130,21 @@
             <button
               onclick={() => userMenuOpen = !userMenuOpen}
               class="
-                flex items-center gap-2 rounded-full
-                border border-slate-200 dark:border-slate-600
-                bg-white dark:bg-slate-700
-                pl-3 pr-1 py-1
-                text-sm font-medium text-slate-700 dark:text-slate-200
+                flex items-center justify-center
+                h-9 w-9 rounded-full
+                border-2 border-transparent
                 hover:border-sunrise transition-colors
+                focus:outline-none focus:border-sunrise
               "
+              aria-label="User menu"
             >
-              <span class="max-w-24 truncate">{profile?.display_name || 'Hiker'}</span>
               {#if profile?.avatar_url}
-                <img src={profile.avatar_url} alt="" class="h-7 w-7 rounded-full" />
+                <img src={profile.avatar_url} alt="" class="h-9 w-9 rounded-full" />
               {:else}
-                <div class="h-7 w-7 rounded-full bg-sunrise/20 flex items-center justify-center">
-                  <svg class="h-4 w-4 text-sunrise" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                  </svg>
+                <div class="h-9 w-9 rounded-full bg-gradient-to-br from-sunrise to-sunrise-coral flex items-center justify-center">
+                  <span class="text-white font-bold text-sm">
+                    {(profile?.display_name || 'H').charAt(0).toUpperCase()}
+                  </span>
                 </div>
               {/if}
             </button>
@@ -174,27 +152,38 @@
             {#if userMenuOpen}
               <div
                 class="
-                  absolute right-0 mt-2 w-48 rounded-xl overflow-hidden
+                  absolute right-0 mt-2 w-56 rounded-xl overflow-hidden
                   bg-white dark:bg-slate-800 shadow-card-elevated
                   border border-slate-200 dark:border-slate-700
                   animate-fade-in-up
                 "
               >
+                <!-- User info header -->
+                <div class="px-4 py-3 border-b border-slate-100 dark:border-slate-700">
+                  <div class="font-medium text-slate-900 dark:text-white truncate">
+                    {profile?.display_name || 'Hiker'}
+                  </div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">View your profile</div>
+                </div>
+
                 <a
                   href="/profile"
                   onclick={closeUserMenu}
-                  class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
+                  class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
                 >
                   <svg class="h-4 w-4 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
                   </svg>
-                  My 58
+                  My 58 Progress
                 </a>
                 <form action="/auth/logout" method="POST">
                   <button
                     type="submit"
-                    class="w-full text-left px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 border-t border-slate-100 dark:border-slate-700"
+                    class="w-full flex items-center gap-3 text-left px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 border-t border-slate-100 dark:border-slate-700"
                   >
+                    <svg class="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
                     Log Out
                   </button>
                 </form>
@@ -205,7 +194,7 @@
           <a
             href="/auth"
             class="
-              px-4 py-2 rounded-lg
+              px-4 py-2 rounded-lg text-sm
               bg-sunrise text-white font-medium
               hover:bg-sunrise-coral transition-colors
             "
