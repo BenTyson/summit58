@@ -71,6 +71,10 @@ export const actions: Actions = {
 | ElevationProfile | `components/map/` | Canvas-based elevation chart |
 | TrailMapSection | `components/map/` | Combined map + elevation profile |
 | Achievements | `components/profile/` | Badge system with SVG icons |
+| ProfileHeader | `components/profile/` | Cover photo, avatar, social links |
+| ProfileTabs | `components/profile/` | Tab navigation for profile sections |
+| ProfileStats | `components/profile/` | Quick stats bar (peaks, progress) |
+| EditProfileModal | `components/profile/` | Edit profile with image uploads |
 | AchievementIcon | `components/ui/` | SVG icons for achievements |
 | TrailReportForm | `components/trail/` | Submit trail conditions |
 | TrailReportCard | `components/trail/` | Display trail reports |

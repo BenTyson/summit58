@@ -1,4 +1,3 @@
-Initialising login role...
 export type Json =
   | string
   | number
@@ -185,37 +184,66 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          cover_image_url: string | null
           created_at: string | null
           display_name: string | null
+          favorite_peak_id: string | null
           id: string
+          instagram_handle: string | null
           is_public: boolean | null
           location: string | null
+          strava_athlete_id: string | null
+          tagline: string | null
           updated_at: string | null
           username: string | null
+          website_url: string | null
+          years_hiking: number | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          cover_image_url?: string | null
           created_at?: string | null
           display_name?: string | null
+          favorite_peak_id?: string | null
           id: string
+          instagram_handle?: string | null
           is_public?: boolean | null
           location?: string | null
+          strava_athlete_id?: string | null
+          tagline?: string | null
           updated_at?: string | null
           username?: string | null
+          website_url?: string | null
+          years_hiking?: number | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          cover_image_url?: string | null
           created_at?: string | null
           display_name?: string | null
+          favorite_peak_id?: string | null
           id?: string
+          instagram_handle?: string | null
           is_public?: boolean | null
           location?: string | null
+          strava_athlete_id?: string | null
+          tagline?: string | null
           updated_at?: string | null
           username?: string | null
+          website_url?: string | null
+          years_hiking?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_favorite_peak_id_fkey"
+            columns: ["favorite_peak_id"]
+            isOneToOne: false
+            referencedRelation: "peaks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       routes: {
         Row: {

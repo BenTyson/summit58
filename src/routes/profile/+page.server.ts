@@ -4,7 +4,7 @@ import { getUserSummitStats } from '$lib/server/summits';
 import { getUserAchievements, markAchievementsNotified } from '$lib/server/achievements';
 import { redirect, fail } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ cookies }) => {
+export const load: PageServerLoad = async ({ cookies, url }) => {
   const supabase = createSupabaseServerClient(cookies);
   const { data: { session } } = await supabase.auth.getSession();
 
@@ -12,12 +12,32 @@ export const load: PageServerLoad = async ({ cookies }) => {
     throw redirect(303, '/auth');
   }
 
+  // Get active tab from URL
+  const activeTab = url.searchParams.get('tab') || 'overview';
+
   // Get user profile
   const { data: profile } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', session.user.id)
     .single();
+
+  // Get favorite peak if set
+  let favoritePeak = null;
+  if (profile?.favorite_peak_id) {
+    const { data } = await supabase
+      .from('peaks')
+      .select('id, name, slug')
+      .eq('id', profile.favorite_peak_id)
+      .single();
+    favoritePeak = data;
+  }
+
+  // Get all peaks for the favorite peak selector in edit modal
+  const { data: peaksForSelector } = await supabase
+    .from('peaks')
+    .select('id, name')
+    .order('name', { ascending: true });
 
   // Get summit stats
   const summitStats = await getUserSummitStats(supabase, session.user.id);
@@ -89,6 +109,9 @@ export const load: PageServerLoad = async ({ cookies }) => {
 
   return {
     profile,
+    favoritePeak,
+    peaksForSelector: peaksForSelector ?? [],
+    activeTab,
     summitStats,
     allPeaks: allPeaks ?? [],
     summitedPeaksMap: Object.fromEntries(summitedPeaksMap),
@@ -118,6 +141,43 @@ export const actions: Actions = {
 
     if (error) {
       return fail(500, { message: 'Failed to update privacy setting' });
+    }
+
+    return { success: true };
+  },
+
+  updateProfile: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      throw redirect(303, '/auth');
+    }
+
+    const formData = await request.formData();
+
+    const updates = {
+      display_name: formData.get('display_name') as string || null,
+      username: formData.get('username') as string || null,
+      tagline: formData.get('tagline') as string || null,
+      bio: formData.get('bio') as string || null,
+      location: formData.get('location') as string || null,
+      website_url: formData.get('website_url') as string || null,
+      instagram_handle: formData.get('instagram_handle') as string || null,
+      strava_athlete_id: formData.get('strava_athlete_id') as string || null,
+      favorite_peak_id: formData.get('favorite_peak_id') as string || null,
+      years_hiking: formData.get('years_hiking') ? parseInt(formData.get('years_hiking') as string) : null,
+      avatar_url: formData.get('avatar_url') as string || null,
+      cover_image_url: formData.get('cover_image_url') as string || null
+    };
+
+    const { error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', session.user.id);
+
+    if (error) {
+      return fail(500, { message: 'Failed to update profile' });
     }
 
     return { success: true };

@@ -51,12 +51,32 @@ The `routes.trail_geometry` JSONB column stores trail paths:
 
 | Table | Purpose | Key Fields |
 |-------|---------|------------|
-| `profiles` | User profiles | user_id, display_name, avatar_url, bio |
+| `profiles` | User profiles | See profile fields below |
 | `user_summits` | Summit logs | user_id, peak_id, date_summited, route_id, conditions |
 | `user_reviews` | Peak reviews | user_id, peak_id, rating (1-5), title, body |
 | `user_achievements` | Earned achievements | user_id, achievement_id, earned_at, notified |
 | `trail_reports` | Trail conditions | user_id, peak_id, hike_date, trail_status, snow_depth, hazards |
 | `peak_images` | Photo gallery | peak_id, storage_path, caption, display_order |
+
+### Profile Fields
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `id` | UUID | User ID (references auth.users) |
+| `username` | text | Unique @username |
+| `display_name` | text | Display name |
+| `avatar_url` | text | Profile photo URL |
+| `cover_image_url` | text | Cover photo URL |
+| `bio` | text | User bio |
+| `tagline` | varchar(100) | Short tagline under name |
+| `location` | text | Location (e.g., "Denver, CO") |
+| `website_url` | text | Personal website |
+| `instagram_handle` | varchar(30) | Instagram username |
+| `strava_athlete_id` | varchar(20) | Strava athlete ID |
+| `favorite_peak_id` | UUID | Featured favorite 14er |
+| `years_hiking` | integer | Years of hiking experience |
+| `is_public` | boolean | Profile visibility |
+| `created_at` | timestamptz | Account creation date |
 
 ### Automated Data
 
@@ -69,6 +89,7 @@ The `routes.trail_geometry` JSONB column stores trail paths:
 | Bucket | Purpose | Access |
 |--------|---------|--------|
 | `peak-images` | Gallery photos | Public read, admin write |
+| `profile-images` | Avatar & cover photos | Public read, own user write |
 
 ## RLS Policies
 

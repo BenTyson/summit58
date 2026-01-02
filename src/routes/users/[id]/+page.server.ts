@@ -83,8 +83,20 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     }
   });
 
+  // Get favorite peak if set
+  let favoritePeak = null;
+  if (profile.favorite_peak_id) {
+    const { data } = await supabase
+      .from('peaks')
+      .select('id, name, slug')
+      .eq('id', profile.favorite_peak_id)
+      .single();
+    favoritePeak = data;
+  }
+
   return {
     profile,
+    favoritePeak,
     isOwnProfile,
     stats: {
       totalSummits,

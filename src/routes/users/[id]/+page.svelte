@@ -1,5 +1,7 @@
 <script lang="ts">
   import Container from '$lib/components/ui/Container.svelte';
+  import ProfileHeader from '$lib/components/profile/ProfileHeader.svelte';
+  import ProfileStats from '$lib/components/profile/ProfileStats.svelte';
   import AchievementIcon from '$lib/components/ui/AchievementIcon.svelte';
   import type { PageData } from './$types';
 
@@ -10,10 +12,20 @@
   let { data }: Props = $props();
 
   const profile = $derived(data.profile);
+  const favoritePeak = $derived(data.favoritePeak);
   const stats = $derived(data.stats);
   const recentSummits = $derived(data.recentSummits);
   const achievements = $derived(data.achievements);
   const rangeStats = $derived(data.rangeStats);
+  const isOwnProfile = $derived(data.isOwnProfile);
+
+  // Quick stats for the stats bar
+  const quickStats = $derived([
+    { value: stats.uniquePeaks, label: 'Peaks' },
+    { value: `${stats.progress.toFixed(0)}%`, label: 'Progress' },
+    { value: stats.totalSummits, label: 'Summits' },
+    { value: achievements.length, label: 'Badges' }
+  ]);
 
   function formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString('en-US', {
@@ -21,15 +33,6 @@
       day: 'numeric',
       year: 'numeric'
     });
-  }
-
-  function getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
   }
 
   // Sort ranges by count
@@ -44,84 +47,30 @@
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
-  <Container class="py-12">
-    <!-- Profile Header -->
-    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-10">
-      <!-- Avatar -->
-      {#if profile.avatar_url}
-        <img
-          src={profile.avatar_url}
-          alt={profile.display_name}
-          class="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-slate-700 shadow-lg"
-        />
-      {:else}
-        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-sunrise to-sunrise-coral flex items-center justify-center text-white text-2xl font-bold border-4 border-white dark:border-slate-700 shadow-lg">
-          {getInitials(profile.display_name || 'U')}
+  <!-- Profile Header -->
+  <ProfileHeader
+    {profile}
+    {favoritePeak}
+    isOwnProfile={isOwnProfile}
+    onEditClick={isOwnProfile ? () => window.location.href = '/profile' : undefined}
+  />
+
+  <!-- Quick Stats Bar -->
+  <ProfileStats stats={quickStats} />
+
+  <!-- Content -->
+  <Container class="py-8">
+    <!-- Peak Bagger badge if completed all 58 -->
+    {#if stats.uniquePeaks === 58}
+      <div class="flex justify-center mb-8">
+        <div class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-white font-bold shadow-lg">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
+          </svg>
+          Colorado 14er Peak Bagger
         </div>
-      {/if}
-
-      <!-- Name & Info -->
-      <div class="text-center sm:text-left">
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">
-          {profile.display_name || 'Anonymous Climber'}
-        </h1>
-        {#if profile.location}
-          <p class="text-slate-500 dark:text-slate-400 mt-1 flex items-center justify-center sm:justify-start gap-1.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            </svg>
-            {profile.location}
-          </p>
-        {/if}
-        {#if profile.bio}
-          <p class="text-slate-600 dark:text-slate-300 mt-3 max-w-lg">
-            {profile.bio}
-          </p>
-        {/if}
-
-        <!-- Peak Bagger badge if completed all 58 -->
-        {#if stats.uniquePeaks === 58}
-          <div class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-white font-semibold shadow-md">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
-            </svg>
-            Peak Bagger
-          </div>
-        {/if}
-
-        {#if data.isOwnProfile}
-          <a
-            href="/profile"
-            class="inline-flex items-center gap-2 mt-4 text-sm text-sunrise hover:text-sunrise-coral transition-colors"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-            Edit Profile
-          </a>
-        {/if}
       </div>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 shadow-card text-center">
-        <div class="text-3xl font-bold text-sunrise">{stats.uniquePeaks}</div>
-        <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">Peaks Summited</div>
-      </div>
-      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 shadow-card text-center">
-        <div class="text-3xl font-bold text-mountain-blue dark:text-mountain-mist">{stats.progress.toFixed(0)}%</div>
-        <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">Progress</div>
-      </div>
-      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 shadow-card text-center">
-        <div class="text-3xl font-bold text-slate-900 dark:text-white">{stats.totalSummits}</div>
-        <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">Total Summits</div>
-      </div>
-      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 shadow-card text-center">
-        <div class="text-3xl font-bold text-slate-900 dark:text-white">{achievements.length}</div>
-        <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">Achievements</div>
-      </div>
-    </div>
+    {/if}
 
     <div class="grid lg:grid-cols-3 gap-8">
       <!-- Main Content -->
@@ -209,6 +158,15 @@
               </div>
             </div>
           </section>
+        {:else}
+          <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-8 text-center shadow-card">
+            <div class="mx-auto h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-3">
+              <svg class="h-6 w-6 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
+              </svg>
+            </div>
+            <p class="text-slate-600 dark:text-slate-400">No summits logged yet</p>
+          </div>
         {/if}
       </div>
 
@@ -254,6 +212,16 @@
             {/if}
           </div>
         </div>
+
+        <!-- Edit Profile Link (own profile) -->
+        {#if isOwnProfile}
+          <a
+            href="/profile"
+            class="block w-full text-center px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+          >
+            Go to Full Profile
+          </a>
+        {/if}
       </div>
     </div>
   </Container>

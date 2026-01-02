@@ -48,7 +48,11 @@ supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/
   - `trail_geometry` - GeoJSON LineString with coordinates [[lon, lat, elevation], ...] and properties
 
 ### User Tables
-- **profiles** - User profiles (extends auth.users) - display_name, avatar_url, bio, location
+- **profiles** - User profiles (extends auth.users)
+  - Core: display_name, username, avatar_url, cover_image_url, bio, tagline, location
+  - Social: website_url, instagram_handle, strava_athlete_id
+  - Hiking: favorite_peak_id, years_hiking
+  - Privacy: is_public
 - **user_summits** - Summit logs (user_id, peak_id, date_summited, route_id, conditions, notes)
 - **user_reviews** - Peak reviews (user_id, peak_id, rating 1-5, title, body, date_climbed, conditions)
 - **user_achievements** - Earned achievements (user_id, achievement_id, earned_at, notified)
@@ -80,7 +84,7 @@ src/
 │   │   ├── review/    → StarRating, ReviewCard, ReviewForm, ReviewSection
 │   │   ├── trail/     → TrailReportForm, TrailReportCard
 │   │   ├── parking/   → ParkingCard
-│   │   ├── profile/   → Achievements
+│   │   ├── profile/   → Achievements, ProfileHeader, ProfileTabs, ProfileStats, EditProfileModal
 │   │   ├── gallery/   → ImageGallery, ImageUploader
 │   │   ├── weather/   → WeatherCard
 │   │   ├── map/       → PeakMap, TrailMap, ElevationProfile, TrailMapSection
@@ -221,6 +225,16 @@ static/images/peaks/              → Custom peak hero images
 - Display name, bio, location, and summit stats
 - Clickable usernames on leaderboard link to profiles
 
+### Social Profile Infrastructure
+- Rich profile header with cover photo and avatar
+- Tab-based layout: Overview, Activity, Photos, Trips, Buddies
+- Social links: Instagram, Strava, personal website
+- Profile fields: tagline, favorite peak, years hiking
+- Image uploads to Supabase Storage (profile-images bucket)
+- Edit profile modal with avatar/cover photo upload
+- Quick stats bar showing peaks, progress, summits, badges
+- Prepared for future social features (Buddies, Trips tabs show "Coming Soon")
+
 ---
 
 ## Svelte 5 Patterns
@@ -292,6 +306,7 @@ Dark mode: `.dark` class on html element.
 | 10. Data Accuracy Audit | ✅ Complete |
 | 11. Launch Prep & Rebrand | ✅ Complete |
 | 12. V2/V3 UI Polish | ✅ Complete |
+| 13. Social Profile Infrastructure | ✅ Complete |
 
 ---
 
@@ -363,6 +378,20 @@ Dark mode: `.dark` class on html element.
   - Search button made more compact with ⌘K shortcut badge
   - Custom peak hero images: 43 of 58 peaks now have custom images
   - Migration file for hero images: `supabase/migrations/20241227500000_custom_hero_images.sql`
+- 2025-12-30/31: Data Fixes & GPX Infrastructure
+  - Fixed Bierstadt parking info (primary parking is free, not paid lot)
+  - Fixed trailhead coordinates for 35+ routes (were set to summit instead of trailhead)
+  - Identified systemic GPX data quality issue (all 66 routes had only 7-25 points)
+  - Created GPX import infrastructure: `scripts/import-gpx.mjs`, `docs/gpx-import-guide.md`
+  - Removed bad GPX data pending accurate CalTopo traces
+- 2026-01-02: Social Profile Infrastructure
+  - Database: Added profile fields (cover_image_url, tagline, social links, favorite_peak_id, years_hiking)
+  - Storage: Created profile-images bucket for avatar/cover uploads
+  - Components: ProfileHeader, ProfileTabs, ProfileStats, EditProfileModal
+  - Profile page redesigned with tab-based layout (Overview, Activity, Photos, Trips, Buddies)
+  - Edit profile modal with image upload support
+  - Public profiles updated to use new header design
+  - Future tabs (Activity, Photos, Trips, Buddies) show "Coming Soon" placeholders
 
 ---
 
