@@ -180,6 +180,102 @@ export type Database = {
         }
         Relationships: []
       }
+      planned_trip_peaks: {
+        Row: {
+          day_number: number | null
+          id: string
+          peak_id: string
+          route_id: string | null
+          sort_order: number | null
+          trip_id: string
+        }
+        Insert: {
+          day_number?: number | null
+          id?: string
+          peak_id: string
+          route_id?: string | null
+          sort_order?: number | null
+          trip_id: string
+        }
+        Update: {
+          day_number?: number | null
+          id?: string
+          peak_id?: string
+          route_id?: string | null
+          sort_order?: number | null
+          trip_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planned_trip_peaks_peak_id_fkey"
+            columns: ["peak_id"]
+            isOneToOne: false
+            referencedRelation: "peaks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planned_trip_peaks_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planned_trip_peaks_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "planned_trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      planned_trips: {
+        Row: {
+          created_at: string | null
+          end_date: string | null
+          id: string
+          is_public: boolean | null
+          notes: string | null
+          start_date: string
+          status: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          is_public?: boolean | null
+          notes?: string | null
+          start_date: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          is_public?: boolean | null
+          notes?: string | null
+          start_date?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planned_trips_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -462,6 +558,42 @@ export type Database = {
           {
             foreignKeyName: "user_achievements_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_follows: {
+        Row: {
+          created_at: string | null
+          follower_id: string
+          following_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          follower_id: string
+          following_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          follower_id?: string
+          following_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_follows_following_id_fkey"
+            columns: ["following_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]

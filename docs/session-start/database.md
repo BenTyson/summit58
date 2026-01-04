@@ -57,6 +57,9 @@ The `routes.trail_geometry` JSONB column stores trail paths:
 | `user_achievements` | Earned achievements | user_id, achievement_id, earned_at, notified |
 | `trail_reports` | Trail conditions | user_id, peak_id, hike_date, trail_status, snow_depth, hazards |
 | `peak_images` | Photo gallery | peak_id, storage_path, caption, display_order |
+| `user_follows` | Follow system | follower_id, following_id, created_at |
+| `planned_trips` | Trip planning | user_id, title, start_date, end_date, status, is_public |
+| `planned_trip_peaks` | Trip peak list | trip_id, peak_id, route_id, day_number, sort_order |
 
 ### Profile Fields
 
@@ -102,6 +105,9 @@ The `routes.trail_geometry` JSONB column stores trail paths:
 | user_achievements | Public | Own only |
 | trail_reports | Public | Own only |
 | peak_images | Public | Admin only |
+| user_follows | Public | Own only (follower_id) |
+| planned_trips | Own + public trips | Own only |
+| planned_trip_peaks | Via parent trip | Via parent trip |
 
 ## Common Queries
 
@@ -136,6 +142,9 @@ const { data } = await supabase
 | `src/lib/server/achievements.ts` | Achievement checking + awarding |
 | `src/lib/server/leaderboard.ts` | Leaderboard aggregation |
 | `src/lib/server/gpx.ts` | GPX to GeoJSON parsing |
+| `src/lib/server/activity.ts` | Unified activity feed |
+| `src/lib/server/follows.ts` | Follow system + suggestions |
+| `src/lib/server/trips.ts` | Past trips + planned trips CRUD |
 | `src/lib/utils/geo.ts` | Geographic utilities (distance, elevation) |
 
 ## Webhooks

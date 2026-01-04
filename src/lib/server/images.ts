@@ -171,3 +171,40 @@ export async function reorderImages(
 
   await Promise.all(updates);
 }
+
+// Extended type with peak info for user's photo gallery
+export type UserPhotoWithPeak = PeakImage & {
+  peak: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  url: string;
+};
+
+// Get all photos uploaded by a user
+export async function getUserPhotos(
+  supabase: SupabaseClient<Database>,
+  userId: string
+): Promise<UserPhotoWithPeak[]> {
+  const { data, error } = await supabase
+    .from('peak_images')
+    .select(`
+      *,
+      peak:peaks(id, name, slug)
+    `)
+    .eq('uploaded_by', userId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching user photos:', error);
+    return [];
+  }
+
+  // Add public URLs
+  return (data ?? []).map((photo) => ({
+    ...photo,
+    peak: photo.peak as UserPhotoWithPeak['peak'],
+    url: getImageUrl(supabase, photo.storage_path)
+  }));
+}

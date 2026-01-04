@@ -5,6 +5,10 @@
   import ProfileStats from '$lib/components/profile/ProfileStats.svelte';
   import EditProfileModal from '$lib/components/profile/EditProfileModal.svelte';
   import Achievements from '$lib/components/profile/Achievements.svelte';
+  import ActivityFeed from '$lib/components/profile/ActivityFeed.svelte';
+  import ProfilePhotoGallery from '$lib/components/profile/ProfilePhotoGallery.svelte';
+  import BuddiesTab from '$lib/components/profile/BuddiesTab.svelte';
+  import TripsTab from '$lib/components/profile/TripsTab.svelte';
   import type { PageData } from './$types';
   import { enhance } from '$app/forms';
   import { invalidateAll } from '$app/navigation';
@@ -32,16 +36,26 @@
   const peakClassMap = $derived(data.peakClassMap);
   const userAchievements = $derived(data.userAchievements);
 
+  // Tab-specific data
+  const activityFeed = $derived(data.activityFeed);
+  const userPhotos = $derived(data.userPhotos);
+  const followStats = $derived(data.followStats);
+  const following = $derived(data.following);
+  const followers = $derived(data.followers);
+  const suggestions = $derived(data.suggestions);
+  const pastTrips = $derived(data.pastTrips);
+  const plannedTrips = $derived(data.plannedTrips);
+
   // Get supabase client from page store
   const supabase = $derived($page.data.supabase);
 
   // Tabs configuration
   const tabs = $derived([
     { id: 'overview', label: 'Overview' },
-    { id: 'activity', label: 'Activity', comingSoon: true },
-    { id: 'photos', label: 'Photos', comingSoon: true },
-    { id: 'trips', label: 'Trips', comingSoon: true },
-    { id: 'buddies', label: 'Buddies', comingSoon: true }
+    { id: 'activity', label: 'Activity' },
+    { id: 'photos', label: 'Photos' },
+    { id: 'trips', label: 'Trips' },
+    { id: 'buddies', label: 'Buddies' }
   ]);
 
   // Quick stats for the stats bar
@@ -398,64 +412,32 @@
       {/if}
 
     {:else if activeTab === 'activity'}
-      <!-- Activity Tab - Coming Soon -->
-      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-12 text-center shadow-card">
-        <div class="mx-auto h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-4">
-          <svg class="h-8 w-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">Activity Feed</h3>
-        <p class="text-slate-600 dark:text-slate-400">
-          Your summit logs, achievement unlocks, and trail reports will appear here.
-        </p>
-        <p class="text-sm text-slate-400 dark:text-slate-500 mt-4">Coming soon</p>
-      </div>
+      <!-- Activity Tab -->
+      <ActivityFeed activities={activityFeed} />
 
     {:else if activeTab === 'photos'}
-      <!-- Photos Tab - Coming Soon -->
-      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-12 text-center shadow-card">
-        <div class="mx-auto h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-4">
-          <svg class="h-8 w-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">Photo Gallery</h3>
-        <p class="text-slate-600 dark:text-slate-400">
-          Your summit photos and memories will be displayed here.
-        </p>
-        <p class="text-sm text-slate-400 dark:text-slate-500 mt-4">Coming soon</p>
-      </div>
+      <!-- Photos Tab -->
+      <ProfilePhotoGallery photos={userPhotos} />
 
     {:else if activeTab === 'trips'}
-      <!-- Trips Tab - Coming Soon -->
-      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-12 text-center shadow-card">
-        <div class="mx-auto h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-4">
-          <svg class="h-8 w-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">Upcoming Trips</h3>
-        <p class="text-slate-600 dark:text-slate-400">
-          Plan trips and find hiking partners for your next adventure.
-        </p>
-        <p class="text-sm text-slate-400 dark:text-slate-500 mt-4">Coming soon</p>
-      </div>
+      <!-- Trips Tab -->
+      <TripsTab
+        {pastTrips}
+        {plannedTrips}
+        peaks={allPeaks}
+        isOwnProfile={true}
+      />
 
     {:else if activeTab === 'buddies'}
-      <!-- Buddies Tab - Coming Soon -->
-      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-12 text-center shadow-card">
-        <div class="mx-auto h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-4">
-          <svg class="h-8 w-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">Hiking Buddies</h3>
-        <p class="text-slate-600 dark:text-slate-400">
-          Connect with other peak baggers and find hiking partners.
-        </p>
-        <p class="text-sm text-slate-400 dark:text-slate-500 mt-4">Coming soon</p>
-      </div>
+      <!-- Buddies Tab -->
+      <BuddiesTab
+        {followStats}
+        {following}
+        {followers}
+        {suggestions}
+        isOwnProfile={true}
+        currentUserId={profile?.id}
+      />
     {/if}
   </Container>
 </div>

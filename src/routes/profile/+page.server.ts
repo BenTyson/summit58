@@ -2,6 +2,10 @@ import type { PageServerLoad, Actions } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getUserSummitStats } from '$lib/server/summits';
 import { getUserAchievements, markAchievementsNotified } from '$lib/server/achievements';
+import { getUserActivityFeed } from '$lib/server/activity';
+import { getUserPhotos } from '$lib/server/images';
+import { getFollowStats, getFollowing, getFollowers, getSuggestedUsers, followUser, unfollowUser } from '$lib/server/follows';
+import { getUserPastTrips, getUserPlannedTrips, createPlannedTrip, deletePlannedTrip } from '$lib/server/trips';
 import { redirect, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ cookies, url }) => {
@@ -89,6 +93,34 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
   // Mark achievements as notified (user is viewing their profile)
   await markAchievementsNotified(supabase, session.user.id);
 
+  // Tab-specific data loading
+  let activityFeed: Awaited<ReturnType<typeof getUserActivityFeed>> = [];
+  let userPhotos: Awaited<ReturnType<typeof getUserPhotos>> = [];
+  let followStats: Awaited<ReturnType<typeof getFollowStats>> = { followingCount: 0, followersCount: 0 };
+  let following: Awaited<ReturnType<typeof getFollowing>> = [];
+  let followers: Awaited<ReturnType<typeof getFollowers>> = [];
+  let suggestions: Awaited<ReturnType<typeof getSuggestedUsers>> = [];
+  let pastTrips: Awaited<ReturnType<typeof getUserPastTrips>> = [];
+  let plannedTrips: Awaited<ReturnType<typeof getUserPlannedTrips>> = [];
+
+  if (activeTab === 'activity') {
+    activityFeed = await getUserActivityFeed(supabase, session.user.id, 50);
+  } else if (activeTab === 'photos') {
+    userPhotos = await getUserPhotos(supabase, session.user.id);
+  } else if (activeTab === 'buddies') {
+    [followStats, following, followers, suggestions] = await Promise.all([
+      getFollowStats(supabase, session.user.id),
+      getFollowing(supabase, session.user.id, session.user.id),
+      getFollowers(supabase, session.user.id, session.user.id),
+      getSuggestedUsers(supabase, session.user.id)
+    ]);
+  } else if (activeTab === 'trips') {
+    [pastTrips, plannedTrips] = await Promise.all([
+      getUserPastTrips(supabase, session.user.id),
+      getUserPlannedTrips(supabase, session.user.id)
+    ]);
+  }
+
   allPeaks?.forEach(peak => {
     // Range stats
     if (!rangeStats[peak.range]) {
@@ -118,7 +150,16 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
     rangeStats,
     classStats,
     peakClassMap: Object.fromEntries(peakClassMap),
-    userAchievements
+    userAchievements,
+    // Tab-specific data
+    activityFeed,
+    userPhotos,
+    followStats,
+    following,
+    followers,
+    suggestions,
+    pastTrips,
+    plannedTrips
   };
 };
 
@@ -181,5 +222,119 @@ export const actions: Actions = {
     }
 
     return { success: true };
+  },
+
+  follow: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      throw redirect(303, '/auth');
+    }
+
+    const formData = await request.formData();
+    const userId = formData.get('userId') as string;
+
+    if (!userId) {
+      return fail(400, { error: 'User ID is required' });
+    }
+
+    try {
+      await followUser(supabase, session.user.id, userId);
+      return { success: true };
+    } catch (error) {
+      console.error('Error following user:', error);
+      return fail(500, { error: 'Failed to follow user' });
+    }
+  },
+
+  unfollow: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      throw redirect(303, '/auth');
+    }
+
+    const formData = await request.formData();
+    const userId = formData.get('userId') as string;
+
+    if (!userId) {
+      return fail(400, { error: 'User ID is required' });
+    }
+
+    try {
+      await unfollowUser(supabase, session.user.id, userId);
+      return { success: true };
+    } catch (error) {
+      console.error('Error unfollowing user:', error);
+      return fail(500, { error: 'Failed to unfollow user' });
+    }
+  },
+
+  createTrip: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      throw redirect(303, '/auth');
+    }
+
+    const formData = await request.formData();
+    const title = formData.get('title') as string;
+    const startDate = formData.get('startDate') as string;
+    const endDate = formData.get('endDate') as string || null;
+    const notes = formData.get('notes') as string || null;
+    const peakIds = formData.getAll('peakIds') as string[];
+
+    if (!title || !startDate) {
+      return fail(400, { error: 'Title and start date are required' });
+    }
+
+    if (peakIds.length === 0) {
+      return fail(400, { error: 'At least one peak must be selected' });
+    }
+
+    try {
+      await createPlannedTrip(
+        supabase,
+        {
+          user_id: session.user.id,
+          title,
+          start_date: startDate,
+          end_date: endDate,
+          notes
+        },
+        peakIds.map(id => ({ peakId: id }))
+      );
+      return { success: true };
+    } catch (error) {
+      console.error('Error creating trip:', error);
+      return fail(500, { error: 'Failed to create trip' });
+    }
+  },
+
+  deleteTrip: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      throw redirect(303, '/auth');
+    }
+
+    const formData = await request.formData();
+    const tripId = formData.get('tripId') as string;
+
+    if (!tripId) {
+      return fail(400, { error: 'Trip ID is required' });
+    }
+
+    try {
+      await deletePlannedTrip(supabase, tripId);
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting trip:', error);
+      return fail(500, { error: 'Failed to delete trip' });
+    }
   }
 };

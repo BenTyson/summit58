@@ -75,6 +75,12 @@ export const actions: Actions = {
 | ProfileTabs | `components/profile/` | Tab navigation for profile sections |
 | ProfileStats | `components/profile/` | Quick stats bar (peaks, progress) |
 | EditProfileModal | `components/profile/` | Edit profile with image uploads |
+| ActivityFeed | `components/profile/` | Timeline of summits, reviews, reports, achievements |
+| ProfilePhotoGallery | `components/profile/` | User's uploaded photos grid |
+| BuddiesTab | `components/profile/` | Following/followers + suggestions |
+| TripsTab | `components/profile/` | Past trips + planned trips |
+| CreateTripModal | `components/profile/` | Trip planning form |
+| UserCard | `components/profile/` | User display with follow button |
 | AchievementIcon | `components/ui/` | SVG icons for achievements |
 | TrailReportForm | `components/trail/` | Submit trail conditions |
 | TrailReportCard | `components/trail/` | Display trail reports |
@@ -93,6 +99,10 @@ export const actions: Actions = {
 | `/leaderboard` | Global rankings + activity feed |
 | `/map` | Full interactive map (peaks + trail overlay toggle) |
 | `/profile` | User dashboard + achievements |
+| `/profile?tab=activity` | Activity feed (summits, reviews, reports) |
+| `/profile?tab=photos` | User's uploaded photos |
+| `/profile?tab=trips` | Past + planned trips |
+| `/profile?tab=buddies` | Following, followers, suggestions |
 | `/users/[id]` | Public user profile |
 | `/learn/parking` | Trailhead parking guide |
 | `/auth` | Login/signup |

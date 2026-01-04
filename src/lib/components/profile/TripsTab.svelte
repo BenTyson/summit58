@@ -1,0 +1,278 @@
+<script lang="ts">
+  import type { PastTrip, PlannedTripWithPeaks } from '$lib/server/trips';
+  import CreateTripModal from './CreateTripModal.svelte';
+
+  interface Peak {
+    id: string;
+    name: string;
+    slug: string;
+    elevation: number;
+    range: string;
+  }
+
+  interface Props {
+    pastTrips: PastTrip[];
+    plannedTrips: PlannedTripWithPeaks[];
+    peaks: Peak[];
+    isOwnProfile?: boolean;
+  }
+
+  let { pastTrips, plannedTrips, peaks, isOwnProfile = false }: Props = $props();
+
+  let showCreateModal = $state(false);
+  let expandedTrips = $state<Set<string>>(new Set());
+
+  function toggleTrip(tripId: string) {
+    const newSet = new Set(expandedTrips);
+    if (newSet.has(tripId)) {
+      newSet.delete(tripId);
+    } else {
+      newSet.add(tripId);
+    }
+    expandedTrips = newSet;
+  }
+
+  function formatDate(dateStr: string): string {
+    return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  }
+
+  function formatDateRange(startDate: string, endDate: string): string {
+    const start = new Date(startDate + 'T12:00:00');
+    const end = new Date(endDate + 'T12:00:00');
+
+    if (startDate === endDate) {
+      return formatDate(startDate);
+    }
+
+    if (start.getFullYear() === end.getFullYear()) {
+      if (start.getMonth() === end.getMonth()) {
+        return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.getDate()}, ${end.getFullYear()}`;
+      }
+      return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}, ${end.getFullYear()}`;
+    }
+
+    return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+  }
+</script>
+
+<div class="space-y-8">
+  <!-- Planned Trips Section -->
+  <section>
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+        <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        Upcoming Trips
+      </h3>
+
+      {#if isOwnProfile}
+        <button
+          type="button"
+          onclick={() => (showCreateModal = true)}
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium text-sm hover:from-sunrise-coral hover:to-sunrise transition-all shadow-sm hover:shadow"
+        >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Plan Trip
+        </button>
+      {/if}
+    </div>
+
+    {#if plannedTrips.length > 0}
+      <div class="space-y-3">
+        {#each plannedTrips as trip}
+          <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-card overflow-hidden">
+            <div class="p-4">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h4 class="font-semibold text-slate-900 dark:text-white">{trip.title}</h4>
+                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                    {formatDateRange(trip.start_date, trip.end_date || trip.start_date)}
+                  </p>
+                </div>
+                <span class="px-2 py-1 rounded-full text-xs font-medium bg-sunrise/10 text-sunrise">
+                  {trip.peaks?.length || 0} peak{trip.peaks?.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+
+              {#if trip.peaks && trip.peaks.length > 0}
+                <div class="mt-3 flex flex-wrap gap-2">
+                  {#each trip.peaks as tripPeak}
+                    <a
+                      href="/peaks/{tripPeak.peak.slug}"
+                      class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                    >
+                      {#if tripPeak.route}
+                        <span class="w-2 h-2 rounded-full bg-class-{tripPeak.route.difficulty_class}"></span>
+                      {/if}
+                      {tripPeak.peak.name}
+                    </a>
+                  {/each}
+                </div>
+              {/if}
+
+              {#if trip.notes}
+                <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">{trip.notes}</p>
+              {/if}
+            </div>
+          </div>
+        {/each}
+      </div>
+    {:else}
+      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-8 text-center shadow-card">
+        <div class="mx-auto h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-3">
+          <svg class="h-6 w-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h4 class="font-medium text-slate-900 dark:text-white mb-1">No upcoming trips</h4>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          {isOwnProfile ? 'Plan your next adventure!' : 'No trips planned yet.'}
+        </p>
+      </div>
+    {/if}
+  </section>
+
+  <!-- Past Trips Section -->
+  <section>
+    <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+      <svg class="h-5 w-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      Past Trips
+      {#if pastTrips.length > 0}
+        <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({pastTrips.length})</span>
+      {/if}
+    </h3>
+
+    {#if pastTrips.length > 0}
+      <div class="space-y-3">
+        {#each pastTrips as trip}
+          {@const isExpanded = expandedTrips.has(trip.id)}
+          <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-card overflow-hidden">
+            <!-- Header (always visible) -->
+            <button
+              type="button"
+              onclick={() => toggleTrip(trip.id)}
+              class="w-full p-4 text-left flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+            >
+              <!-- First peak thumbnail -->
+              {#if trip.summits[0]?.peak.thumbnail_url}
+                <img
+                  src={trip.summits[0].peak.thumbnail_url}
+                  alt=""
+                  class="w-14 h-14 rounded-lg object-cover flex-shrink-0"
+                />
+              {:else}
+                <div class="w-14 h-14 rounded-lg bg-slate-200 dark:bg-slate-600 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l7 9 7-9M5 21l7-9 7 9" />
+                  </svg>
+                </div>
+              {/if}
+
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <h4 class="font-semibold text-slate-900 dark:text-white truncate">
+                    {trip.summits.map((s) => s.peak.name).join(', ')}
+                  </h4>
+                </div>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                  {formatDateRange(trip.startDate, trip.endDate)}
+                </p>
+                <div class="flex items-center gap-4 mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  <span>{trip.totalPeaks} peak{trip.totalPeaks !== 1 ? 's' : ''}</span>
+                  {#if trip.totalElevationGain > 0}
+                    <span>{trip.totalElevationGain.toLocaleString()}ft gain</span>
+                  {/if}
+                  {#if trip.totalDistanceMiles > 0}
+                    <span>{trip.totalDistanceMiles.toFixed(1)} mi</span>
+                  {/if}
+                </div>
+              </div>
+
+              <svg
+                class="w-5 h-5 text-slate-400 transition-transform {isExpanded ? 'rotate-180' : ''}"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <!-- Expanded details -->
+            {#if isExpanded}
+              <div class="border-t border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-slate-900/50">
+                <div class="space-y-3">
+                  {#each trip.summits as summit}
+                    <div class="flex items-center gap-3">
+                      {#if summit.peak.thumbnail_url}
+                        <img
+                          src={summit.peak.thumbnail_url}
+                          alt={summit.peak.name}
+                          class="w-10 h-10 rounded-lg object-cover"
+                        />
+                      {:else}
+                        <div class="w-10 h-10 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+                          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l7 9 7-9M5 21l7-9 7 9" />
+                          </svg>
+                        </div>
+                      {/if}
+
+                      <div class="flex-1 min-w-0">
+                        <a
+                          href="/peaks/{summit.peak.slug}"
+                          class="font-medium text-slate-900 dark:text-white hover:text-sunrise transition-colors"
+                        >
+                          {summit.peak.name}
+                        </a>
+                        <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                          <span>{summit.peak.elevation.toLocaleString()}ft</span>
+                          {#if summit.route}
+                            <span class="flex items-center gap-1">
+                              <span class="w-1.5 h-1.5 rounded-full bg-class-{summit.route.difficulty_class}"></span>
+                              {summit.route.name}
+                            </span>
+                          {/if}
+                        </div>
+                      </div>
+
+                      <span class="text-xs text-slate-400">
+                        {formatDate(summit.date_summited)}
+                      </span>
+                    </div>
+                  {/each}
+                </div>
+              </div>
+            {/if}
+          </div>
+        {/each}
+      </div>
+    {:else}
+      <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-8 text-center shadow-card">
+        <div class="mx-auto h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-3">
+          <svg class="h-6 w-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h4 class="font-medium text-slate-900 dark:text-white mb-1">No past trips</h4>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          {isOwnProfile ? 'Log your first summit to start tracking trips!' : 'No completed trips yet.'}
+        </p>
+      </div>
+    {/if}
+  </section>
+</div>
+
+<!-- Create Trip Modal -->
+{#if showCreateModal}
+  <CreateTripModal {peaks} onClose={() => (showCreateModal = false)} />
+{/if}
