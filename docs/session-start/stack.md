@@ -54,9 +54,16 @@ supabase link --project-ref seywnbufuewbiwoouwkk
 src/lib/components/   → UI components
 src/lib/server/       → Server-side queries
 src/routes/           → Pages & API
-static/images/peaks/  → Peak images
+static/images/peaks/  → Peak hero images (58 optimized JPEGs)
 supabase/migrations/  → DB migrations
+scripts/              → Utility scripts
 ```
+
+## Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/optimize-peak-images.js` | Optimize peak images (PNG → JPEG, resize to 1920px, ~90% size reduction) |
 
 ---
 
