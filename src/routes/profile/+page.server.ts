@@ -1,11 +1,15 @@
 import type { PageServerLoad, Actions } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
-import { getUserSummitStats } from '$lib/server/summits';
+import { getUserSummitStats, getAdvancedStats } from '$lib/server/summits';
+import type { AdvancedStats } from '$lib/server/summits';
 import { getUserAchievements, markAchievementsNotified } from '$lib/server/achievements';
 import { getUserActivityFeed } from '$lib/server/activity';
 import { getUserPhotos } from '$lib/server/images';
 import { getFollowStats, getFollowing, getFollowers, getSuggestedUsers, followUser, unfollowUser } from '$lib/server/follows';
-import { getUserPastTrips, getUserPlannedTrips, createPlannedTrip, deletePlannedTrip } from '$lib/server/trips';
+import { getUserPastTrips, getUserPlannedTrips, createPlannedTrip, deletePlannedTrip, updatePlannedTrip, getPlannedTrip } from '$lib/server/trips';
+import { getUserWatchlist, removeFromWatchlist } from '$lib/server/watchlist';
+import type { WatchlistItem } from '$lib/server/watchlist';
+import { getSubscription, isPro } from '$lib/server/subscriptions';
 import { redirect, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ cookies, url }) => {
@@ -102,8 +106,19 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
   let suggestions: Awaited<ReturnType<typeof getSuggestedUsers>> = [];
   let pastTrips: Awaited<ReturnType<typeof getUserPastTrips>> = [];
   let plannedTrips: Awaited<ReturnType<typeof getUserPlannedTrips>> = [];
+  let watchlist: WatchlistItem[] = [];
+  let advancedStats: AdvancedStats | null = null;
 
-  if (activeTab === 'activity') {
+  if (activeTab === 'overview') {
+    const subscription = await getSubscription(supabase, session.user.id);
+    const userIsPro = isPro(subscription);
+    [watchlist] = await Promise.all([
+      getUserWatchlist(supabase, session.user.id)
+    ]);
+    if (userIsPro) {
+      advancedStats = await getAdvancedStats(supabase, session.user.id);
+    }
+  } else if (activeTab === 'activity') {
     activityFeed = await getUserActivityFeed(supabase, session.user.id, 50);
   } else if (activeTab === 'photos') {
     userPhotos = await getUserPhotos(supabase, session.user.id);
@@ -159,7 +174,9 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
     followers,
     suggestions,
     pastTrips,
-    plannedTrips
+    plannedTrips,
+    watchlist,
+    advancedStats
   };
 };
 
@@ -285,6 +302,7 @@ export const actions: Actions = {
     const startDate = formData.get('startDate') as string;
     const endDate = formData.get('endDate') as string || null;
     const notes = formData.get('notes') as string || null;
+    const isPublic = formData.get('is_public') === 'true';
     const peakIds = formData.getAll('peakIds') as string[];
 
     if (!title || !startDate) {
@@ -303,7 +321,8 @@ export const actions: Actions = {
           title,
           start_date: startDate,
           end_date: endDate,
-          notes
+          notes,
+          is_public: isPublic
         },
         peakIds.map(id => ({ peakId: id }))
       );
@@ -311,6 +330,57 @@ export const actions: Actions = {
     } catch (error) {
       console.error('Error creating trip:', error);
       return fail(500, { error: 'Failed to create trip' });
+    }
+  },
+
+  toggleTripVisibility: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      throw redirect(303, '/auth');
+    }
+
+    const formData = await request.formData();
+    const tripId = formData.get('tripId') as string;
+
+    if (!tripId) {
+      return fail(400, { error: 'Trip ID is required' });
+    }
+
+    try {
+      const trip = await getPlannedTrip(supabase, tripId);
+      if (!trip) return fail(404, { error: 'Trip not found' });
+
+      await updatePlannedTrip(supabase, tripId, { is_public: !trip.is_public });
+      return { success: true };
+    } catch (error) {
+      console.error('Error toggling trip visibility:', error);
+      return fail(500, { error: 'Failed to update trip visibility' });
+    }
+  },
+
+  removeFromWatchlist: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      throw redirect(303, '/auth');
+    }
+
+    const formData = await request.formData();
+    const peakId = formData.get('peakId') as string;
+
+    if (!peakId) {
+      return fail(400, { error: 'Peak ID is required' });
+    }
+
+    try {
+      await removeFromWatchlist(supabase, session.user.id, peakId);
+      return { success: true };
+    } catch (error) {
+      console.error('Error removing from watchlist:', error);
+      return fail(500, { error: 'Failed to remove from watchlist' });
     }
   },
 

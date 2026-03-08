@@ -10,9 +10,10 @@
 
   interface Props {
     activities: ActivityItem[];
+    showUser?: boolean;
   }
 
-  let { activities }: Props = $props();
+  let { activities, showUser = false }: Props = $props();
 
   // Group activities by date
   function groupByDate(items: ActivityItem[]): Map<string, ActivityItem[]> {
@@ -98,6 +99,22 @@
       <div class="space-y-3">
         {#each items as item}
           <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 shadow-card hover:shadow-card-hover transition-shadow">
+            {#if showUser && item.user}
+              <div class="flex items-center gap-2 mb-3 pb-3 border-b border-slate-100 dark:border-slate-700">
+                {#if item.user.avatar_url}
+                  <img src={item.user.avatar_url} alt="" class="w-6 h-6 rounded-full object-cover" />
+                {:else}
+                  <div class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-600 flex items-center justify-center">
+                    <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                {/if}
+                <a href="/users/{item.user.id}" class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sunrise transition-colors">
+                  {item.user.display_name || 'Climber'}
+                </a>
+              </div>
+            {/if}
             {#if item.type === 'summit' && isSummit(item.data)}
               <!-- Summit Activity -->
               <div class="flex items-start gap-4">

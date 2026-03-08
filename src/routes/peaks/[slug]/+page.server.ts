@@ -2,6 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getPeakBySlug } from '$lib/server/peaks';
 import { getUserSummitsForPeak, createSummit, deleteSummit } from '$lib/server/summits';
+import { canLogSummit } from '$lib/server/subscriptions';
 import {
   getPeakReviews,
   getUserReviewForPeak,
@@ -19,6 +20,7 @@ import {
 import { getConditionsForPeak } from '$lib/server/conditions';
 import { getRecentTrailReports, createTrailReport } from '$lib/server/trailReports';
 import { checkAndAwardAchievements } from '$lib/server/achievements';
+import { isOnWatchlist, addToWatchlist, removeFromWatchlist } from '$lib/server/watchlist';
 import { error, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
@@ -39,9 +41,16 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
   let userSummits: Awaited<ReturnType<typeof getUserSummitsForPeak>> = [];
   let userReview: Awaited<ReturnType<typeof getUserReviewForPeak>> = null;
 
+  let summitLimit: { allowed: boolean; remaining: number; isPro: boolean } | null = null;
+  let isWatched = false;
+
   if (session?.user) {
-    userSummits = await getUserSummitsForPeak(supabase, session.user.id, peak.id);
-    userReview = await getUserReviewForPeak(supabase, session.user.id, peak.id);
+    [userSummits, userReview, summitLimit, isWatched] = await Promise.all([
+      getUserSummitsForPeak(supabase, session.user.id, peak.id),
+      getUserReviewForPeak(supabase, session.user.id, peak.id),
+      canLogSummit(supabase, session.user.id),
+      isOnWatchlist(supabase, session.user.id, peak.id)
+    ]);
   }
 
   // Get all reviews, stats, images, weather conditions, and trail reports
@@ -65,7 +74,9 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     totalReviews: reviewStats.totalReviews,
     images,
     conditions,
-    trailReports
+    trailReports,
+    summitLimit,
+    isWatched
   };
 };
 
@@ -90,6 +101,12 @@ export const actions: Actions = {
 
     if (!peakId || !dateSummited) {
       return fail(400, { message: 'Peak ID and date are required' });
+    }
+
+    // Check summit limit for free users
+    const summitCheck = await canLogSummit(supabase, session.user.id);
+    if (!summitCheck.allowed) {
+      return fail(403, { limitReached: true, remaining: 0 });
     }
 
     try {
@@ -292,6 +309,55 @@ export const actions: Actions = {
     } catch (e) {
       console.error('Error deleting image:', e);
       return fail(500, { message: 'Failed to delete image' });
+    }
+  },
+
+  // Watchlist actions
+  addToWatchlist: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in' });
+    }
+
+    const formData = await request.formData();
+    const peakId = formData.get('peak_id') as string;
+
+    if (!peakId) {
+      return fail(400, { message: 'Peak ID required' });
+    }
+
+    try {
+      await addToWatchlist(supabase, session.user.id, peakId);
+      return { success: true };
+    } catch (e) {
+      console.error('Error adding to watchlist:', e);
+      return fail(500, { message: 'Failed to add to watchlist' });
+    }
+  },
+
+  removeFromWatchlist: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in' });
+    }
+
+    const formData = await request.formData();
+    const peakId = formData.get('peak_id') as string;
+
+    if (!peakId) {
+      return fail(400, { message: 'Peak ID required' });
+    }
+
+    try {
+      await removeFromWatchlist(supabase, session.user.id, peakId);
+      return { success: true };
+    } catch (e) {
+      console.error('Error removing from watchlist:', e);
+      return fail(500, { message: 'Failed to remove from watchlist' });
     }
   },
 

@@ -12,10 +12,11 @@
     profile: Profile;
     favoritePeak?: Peak | null;
     isOwnProfile?: boolean;
+    isPro?: boolean;
     onEditClick?: () => void;
   }
 
-  let { profile, favoritePeak = null, isOwnProfile = false, onEditClick }: Props = $props();
+  let { profile, favoritePeak = null, isOwnProfile = false, isPro = false, onEditClick }: Props = $props();
 
   const memberSince = $derived(
     profile.created_at
@@ -72,8 +73,11 @@
 
       <!-- Name and Details -->
       <div class="pt-2 sm:pb-2">
-        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
           {profile.display_name || 'Peak Bagger'}
+          {#if isPro}
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-sunrise/10 text-sunrise">PRO</span>
+          {/if}
         </h1>
 
         {#if profile.tagline}

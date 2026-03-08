@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
+  import { invalidateAll } from '$app/navigation';
   import type { PastTrip, PlannedTripWithPeaks } from '$lib/server/trips';
   import CreateTripModal from './CreateTripModal.svelte';
 
@@ -21,6 +23,13 @@
 
   let showCreateModal = $state(false);
   let expandedTrips = $state<Set<string>>(new Set());
+  let copiedTripId = $state<string | null>(null);
+
+  async function copyTripLink(tripId: string) {
+    await navigator.clipboard.writeText(`${window.location.origin}/trips/${tripId}`);
+    copiedTripId = tripId;
+    setTimeout(() => (copiedTripId = null), 2000);
+  }
 
   function toggleTrip(tripId: string) {
     const newSet = new Set(expandedTrips);
@@ -100,7 +109,51 @@
                   <span class="px-2 py-1 rounded-full text-xs font-medium bg-sunrise/10 text-sunrise">
                     {trip.peaks?.length || 0} peak{trip.peaks?.length !== 1 ? 's' : ''}
                   </span>
+                  <span class="px-2 py-1 rounded-full text-xs font-medium {trip.is_public ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400'}">
+                    {trip.is_public ? 'Public' : 'Private'}
+                  </span>
+                  {#if trip.is_public}
+                    <button
+                      type="button"
+                      onclick={() => copyTripLink(trip.id)}
+                      class="p-1.5 rounded-lg text-slate-400 hover:text-sunrise hover:bg-sunrise/10 transition-colors"
+                      title={copiedTripId === trip.id ? 'Copied!' : 'Copy share link'}
+                    >
+                      {#if copiedTripId === trip.id}
+                        <svg class="h-4 w-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                      {:else}
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                      {/if}
+                    </button>
+                  {/if}
                   {#if isOwnProfile}
+                    <form method="POST" action="?/toggleTripVisibility" class="inline" use:enhance={() => {
+                      return async () => {
+                        await invalidateAll();
+                      };
+                    }}>
+                      <input type="hidden" name="tripId" value={trip.id} />
+                      <button
+                        type="submit"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                        title={trip.is_public ? 'Make private' : 'Make public'}
+                      >
+                        {#if trip.is_public}
+                          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        {:else}
+                          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                          </svg>
+                        {/if}
+                      </button>
+                    </form>
                     <form method="POST" action="?/deleteTrip" class="inline">
                       <input type="hidden" name="tripId" value={trip.id} />
                       <button

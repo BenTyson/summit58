@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getUserAchievements } from '$lib/server/achievements';
+import { getSubscription, isPro } from '$lib/server/subscriptions';
 import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
@@ -83,6 +84,10 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     }
   });
 
+  // Get subscription status
+  const userSubscription = await getSubscription(supabase, userId);
+  const userIsPro = isPro(userSubscription);
+
   // Get favorite peak if set
   let favoritePeak = null;
   if (profile.favorite_peak_id) {
@@ -98,6 +103,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     profile,
     favoritePeak,
     isOwnProfile,
+    isPro: userIsPro,
     stats: {
       totalSummits,
       uniquePeaks,

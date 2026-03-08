@@ -10,6 +10,7 @@ export interface LeaderboardEntry {
   progress: number;
   lastSummitDate: string | null;
   totalElevationGain: number;
+  isPro: boolean;
 }
 
 export interface LeaderboardStats {
@@ -53,6 +54,15 @@ export async function getLeaderboard(
   profiles?.forEach(p => {
     profileMap.set(p.id, p.display_name || 'Anonymous Climber');
   });
+
+  // Get pro subscribers
+  const { data: proSubs } = await supabase
+    .from('user_subscriptions')
+    .select('user_id')
+    .eq('plan', 'pro')
+    .eq('status', 'active');
+
+  const proUserIds = new Set((proSubs ?? []).map(s => s.user_id));
 
   // Aggregate by user
   const userStats = new Map<string, {
@@ -104,7 +114,8 @@ export async function getLeaderboard(
       totalSummits: stats.totalSummits,
       progress: (uniquePeaks / 58) * 100,
       lastSummitDate: stats.lastSummitDate,
-      totalElevationGain: stats.totalElevationGain
+      totalElevationGain: stats.totalElevationGain,
+      isPro: proUserIds.has(userId)
     });
   });
 

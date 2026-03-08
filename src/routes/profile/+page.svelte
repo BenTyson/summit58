@@ -9,6 +9,7 @@
   import ProfilePhotoGallery from '$lib/components/profile/ProfilePhotoGallery.svelte';
   import BuddiesTab from '$lib/components/profile/BuddiesTab.svelte';
   import TripsTab from '$lib/components/profile/TripsTab.svelte';
+  import AdvancedStats from '$lib/components/profile/AdvancedStats.svelte';
   import type { PageData } from './$types';
   import { enhance } from '$app/forms';
   import { invalidateAll } from '$app/navigation';
@@ -22,6 +23,7 @@
 
   const profile = $derived(data.profile);
   const favoritePeak = $derived(data.favoritePeak);
+  const subscription = $derived($page.data.subscription);
   const peaksForSelector = $derived(data.peaksForSelector);
   const activeTab = $derived(data.activeTab);
   let isPublic = $state(data.profile?.is_public ?? true);
@@ -45,6 +47,8 @@
   const suggestions = $derived(data.suggestions);
   const pastTrips = $derived(data.pastTrips);
   const plannedTrips = $derived(data.plannedTrips);
+  const watchlist = $derived(data.watchlist);
+  const advancedStats = $derived(data.advancedStats);
 
   // Get supabase client from page store
   const supabase = $derived($page.data.supabase);
@@ -113,6 +117,7 @@
       {profile}
       {favoritePeak}
       isOwnProfile={true}
+      isPro={subscription?.plan === 'pro' && subscription?.status === 'active'}
       onEditClick={() => editModalOpen = true}
     />
   {/if}
@@ -335,6 +340,101 @@
           </div>
         </section>
       </div>
+
+      <!-- Watched Peaks -->
+      {#if watchlist.length > 0}
+        <section class="mt-8">
+          <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Watched Peaks
+          </h2>
+          <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-card overflow-hidden">
+            <div class="divide-y divide-slate-200 dark:divide-slate-700">
+              {#each watchlist as item}
+                <div class="flex items-center gap-4 p-4">
+                  <a
+                    href="/peaks/{item.peak.slug}"
+                    class="flex-1 flex items-center gap-3 hover:text-sunrise transition-colors min-w-0"
+                  >
+                    <div class="flex-1 min-w-0">
+                      <div class="font-semibold text-slate-900 dark:text-white">{item.peak.name}</div>
+                      <div class="text-sm text-slate-500 dark:text-slate-400">
+                        {item.peak.elevation.toLocaleString()}' -- {item.peak.range}
+                      </div>
+                    </div>
+                    {#if item.conditions}
+                      <div class="text-right text-sm flex-shrink-0">
+                        {#if item.conditions.high_f !== null}
+                          <span class="font-medium text-slate-700 dark:text-slate-300">{item.conditions.high_f}°</span>
+                          <span class="text-slate-400 dark:text-slate-500">/</span>
+                          <span class="text-slate-500 dark:text-slate-400">{item.conditions.low_f}°</span>
+                        {/if}
+                      </div>
+                    {/if}
+                  </a>
+                  <form
+                    method="POST"
+                    action="?/removeFromWatchlist"
+                    use:enhance={() => {
+                      return async ({ update }) => {
+                        await update();
+                      };
+                    }}
+                  >
+                    <input type="hidden" name="peakId" value={item.peak_id} />
+                    <button
+                      type="submit"
+                      class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      title="Remove from watchlist"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+              {/each}
+            </div>
+          </div>
+        </section>
+      {/if}
+
+      <!-- Advanced Stats -->
+      {#if advancedStats}
+        <section class="mt-8">
+          <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Advanced Stats
+            <span class="ml-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-sunrise to-sunrise-coral text-white text-xs font-medium">PRO</span>
+          </h2>
+          <AdvancedStats stats={advancedStats} />
+        </section>
+      {:else if subscription?.plan !== 'pro'}
+        <section class="mt-8">
+          <div class="rounded-xl bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-800/50 border border-slate-200 dark:border-slate-700 p-6 shadow-card text-center">
+            <div class="mx-auto h-12 w-12 rounded-full bg-sunrise/10 flex items-center justify-center mb-3">
+              <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">Advanced Stats</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">
+              Upgrade to Pro for pace trends, seasonal analysis, personal records, and more.
+            </p>
+            <a
+              href="/pricing"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white text-sm font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-sm"
+            >
+              Upgrade to Pro
+            </a>
+          </div>
+        </section>
+      {/if}
 
       <!-- Recent Summits -->
       {#if stats.recentSummits.length > 0}

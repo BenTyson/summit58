@@ -85,6 +85,8 @@ export const actions: Actions = {
 | TrailReportForm | `components/trail/` | Submit trail conditions |
 | TrailReportCard | `components/trail/` | Display trail reports |
 | ParkingCard | `components/parking/` | Trailhead parking info |
+| ShareButton | `components/ui/` | Native share / clipboard fallback |
+| AdvancedStats | `components/profile/` | Pro stats: pace, seasonal, records, conditions |
 | ReloadPrompt | `components/pwa/` | PWA update notification |
 | WeatherCard | `components/weather/` | 7-day summit forecast |
 
@@ -104,6 +106,8 @@ export const actions: Actions = {
 | `/profile?tab=trips` | Past + planned trips |
 | `/profile?tab=buddies` | Following, followers, suggestions |
 | `/users/[id]` | Public user profile |
+| `/pricing` | Free vs Pro comparison |
+| `/trips/[id]` | Public trip detail page |
 | `/learn/parking` | Trailhead parking guide |
 | `/auth` | Login/signup |
 

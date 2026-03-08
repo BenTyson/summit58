@@ -1,20 +1,22 @@
 import type { LayoutServerLoad } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
+import { getSubscription, type Subscription } from '$lib/server/subscriptions';
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
   const supabase = createSupabaseServerClient(cookies);
 
   const { data: { session } } = await supabase.auth.getSession();
 
-  // Get user profile if logged in
+  // Get user profile and subscription if logged in
   let profile = null;
+  let subscription: Subscription | null = null;
   if (session?.user) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', session.user.id)
-      .single();
-    profile = data;
+    const [profileResult, sub] = await Promise.all([
+      supabase.from('profiles').select('*').eq('id', session.user.id).single(),
+      getSubscription(supabase, session.user.id)
+    ]);
+    profile = profileResult.data;
+    subscription = sub;
   }
 
   // Get all peaks for search (lightweight query)
@@ -26,6 +28,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
   return {
     session,
     profile,
+    subscription,
     peaks: peaks ?? []
   };
 };

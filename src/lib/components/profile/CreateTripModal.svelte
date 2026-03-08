@@ -21,6 +21,7 @@
   let startDate = $state('');
   let endDate = $state('');
   let notes = $state('');
+  let isPublic = $state(false);
   let selectedPeakIds = $state<string[]>([]);
   let searchQuery = $state('');
   let showPeakDropdown = $state(false);
@@ -249,6 +250,25 @@
           placeholder="Any notes about the trip..."
           class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-sunrise focus:border-transparent transition-shadow resize-none"
         ></textarea>
+      </div>
+
+      <!-- Visibility -->
+      <div class="flex items-center gap-3">
+        <input type="hidden" name="is_public" value={isPublic ? 'true' : 'false'} />
+        <button
+          type="button"
+          onclick={() => (isPublic = !isPublic)}
+          class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 {isPublic ? 'bg-sunrise' : 'bg-slate-300 dark:bg-slate-600'}"
+          role="switch"
+          aria-checked={isPublic}
+        >
+          <span
+            class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 {isPublic ? 'translate-x-5' : 'translate-x-0'}"
+          ></span>
+        </button>
+        <label class="text-sm text-slate-700 dark:text-slate-300">
+          Make this trip public
+        </label>
       </div>
 
       <!-- Actions -->

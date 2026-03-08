@@ -180,6 +180,43 @@ export async function getUserPlannedTrips(
   return (trips ?? []) as PlannedTripWithPeaks[];
 }
 
+// Extended type with owner profile for public trips
+export type PublicTripWithPeaks = PlannedTripWithPeaks & {
+  owner: {
+    id: string;
+    display_name: string | null;
+    username: string | null;
+    avatar_url: string | null;
+  };
+};
+
+// Get a public trip by ID (with owner profile)
+export async function getPublicTrip(
+  supabase: SupabaseClient<Database>,
+  tripId: string
+): Promise<PublicTripWithPeaks | null> {
+  const { data, error } = await supabase
+    .from('planned_trips')
+    .select(`
+      *,
+      peaks:planned_trip_peaks(
+        id,
+        peak_id,
+        day_number,
+        sort_order,
+        peak:peaks(id, name, slug, elevation, range),
+        route:routes(id, name, difficulty_class)
+      ),
+      owner:profiles!planned_trips_user_id_fkey(id, display_name, username, avatar_url)
+    `)
+    .eq('id', tripId)
+    .single();
+
+  if (error) return null;
+
+  return data as unknown as PublicTripWithPeaks;
+}
+
 // Get a single planned trip by ID
 export async function getPlannedTrip(
   supabase: SupabaseClient<Database>,

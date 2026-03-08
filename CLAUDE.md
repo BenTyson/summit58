@@ -39,7 +39,7 @@ scripts/              Utility scripts (image optimization, GPX import)
 ## Database (Quick Ref)
 
 Core: `peaks` (58), `routes` (66), `peak_conditions` (weather)
-User: `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`
+User: `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`, `peak_watchlist`, `user_subscriptions`
 Storage buckets: `peak-images` (gallery), `profile-images` (avatar/cover)
 RLS: public read on most tables, users CRUD own data
 
@@ -58,6 +58,8 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 | `/leaderboard` | Rankings + activity |
 | `/profile` | User dashboard (tabs: activity, photos, trips, buddies) |
 | `/users/[id]` | Public profiles |
+| `/pricing` | Free vs Pro comparison |
+| `/trips/[id]` | Public trip detail |
 | `/auth` | Login/signup |
 | `/learn/*` | Educational guides |
 
@@ -71,7 +73,7 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 
 - PWA glob warning is harmless (ignore it)
 - `semver` circular dependency warning in node_modules (harmless)
-- Only 1 API endpoint (`/api/webhooks/weather`) -- everything else uses form actions
+- API endpoints: `/api/webhooks/weather`, `/api/checkout`, `/api/portal`, `/api/webhooks/stripe` (last 3 are stubs)
 - Admin check: hardcoded user ID in `src/lib/server/images.ts`
 
 ## Deep Dive Docs

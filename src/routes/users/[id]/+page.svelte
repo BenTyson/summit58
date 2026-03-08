@@ -18,6 +18,7 @@
   const achievements = $derived(data.achievements);
   const rangeStats = $derived(data.rangeStats);
   const isOwnProfile = $derived(data.isOwnProfile);
+  const userIsPro = $derived(data.isPro);
 
   // Quick stats for the stats bar
   const quickStats = $derived([
@@ -52,6 +53,7 @@
     {profile}
     {favoritePeak}
     isOwnProfile={isOwnProfile}
+    isPro={userIsPro}
     onEditClick={isOwnProfile ? () => window.location.href = '/profile' : undefined}
   />
 

@@ -330,6 +330,7 @@ Dark mode: `.dark` class on html element.
 - 2026-01-03: Profile tabs (Activity, Photos, Trips, Buddies), follow system
 - 2026-02-28: All 58 peak hero images complete (optimized JPEG)
 - 2026-03-07: Launch audit, monetization strategy, roadmap created
+- 2026-03-08: Phase 3 (monetization stubs) + Phase 4 (sharing, watchlist, advanced stats, friends feed)
 
 ---
 

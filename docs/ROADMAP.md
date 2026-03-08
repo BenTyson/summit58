@@ -29,28 +29,31 @@ Created: 2026-03-07
 - [x] Performance (images already had loading="lazy" on PeakCard and gallery)
 - Note: Skeleton loading states are available but sparingly used -- adequate for launch
 
-### Phase 2: GPX Trail Data (2-3 sessions)
-- [ ] Source accurate GPX data (CalTopo traces for all 66 routes)
-- [ ] Import via existing `scripts/import-gpx.mjs`
-- [ ] Prioritize top 20 most popular peaks first
-- [ ] Verify TrailMap, ElevationProfile, TrailMapSection rendering
+### Phase 2: GPX Trail Data [SKIPPED]
+- Deferred -- can be done post-launch when accurate GPX data is available
 
-### Phase 3: Monetization Infrastructure (2-3 sessions)
-- [ ] `user_subscriptions` table (user_id, plan, status, stripe_customer_id, current_period_end)
-- [ ] Stripe integration (checkout sessions, webhook handler)
-- [ ] Pro gate middleware (server-side premium feature checks)
-- [ ] Pricing page (`/pricing`)
-- [ ] 5-summit limit enforcement with upgrade prompt
-- [ ] Pro badge on profiles and leaderboard
+### Phase 3: Monetization Infrastructure [DONE]
+- [x] `user_subscriptions` table with migration (enum types, RLS, trigger, backfill)
+- [x] Server-side subscription helpers (`getSubscription`, `isPro`, `canLogSummit`)
+- [x] Stripe integration stubbed (`src/lib/server/stripe.ts`) -- ready for real Stripe SDK
+- [x] Checkout + portal API endpoints (stubbed)
+- [x] Stripe webhook handler (stubbed, returns 400 until configured)
+- [x] Pricing page (`/pricing`) with free/pro comparison
+- [x] 5-summit limit enforcement with upgrade prompt modal
+- [x] Pro badge on profiles and leaderboard
+- [x] Subscription data exposed in layout for all pages
+- [x] Manual actions documented in `docs/ben.md`
 
 ### Phase 4: Growth Features (3-4 sessions)
-- [ ] Social sharing ("I summited [Peak]!" cards)
-- [ ] Peak watchlist (condition alerts)
+- [x] Share button component (native share / clipboard fallback)
+- [x] Trip sharing (is_public toggle, public trip pages at `/trips/[id]`)
+- [x] Friends activity feed (followed users' activity on homepage)
+- [x] Peak page share button
+- [x] Social sharing ("I summited [Peak]!" post-summit share prompt)
+- [x] Peak watchlist (watch/unwatch toggle, profile section with conditions)
 - [ ] Notifications system (follows, achievements, trail reports)
 - [ ] Email digests (weekly/monthly)
-- [ ] Advanced stats (Pro) -- pace trends, seasonal analysis, personal records
-- [ ] Friends activity feed (followed users' activity)
-- [ ] Trip sharing (is_public toggle, public trip pages)
+- [x] Advanced stats (Pro) -- pace trends, seasonal analysis, personal records
 
 ### Phase 5: Content & SEO (2 sessions)
 - [ ] Complete Learn section (difficulty ratings, FAQ)
@@ -79,8 +82,8 @@ Created: 2026-03-07
 | 0a: Docs | 1 | YES -- do first |
 | 0: Critical Fixes | 1-2 | YES -- before launch |
 | 1: Launch Polish | 2-3 | YES -- before launch |
-| 2: GPX Data | 2-3 | NO -- can launch without |
-| 3: Monetization | 2-3 | NO -- launch free first |
+| 2: GPX Data | SKIPPED | NO -- deferred |
+| 3: Monetization | 1 | NO -- launch free first |
 | 4-7 | Ongoing | NO -- post-launch |
 
 **Minimum viable launch = Phase 0 + Phase 1** (3-5 sessions)

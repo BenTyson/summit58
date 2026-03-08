@@ -60,6 +60,8 @@ The `routes.trail_geometry` JSONB column stores trail paths (data was removed du
 | `user_follows` | Follow system | follower_id, following_id, created_at |
 | `planned_trips` | Trip planning | user_id, title, start_date, end_date, status, is_public |
 | `planned_trip_peaks` | Trip peak list | trip_id, peak_id, route_id, day_number, sort_order |
+| `peak_watchlist` | Peak watch/bookmark | user_id, peak_id, created_at (unique user+peak) |
+| `user_subscriptions` | Pro subscriptions | user_id, plan, status, stripe_customer_id, current_period_end |
 
 ### Profile Fields
 
@@ -108,6 +110,8 @@ The `routes.trail_geometry` JSONB column stores trail paths (data was removed du
 | user_follows | Public | Own only (follower_id) |
 | planned_trips | Own + public trips | Own only |
 | planned_trip_peaks | Via parent trip | Via parent trip |
+| peak_watchlist | Own only | Own only |
+| user_subscriptions | Own only | Own only |
 
 ## Common Queries
 
@@ -145,6 +149,9 @@ const { data } = await supabase
 | `src/lib/server/activity.ts` | Unified activity feed |
 | `src/lib/server/follows.ts` | Follow system + suggestions |
 | `src/lib/server/trips.ts` | Past trips + planned trips CRUD |
+| `src/lib/server/watchlist.ts` | Peak watchlist CRUD + conditions |
+| `src/lib/server/subscriptions.ts` | Subscription helpers (isPro, canLogSummit) |
+| `src/lib/server/stripe.ts` | Stripe integration (stubbed) |
 | `src/lib/utils/geo.ts` | Geographic utilities (distance, elevation) |
 
 ## Webhooks

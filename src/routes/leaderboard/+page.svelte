@@ -108,8 +108,11 @@
                         {entry.displayName.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-sunrise transition-colors">
+                        <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-sunrise transition-colors flex items-center gap-1.5">
                           {entry.displayName}
+                          {#if entry.isPro}
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-sunrise/10 text-sunrise">PRO</span>
+                          {/if}
                         </div>
                         {#if entry.uniquePeaks === 58}
                           <div class="text-xs text-sunrise font-medium flex items-center gap-1">

@@ -1,6 +1,7 @@
 <script lang="ts">
   import Container from '$lib/components/ui/Container.svelte';
   import PeakCard from '$lib/components/peak/PeakCard.svelte';
+  import ActivityFeed from '$lib/components/profile/ActivityFeed.svelte';
   import type { PageData } from './$types';
 
   interface Props {
@@ -220,6 +221,32 @@
     </div>
   </Container>
 </section>
+
+<!-- Friends Activity -->
+{#if data.friendsActivity && data.friendsActivity.length > 0}
+  <section class="py-16 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+    <Container>
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+        <div>
+          <p class="text-sunrise font-medium tracking-wide uppercase text-sm mb-2">Your Network</p>
+          <h2 class="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">
+            Friends Activity
+          </h2>
+        </div>
+        <a
+          href="/profile?tab=buddies"
+          class="inline-flex items-center gap-2 font-semibold text-mountain-blue hover:text-sunrise transition-colors dark:text-sunrise dark:hover:text-sunrise-light whitespace-nowrap text-sm"
+        >
+          See all
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+      <ActivityFeed activities={data.friendsActivity} showUser={true} />
+    </Container>
+  </section>
+{/if}
 
 <!-- Featured Peaks -->
 <section class="py-20 bg-slate-50 dark:bg-slate-800/50">

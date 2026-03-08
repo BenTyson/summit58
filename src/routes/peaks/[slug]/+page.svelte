@@ -1,5 +1,6 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
+  import { enhance } from '$app/forms';
   import { browser } from '$app/environment';
   import { PUBLIC_SUPABASE_URL } from '$env/static/public';
   import Container from '$lib/components/ui/Container.svelte';
@@ -8,6 +9,7 @@
   import StatsBar from '$lib/components/peak/StatsBar.svelte';
   import QuickFacts from '$lib/components/peak/QuickFacts.svelte';
   import RouteCard from '$lib/components/route/RouteCard.svelte';
+  import ShareButton from '$lib/components/ui/ShareButton.svelte';
   import SummitButton from '$lib/components/summit/SummitButton.svelte';
   import SummitModal from '$lib/components/summit/SummitModal.svelte';
   import ReviewSection from '$lib/components/review/ReviewSection.svelte';
@@ -39,8 +41,13 @@
   const images = $derived(data.images);
   const conditions = $derived(data.conditions);
   const trailReports = $derived(data.trailReports);
+  const summitLimit = $derived(data.summitLimit);
+  const isWatched = $derived(data.isWatched);
 
   let modalOpen = $state(false);
+  let showUpgradePrompt = $state(false);
+  let showSharePrompt = $state(false);
+  let watchlistSubmitting = $state(false);
 
   // Build public URL for storage images
   function getImageUrl(storagePath: string): string {
@@ -48,6 +55,10 @@
   }
 
   function openModal() {
+    if (summitLimit && !summitLimit.allowed) {
+      showUpgradePrompt = true;
+      return;
+    }
     modalOpen = true;
   }
 
@@ -74,6 +85,8 @@
     if (response.ok) {
       await invalidateAll();
       closeModal();
+      showSharePrompt = true;
+      setTimeout(() => { showSharePrompt = false; }, 8000);
     }
   }
 
@@ -276,11 +289,45 @@
             {peak.range}
           </a>
         </nav>
-        <SummitButton
-          summits={userSummits}
-          {isLoggedIn}
-          onLogSummit={openModal}
-        />
+        <div class="flex items-center gap-2">
+          {#if isLoggedIn}
+            <form
+              method="POST"
+              action="?/{isWatched ? 'removeFromWatchlist' : 'addToWatchlist'}"
+              use:enhance={() => {
+                watchlistSubmitting = true;
+                return async ({ update }) => {
+                  await update();
+                  watchlistSubmitting = false;
+                };
+              }}
+            >
+              <input type="hidden" name="peak_id" value={peak.id} />
+              <button
+                type="submit"
+                disabled={watchlistSubmitting}
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {isWatched ? 'text-sunrise hover:bg-sunrise/10' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'}"
+                title={isWatched ? 'Remove from watchlist' : 'Add to watchlist'}
+              >
+                <svg class="w-4 h-4" fill={isWatched ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span class="hidden sm:inline">{isWatched ? 'Watching' : 'Watch'}</span>
+              </button>
+            </form>
+          {/if}
+          <ShareButton
+            url={canonicalUrl}
+            title="{peak.name} ({peak.elevation.toLocaleString()}') | Cairn58"
+            text="Check out {peak.name} on Cairn58"
+          />
+          <SummitButton
+            summits={userSummits}
+            {isLoggedIn}
+            onLogSummit={openModal}
+          />
+        </div>
       </div>
 
       <!-- Hero section: Route name + Peak stats -->
@@ -547,6 +594,83 @@
     </div>
   </div>
 </section>
+
+<!-- Summit Limit Indicator (free users) -->
+{#if isLoggedIn && summitLimit && !summitLimit.isPro}
+  <div class="fixed bottom-4 right-4 z-40">
+    <div class="px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-card text-sm text-slate-600 dark:text-slate-400">
+      {summitLimit.remaining} of 5 free summits remaining
+    </div>
+  </div>
+{/if}
+
+<!-- Upgrade Prompt Modal -->
+{#if showUpgradePrompt}
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full mx-4 p-8 text-center">
+      <div class="mx-auto h-16 w-16 rounded-full bg-sunrise/10 flex items-center justify-center mb-4">
+        <svg class="h-8 w-8 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
+        Free Summit Limit Reached
+      </h3>
+      <p class="text-slate-600 dark:text-slate-400 mb-6">
+        You've used all 5 free summits. Upgrade to Cairn58 Pro for unlimited summit logging.
+      </p>
+      <div class="flex flex-col gap-3">
+        <a
+          href="/pricing"
+          class="block w-full px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md"
+        >
+          Upgrade to Pro -- $29.99/yr
+        </a>
+        <button
+          onclick={() => showUpgradePrompt = false}
+          class="px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+        >
+          Maybe Later
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
+
+<!-- Summit Share Prompt -->
+{#if showSharePrompt}
+  <div class="fixed bottom-20 right-4 z-50 animate-fade-in-up">
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-card-elevated border border-slate-200 dark:border-slate-700 p-4 max-w-sm">
+      <div class="flex items-start gap-3">
+        <div class="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
+          <svg class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div class="flex-1">
+          <p class="font-semibold text-slate-900 dark:text-white text-sm">Summit logged!</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Share your achievement</p>
+          <div class="mt-2">
+            <ShareButton
+              url="https://cairn58.com/peaks/{peak.slug}"
+              title="I just summited {peak.name}!"
+              text="I summited {peak.name} ({peak.elevation.toLocaleString()}') on Cairn58"
+            />
+          </div>
+        </div>
+        <button
+          onclick={() => showSharePrompt = false}
+          class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+          aria-label="Dismiss"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <!-- Summit Modal -->
 <SummitModal
