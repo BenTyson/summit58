@@ -388,25 +388,54 @@
         </section>
       {:else}
         <section class="mt-8">
-          <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-12 text-center shadow-card">
-            <div class="mx-auto h-16 w-16 rounded-full bg-sunrise/10 flex items-center justify-center mb-4">
-              <svg class="h-8 w-8 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
-              </svg>
+          <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-8 sm:p-12 shadow-card">
+            <div class="max-w-lg mx-auto text-center mb-8">
+              <div class="mx-auto h-16 w-16 rounded-full bg-sunrise/10 flex items-center justify-center mb-4">
+                <svg class="h-8 w-8 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">Welcome to Cairn58!</h3>
+              <p class="text-slate-600 dark:text-slate-400">
+                Here's how to get started on your 14er journey:
+              </p>
             </div>
-            <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">No summits yet</h3>
-            <p class="text-slate-600 dark:text-slate-400 mb-6">
-              Start your 14er journey by logging your first summit!
-            </p>
-            <a
-              href="/peaks"
-              class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md hover:shadow-lg"
-            >
-              Browse Peaks
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
+
+            <div class="grid sm:grid-cols-3 gap-4 max-w-2xl mx-auto mb-8">
+              <a href="/peaks" class="group p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 hover:border-sunrise/40 transition-colors text-center">
+                <div class="mx-auto h-10 w-10 rounded-full bg-sunrise/10 flex items-center justify-center mb-3">
+                  <span class="text-sunrise font-bold">1</span>
+                </div>
+                <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-sunrise transition-colors">Find a peak</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Browse all 58 fourteeners</div>
+              </a>
+              <a href="/learn/first-fourteener" class="group p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 hover:border-sunrise/40 transition-colors text-center">
+                <div class="mx-auto h-10 w-10 rounded-full bg-sunrise/10 flex items-center justify-center mb-3">
+                  <span class="text-sunrise font-bold">2</span>
+                </div>
+                <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-sunrise transition-colors">Prepare</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Read our first-timer guide</div>
+              </a>
+              <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 text-center">
+                <div class="mx-auto h-10 w-10 rounded-full bg-sunrise/10 flex items-center justify-center mb-3">
+                  <span class="text-sunrise font-bold">3</span>
+                </div>
+                <div class="font-medium text-slate-900 dark:text-white text-sm">Log your summit</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Track progress + earn badges</div>
+              </div>
+            </div>
+
+            <div class="text-center">
+              <a
+                href="/peaks"
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md hover:shadow-lg"
+              >
+                Browse Peaks
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
           </div>
         </section>
       {/if}

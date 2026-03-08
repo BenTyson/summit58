@@ -63,7 +63,8 @@ scripts/              → Utility scripts
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/optimize-peak-images.js` | Optimize peak images (PNG → JPEG, resize to 1920px, ~90% size reduction) |
+| `scripts/optimize-peak-images.js` | Optimize peak images (PNG -> JPEG, resize to 1920px, ~90% size reduction) |
+| `scripts/import-gpx.mjs` | Import GPX trail data into routes.trail_geometry |
 
 ---
 

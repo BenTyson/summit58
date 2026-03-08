@@ -6,20 +6,26 @@ export const load: PageServerLoad = async ({ cookies }) => {
   const supabase = createSupabaseServerClient(cookies);
 
   try {
-    const [featuredPeaks, allPeaks] = await Promise.all([
+    const [featuredPeaks, allPeaks, profileCount, summitCount] = await Promise.all([
       getFeaturedPeaks(supabase, 5),
-      getAllPeaks(supabase)
+      getAllPeaks(supabase),
+      supabase.from('profiles').select('id', { count: 'exact', head: true }),
+      supabase.from('user_summits').select('id', { count: 'exact', head: true })
     ]);
 
     return {
       peaks: featuredPeaks,
-      totalPeaks: allPeaks.length
+      totalPeaks: allPeaks.length,
+      climberCount: profileCount.count ?? 0,
+      summitCount: summitCount.count ?? 0
     };
   } catch (error) {
     console.error('Error loading homepage data:', error);
     return {
       peaks: [],
-      totalPeaks: 0
+      totalPeaks: 0,
+      climberCount: 0,
+      summitCount: 0
     };
   }
 };

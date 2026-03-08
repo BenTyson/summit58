@@ -46,10 +46,16 @@
         </span>
       </div>
 
-      <!-- Copyright -->
-      <p class="text-sm text-slate-500 dark:text-slate-400">
-        &copy; {currentYear} Cairn58. All rights reserved.
-      </p>
+      <!-- Links + Copyright -->
+      <div class="flex flex-col items-center gap-2 sm:items-end">
+        <div class="flex items-center gap-4 text-sm">
+          <a href="/legal/terms" class="text-slate-500 dark:text-slate-400 hover:text-sunrise transition-colors">Terms</a>
+          <a href="/legal/privacy" class="text-slate-500 dark:text-slate-400 hover:text-sunrise transition-colors">Privacy</a>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          &copy; {currentYear} Cairn58. All rights reserved.
+        </p>
+      </div>
     </div>
 
     <!-- Disclaimer with icon -->

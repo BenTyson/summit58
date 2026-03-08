@@ -16,14 +16,15 @@
   let inputRef: HTMLInputElement;
 
   const filteredPeaks = $derived(() => {
-    if (!query.trim()) return peaks.slice(0, 8);
+    if (!query.trim()) return peaks.slice(0, 12);
     const q = query.toLowerCase();
     return peaks
       .filter(p =>
         p.name.toLowerCase().includes(q) ||
-        p.range?.toLowerCase().includes(q)
+        p.range?.toLowerCase().includes(q) ||
+        String(p.elevation).includes(q)
       )
-      .slice(0, 8);
+      .slice(0, 12);
   });
 
   function handleKeydown(e: KeyboardEvent) {

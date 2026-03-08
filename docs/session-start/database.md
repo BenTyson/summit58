@@ -29,9 +29,9 @@
 | `restroom_available` | boolean | TRUE if restrooms at trailhead |
 | `cell_service` | text | none, weak, moderate, good |
 
-### Trail Geometry (GeoJSON)
+### Trail Geometry (GeoJSON) -- CURRENTLY EMPTY
 
-The `routes.trail_geometry` JSONB column stores trail paths:
+The `routes.trail_geometry` JSONB column stores trail paths (data was removed due to poor quality -- see Roadmap Phase 2):
 
 ```json
 {

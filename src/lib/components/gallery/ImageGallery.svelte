@@ -26,21 +26,23 @@
   }
 </script>
 
-{#if images.length > 0}
-  <section class="mt-10 animate-fade-in-up" style="animation-delay: 250ms">
-    <!-- Section Header -->
-    <div class="flex items-center gap-3 mb-6">
-      <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2">
-        <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        Photos
-      </h2>
+<section class="mt-10 animate-fade-in-up" style="animation-delay: 250ms">
+  <!-- Section Header -->
+  <div class="flex items-center gap-3 mb-6">
+    <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2">
+      <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      Photos
+    </h2>
+    {#if images.length > 0}
       <span class="text-sm text-slate-500 dark:text-slate-400">
         {images.length} {images.length === 1 ? 'photo' : 'photos'}
       </span>
-    </div>
+    {/if}
+  </div>
 
+  {#if images.length > 0}
     <!-- Image Grid -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
       {#each images as image, i}
@@ -87,16 +89,25 @@
         </button>
       {/each}
     </div>
-  </section>
-
-  <!-- Lightbox -->
-  {#if lightboxOpen}
-    <Lightbox
-      {images}
-      {currentIndex}
-      {getImageUrl}
-      onClose={closeLightbox}
-      onNavigate={navigateLightbox}
-    />
+  {:else}
+    <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-8 text-center">
+      <div class="mx-auto h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mb-3">
+        <svg class="h-6 w-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <p class="text-slate-600 dark:text-slate-400">No photos yet. Be the first to share one!</p>
+    </div>
   {/if}
+</section>
+
+<!-- Lightbox -->
+{#if lightboxOpen}
+  <Lightbox
+    {images}
+    {currentIndex}
+    {getImageUrl}
+    onClose={closeLightbox}
+    onNavigate={navigateLightbox}
+  />
 {/if}

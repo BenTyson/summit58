@@ -177,18 +177,13 @@ static/images/peaks/              → Custom peak hero images
 - "Peak Bagger" badge for users who've completed all 58
 
 ### Trail GPX Mapping
-- Interactive trail visualization on topographic maps
+- Infrastructure built: TrailMap, ElevationProfile, TrailMapSection components
 - Map type toggle: Topo (OpenTopoMap), Satellite (Esri), Street (OSM)
 - Mountain-shaped markers with drop shadows and class colors
 - Summited peaks show checkmark, unsummited show class number
-- Trail polylines for all 58 peaks with difficulty-based coloring
-- Canvas-based elevation profiles with hover interaction
-- Synchronized hover between map and elevation chart
-- Route detail pages: TrailMapSection with map + elevation profile
-- Main map page: "Show Trails" toggle to display all trail overlays
-- GeoJSON storage with elevation data at each waypoint
-- Styled popups with dark mode support and gradient CTAs
-- Custom zoom controls with dark mode styling
+- **Trail data currently REMOVED** -- original data had only 7-25 points per route (unusable)
+- GPX import pipeline ready: `scripts/import-gpx.mjs`, `src/lib/server/gpx.ts`
+- Pending: accurate CalTopo traces for all 66 routes (see Roadmap Phase 2)
 
 ### Trailhead Parking
 - Comprehensive parking info for all 66 routes
@@ -213,7 +208,7 @@ static/images/peaks/              → Custom peak hero images
 - Data sources: 14ers.com, National Geodetic Survey, 5280.com
 
 ### Custom Peak Images
-- 43 of 58 peaks have custom hero images
+- 58 peak hero images (all peaks covered, optimized JPEG ~300KB each)
 - Images stored in `static/images/peaks/` (served as `/images/peaks/`)
 - Database fields: `peaks.hero_image_url`, `peaks.thumbnail_url`
 - Migration: `supabase/migrations/20241227500000_custom_hero_images.sql`
@@ -233,7 +228,9 @@ static/images/peaks/              → Custom peak hero images
 - Image uploads to Supabase Storage (profile-images bucket)
 - Edit profile modal with avatar/cover photo upload
 - Quick stats bar showing peaks, progress, summits, badges
-- Prepared for future social features (Buddies, Trips tabs show "Coming Soon")
+- Profile tabs fully implemented: Activity, Photos, Trips, Buddies
+- Follow system with follower/following lists and suggestions
+- Trip planning with create/edit (delete not yet wired to UI)
 
 ---
 
@@ -317,81 +314,22 @@ Dark mode: `.dark` class on html element.
 
 ---
 
-## Session Log
+## Timeline
 
 - 2025-12-15: Project created
-- 2025-12-18: MVP complete, Supabase cloud connected
-- 2025-12-19: V2 UI, Railway deploy
-- 2025-12-20: All 58 peaks added, QuickFacts component, parallax hero, content expansion schema
-- 2025-12-20: User authentication, profiles table, Peak Bagger feature with summit logging
-- 2025-12-21: "My 58" dashboard with grid visualization, progress tracking
-- 2025-12-21: Mountain Ranges pages with rich metadata and user progress
-- 2025-12-21: User Reviews system with star ratings, CRUD operations
-- 2025-12-22: Fixed range detail page layout, review query error handling
-- 2025-12-22: Created session-start/ quick reference docs
-- 2025-12-24: Image Gallery with lightbox, Weather Conditions with 7-day forecast
-- 2025-12-24: Trail Reports system with hazards, conditions, and crowd tracking
-- 2025-12-25: Achievements system with 23 badges, database persistence
-- 2025-12-26: V2 UI Polish - replaced emoji icons with custom SVG icons
-- 2025-12-26: Leaderboard with global rankings and recent activity feed
-- 2025-12-26: Public User Profiles with privacy toggle, clickable leaderboard links
-- 2025-12-26: Trail GPX Mapping - interactive trail visualization on topographic maps
-- 2025-12-26: Comprehensive trail geometry for all 58 peaks with elevation profiles
-- 2025-12-27: Trailhead Parking feature - parking cards, trail report parking status, Learn page
-- 2025-12-27: Data Accuracy Audit - comprehensive verification against 14ers.com
-  - Peak data updated to 2024 NGS survey (14 elevation corrections, all 58 ranks)
-  - Mt. Evans renamed to Mt. Blue Sky (2022 official name change)
-  - Route data corrected: 9 difficulty class fixes (6 were underrated safety risk)
-  - Trailhead coordinates verified and corrected for all 58 routes
-  - Complete parking data added: fees, capacity, restrooms, cell service, arrival times
-  - 8 high-priority alternate routes added (Longs, Elbert, Torreys, Quandary, Bierstadt)
-- 2025-12-27: Launch Prep & Rebrand - Summit58 → Cairn58
-  - Renamed project sitewide: package.json, vite.config.ts, supabase/config.toml
-  - Updated domain references: summit58.co → cairn58.com
-  - Updated all page titles and UI components (Header, Footer, ReloadPrompt)
-  - Created custom error page (+error.svelte) with 404/500 handling
-  - Added security headers in hooks.server.ts (X-Frame-Options, X-Content-Type-Options, etc.)
-  - Added accessibility improvements: skip-to-main-content link, focus trap for modals
-  - Added SEO meta tags to remaining pages (map, auth, ranges)
-  - Added JSON-LD WebSite schema to homepage
-  - Created Skeleton.svelte loading component
-  - Integrated sharp image optimizer for user uploads
-  - Fixed PWA build by excluding large peak images from precaching
-- 2025-12-27: V2/V3 UI Polish
-  - Map icons redesigned: mountain-shaped with drop shadows, class colors
-  - Summited peaks show checkmark, unsummited show class number in marker
-  - Map type toggle added: Topo, Satellite, Street views
-  - Popup styling improved with dark mode support, gradient buttons
-  - Zoom controls and attribution styled for dark mode
-  - Route page layout: 3-column info cards grid, 2-column description grid
-  - Peak page V3: route-focused header with "STANDARD ROUTE" label
-  - Peak name shown as context below route name (different treatment than hero)
-  - Quick stats pills (distance, gain, class) added to peak header
-  - Mobile hero text cutoff fixed with increased padding
-- 2025-12-28/29: Homepage Storytelling & Peak Images
-  - Homepage content sections: storytelling approach with SVG illustrations
-  - "Seven Ranges" section: compelling narrative about Colorado's mountain ranges
-  - "Track Your Journey" section: peak bagger feature showcase with mock dashboard
-  - "New to 14ers" section: beginner-friendly with checklist visual
-  - Final CTA section with dark gradient background
-  - Navbar cleanup: removed Home/My 58 buttons, streamlined user dropdown
-  - Search button made more compact with ⌘K shortcut badge
-  - Custom peak hero images: 43 of 58 peaks now have custom images
-  - Migration file for hero images: `supabase/migrations/20241227500000_custom_hero_images.sql`
-- 2025-12-30/31: Data Fixes & GPX Infrastructure
-  - Fixed Bierstadt parking info (primary parking is free, not paid lot)
-  - Fixed trailhead coordinates for 35+ routes (were set to summit instead of trailhead)
-  - Identified systemic GPX data quality issue (all 66 routes had only 7-25 points)
-  - Created GPX import infrastructure: `scripts/import-gpx.mjs`, `docs/gpx-import-guide.md`
-  - Removed bad GPX data pending accurate CalTopo traces
-- 2026-01-02: Social Profile Infrastructure
-  - Database: Added profile fields (cover_image_url, tagline, social links, favorite_peak_id, years_hiking)
-  - Storage: Created profile-images bucket for avatar/cover uploads
-  - Components: ProfileHeader, ProfileTabs, ProfileStats, EditProfileModal
-  - Profile page redesigned with tab-based layout (Overview, Activity, Photos, Trips, Buddies)
-  - Edit profile modal with image upload support
-  - Public profiles updated to use new header design
-  - Future tabs (Activity, Photos, Trips, Buddies) show "Coming Soon" placeholders
+- 2025-12-18: MVP complete
+- 2025-12-20: All 58 peaks, auth, Peak Bagger
+- 2025-12-21: Reviews, ranges, "My 58" dashboard
+- 2025-12-24: Image gallery, weather, trail reports
+- 2025-12-25: Achievements (23 badges)
+- 2025-12-26: Leaderboard, public profiles, GPX trail mapping
+- 2025-12-27: Parking, data audit (2024 NGS), rebrand Summit58 -> Cairn58, UI polish
+- 2025-12-28: Homepage storytelling, peak hero images
+- 2025-12-30: GPX data removed (bad quality), import infrastructure created
+- 2026-01-02: Social profile infrastructure, edit profile modal
+- 2026-01-03: Profile tabs (Activity, Photos, Trips, Buddies), follow system
+- 2026-02-28: All 58 peak hero images complete (optimized JPEG)
+- 2026-03-07: Launch audit, monetization strategy, roadmap created
 
 ---
 

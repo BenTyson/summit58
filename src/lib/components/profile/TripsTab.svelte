@@ -96,9 +96,25 @@
                     {formatDateRange(trip.start_date, trip.end_date || trip.start_date)}
                   </p>
                 </div>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-sunrise/10 text-sunrise">
-                  {trip.peaks?.length || 0} peak{trip.peaks?.length !== 1 ? 's' : ''}
-                </span>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-1 rounded-full text-xs font-medium bg-sunrise/10 text-sunrise">
+                    {trip.peaks?.length || 0} peak{trip.peaks?.length !== 1 ? 's' : ''}
+                  </span>
+                  {#if isOwnProfile}
+                    <form method="POST" action="?/deleteTrip" class="inline">
+                      <input type="hidden" name="tripId" value={trip.id} />
+                      <button
+                        type="submit"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        title="Delete trip"
+                      >
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </form>
+                  {/if}
+                </div>
               </div>
 
               {#if trip.peaks && trip.peaks.length > 0}

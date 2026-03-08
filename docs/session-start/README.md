@@ -1,53 +1,16 @@
-# Cairn58 - Quick Start
+# Cairn58 - Session Start Docs
 
-> Read this first. Links to details below.
-
-## What Is This?
-
-Colorado 14ers tracking app. Users log summits, write reviews, track progress across all 58 peaks.
-
-**Live:** https://cairn58.com
+> **Primary agent guide is now [CLAUDE.md](../../CLAUDE.md) at project root.**
+> These docs provide deep-dive reference that CLAUDE.md links to.
 
 ## Status
 
-**Production Ready** - All features complete, launch audit done.
-
-| Phase | Status |
-|-------|--------|
-| MVP + All 58 Peaks | Done |
-| Auth + Peak Bagger | Done |
-| Reviews + Ranges | Done |
-| Image Gallery | Done |
-| Search + Dashboard | Done |
-| Map View | Done |
-| PWA (Offline/Mobile) | Done |
-| SEO & Social Sharing | Done |
-| Weather Conditions | Done |
-| Trail Reports | Done |
-| Achievements System | Done |
-| Leaderboard | Done |
-| Public User Profiles | Done |
-| Trail GPX Mapping | Done |
-| Custom Domain | Done |
-| Advanced Search | Done |
-| Trailhead Parking | Done |
-| Data Accuracy Audit | Done |
-| Launch Prep & Rebrand | Done |
-| V2/V3 UI Polish | Done |
-| Social Profile Infrastructure | Done |
-| **Profile Tabs (Activity, Photos, Trips, Buddies)** | **Done** |
-
-## Commands
-
-```bash
-npm run dev          # localhost:4466
-railway up -d        # Deploy
-supabase db push     # Push migrations
-```
+All core features complete. Pre-launch phase -- see [Roadmap](../ROADMAP.md) for next steps.
 
 ## Deep Dives
 
-- [Stack & Infrastructure](./stack.md)
-- [Database Schema](./database.md)
-- [Code Patterns](./patterns.md)
-- [Full Reference](../CAIRN58.md)
+- [Database Schema](./database.md) -- tables, RLS, storage, common queries
+- [Code Patterns](./patterns.md) -- Svelte 5 runes, design system, components, routes
+- [Stack & Infrastructure](./stack.md) -- tech stack, commands, project IDs, directories
+- [Full Reference](../CAIRN58.md) -- comprehensive feature documentation
+- [Launch Roadmap](../ROADMAP.md) -- phased plan from pre-launch to monetization
