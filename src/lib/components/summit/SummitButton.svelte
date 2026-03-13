@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { UserSummit } from '$lib/server/summits';
+  import { page } from '$app/stores';
 
   interface Props {
     summits: UserSummit[];
@@ -24,7 +25,7 @@
 
 {#if !isLoggedIn}
   <a
-    href="/auth"
+    href="/auth?redirectTo={encodeURIComponent($page.url.pathname)}"
     class="
       inline-flex items-center gap-2 rounded-lg
       border border-slate-200 dark:border-slate-600

@@ -4,6 +4,7 @@
   import ReviewForm from './ReviewForm.svelte';
   import type { ReviewFormData } from './ReviewForm.svelte';
   import type { ReviewWithProfile, UserReview } from '$lib/server/reviews';
+  import { page } from '$app/stores';
 
   interface Props {
     peakId: string;
@@ -138,7 +139,7 @@
         Share your experience with other hikers
       </p>
       <a
-        href="/auth"
+        href="/auth?redirectTo={encodeURIComponent($page.url.pathname)}"
         class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sunrise text-white font-medium hover:bg-sunrise-coral transition-colors"
       >
         Log in to write a review

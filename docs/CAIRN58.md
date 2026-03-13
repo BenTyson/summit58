@@ -341,6 +341,8 @@ Dark mode: `.dark` class on html element.
 - 2026-03-08: Phase 3 (monetization stubs) + Phase 4 (sharing, watchlist, advanced stats, friends feed)
 - 2026-03-08: Phase 5 (SEO structured data, learn guides, blog, sitemap, "Hikers Also Climbed")
 - 2026-03-12: Phase 6 (UGC photo uploads, moderation, flagging, admin page, community guidelines)
+- 2026-03-12: Phase 6b (photo categories + gallery filters)
+- 2026-03-13: Phase 6c started (GPX trace infrastructure, post-login redirect for auth CTAs)
 
 ---
 

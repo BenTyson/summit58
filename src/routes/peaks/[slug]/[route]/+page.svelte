@@ -4,6 +4,7 @@
   import StatsBar from '$lib/components/peak/StatsBar.svelte';
   import TrailMapSection from '$lib/components/map/TrailMapSection.svelte';
   import ParkingCard from '$lib/components/parking/ParkingCard.svelte';
+  import { invalidateAll } from '$app/navigation';
   import type { PageData } from './$types';
 
   interface Props {
@@ -37,6 +38,54 @@
       copySuccess = true;
       setTimeout(() => (copySuccess = false), 2000);
     }
+  }
+
+  async function handleUploadTrace(file: File) {
+    const formData = new FormData();
+    formData.append('route_id', route.id);
+    formData.append('file', file);
+
+    const response = await fetch('?/uploadTrace', {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+
+    // SvelteKit form action responses have a specific shape
+    if (result.type === 'failure') {
+      throw new Error(result.data?.message || 'Upload failed');
+    }
+
+    await invalidateAll();
+  }
+
+  async function handleVoteTrace(traceId: string) {
+    const formData = new FormData();
+    formData.append('trace_id', traceId);
+
+    await fetch('?/voteTrace', {
+      method: 'POST',
+      body: formData
+    });
+
+    await invalidateAll();
+  }
+
+  async function handleDeleteTrace(traceId: string) {
+    const formData = new FormData();
+    formData.append('trace_id', traceId);
+
+    await fetch('?/deleteTrace', {
+      method: 'POST',
+      body: formData
+    });
+
+    await invalidateAll();
+  }
+
+  function handleDownload(storagePath: string): string {
+    return data.downloadUrls[storagePath] || '#';
   }
 </script>
 
@@ -125,7 +174,18 @@
 
   <!-- Trail Map Section -->
   <div class="mt-10">
-    <TrailMapSection {route} {peak} />
+    <TrailMapSection
+      {route}
+      {peak}
+      bestTrace={data.bestTrace}
+      allTraces={data.allTraces}
+      isLoggedIn={data.isLoggedIn}
+      currentUserId={data.currentUserId}
+      onUpload={handleUploadTrace}
+      onVote={handleVoteTrace}
+      onDelete={handleDeleteTrace}
+      onDownload={handleDownload}
+    />
   </div>
 
   <!-- Info Cards Grid -->

@@ -74,20 +74,25 @@ Created: 2026-03-07
 - [x] Community guidelines page (`/guidelines`)
 - [x] Generic `content_flags` table (covers photos, reviews, trail reports)
 
-### Phase 6b: Photo Categories + Gallery Filters [TODO]
-- [ ] Photo category/tag field on `peak_images` (e.g. `category TEXT`)
+### Phase 6b: Photo Categories + Gallery Filters [DONE]
+- [x] Photo category/tag field on `peak_images` (e.g. `category TEXT`)
   - Categories: Summit, Trailhead, Trail, Hazards, Vistas, Wildlife, Parking & Road Access, Wildflowers, Winter Conditions, Camping
   - Category selector in ImageUploader (dropdown or chip picker)
-- [ ] Gallery filtering on peak pages (filter chips above photo grid)
-- [ ] Category badge overlay on gallery thumbnails
-- [ ] Category shown in lightbox view
+- [x] Gallery filtering on peak pages (filter chips above photo grid)
+- [x] Category badge overlay on gallery thumbnails
+- [x] Category shown in lightbox view
 
-### Phase 6c: User GPX Uploads [TODO]
+### Phase 6c: User GPX Uploads [IN PROGRESS]
 - [ ] User GPX upload on routes
   - Upload GPX file, parse to GeoJSON (pipeline exists: `src/lib/server/gpx.ts`)
   - Community-sourced trail data with voting/quality scoring
   - Best trace selected for route display
   - Attribution to uploader
+- [x] `route_traces` table + migration
+- [x] Server-side trace queries (`src/lib/server/traces.ts`)
+- [x] TrailMapSection updated for community traces (selector, voting, download, delete)
+- [x] GpxUploader component (`src/lib/components/trail/GpxUploader.svelte`)
+- [x] Post-login redirect (`redirectTo` param across auth flow) -- users return to route page after login
 
 ### Phase 7: Affiliate & Partnerships (1-2 sessions)
 - [ ] Contextual gear recommendations on peak/route pages
@@ -103,7 +108,7 @@ Created: 2026-03-07
 
 - [ ] Accessibility audit
 - [ ] Admin dashboard
-- [ ] Remaining hero images (15 missing)
+- [x] ~~Remaining hero images~~ (all 58 complete)
 
 ## Execution Order
 

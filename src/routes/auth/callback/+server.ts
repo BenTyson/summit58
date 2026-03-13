@@ -15,5 +15,8 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
     throw redirect(303, '/auth/reset-password');
   }
 
-  throw redirect(303, '/');
+  const redirectTo = url.searchParams.get('redirectTo');
+  const destination = redirectTo && redirectTo.startsWith('/') && !redirectTo.startsWith('//') ? redirectTo : '/';
+
+  throw redirect(303, destination);
 };

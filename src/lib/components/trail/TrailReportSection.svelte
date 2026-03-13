@@ -3,6 +3,7 @@
   import TrailReportForm from './TrailReportForm.svelte';
   import type { TrailReportFormData } from './TrailReportForm.svelte';
   import TrailReportCard from './TrailReportCard.svelte';
+  import { page } from '$app/stores';
 
   type TrailReportWithProfile = Tables<'trail_reports'> & {
     profile: { display_name: string | null; avatar_url: string | null } | null;
@@ -39,7 +40,7 @@
   {:else}
     <div class="mb-4 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-center">
       <p class="text-slate-600 dark:text-slate-400">
-        <a href="/auth" class="text-sunrise hover:text-sunrise-coral font-medium">Sign in</a> to report trail conditions
+        <a href="/auth?redirectTo={encodeURIComponent($page.url.pathname)}" class="text-sunrise hover:text-sunrise-coral font-medium">Sign in</a> to report trail conditions
       </p>
     </div>
   {/if}

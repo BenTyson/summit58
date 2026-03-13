@@ -3,6 +3,9 @@
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
   import { createBrowserClient } from '@supabase/ssr';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+
+  const redirectTo = $derived($page.url.searchParams.get('redirectTo') || '/');
 
   let mode = $state<'login' | 'signup' | 'forgot'>('login');
   let email = $state('');
@@ -38,14 +41,14 @@
       if (authError) {
         error = authError.message;
       } else {
-        goto('/');
+        goto(redirectTo);
       }
     } else {
       const { error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`
+          emailRedirectTo: `${window.location.origin}/auth/callback?redirectTo=${encodeURIComponent(redirectTo)}`
         }
       });
 
@@ -64,7 +67,7 @@
     const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: `${window.location.origin}/auth/callback?redirectTo=${encodeURIComponent(redirectTo)}`
       }
     });
     if (authError) {

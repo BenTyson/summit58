@@ -425,6 +425,82 @@ export type Database = {
           },
         ]
       }
+      route_trace_votes: {
+        Row: {
+          created_at: string | null
+          id: string
+          trace_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          trace_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          trace_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_trace_votes_trace_id_fkey"
+            columns: ["trace_id"]
+            isOneToOne: false
+            referencedRelation: "route_traces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      route_traces: {
+        Row: {
+          created_at: string | null
+          distance_miles: number | null
+          elevation_gain: number | null
+          id: string
+          point_count: number
+          route_id: string
+          storage_path: string
+          trail_geometry: Json
+          uploaded_by: string
+          vote_count: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          distance_miles?: number | null
+          elevation_gain?: number | null
+          id?: string
+          point_count: number
+          route_id: string
+          storage_path: string
+          trail_geometry: Json
+          uploaded_by: string
+          vote_count?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          distance_miles?: number | null
+          elevation_gain?: number | null
+          id?: string
+          point_count?: number
+          route_id?: string
+          storage_path?: string
+          trail_geometry?: Json
+          uploaded_by?: string
+          vote_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_traces_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       routes: {
         Row: {
           cell_service: string | null
@@ -846,7 +922,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      toggle_trace_vote: {
+        Args: { p_trace_id: string; p_user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       subscription_plan: "free" | "pro"
@@ -983,5 +1062,3 @@ export const Constants = {
     },
   },
 } as const
-A new version of Supabase CLI is available: v2.75.0 (currently installed v2.72.7)
-We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
