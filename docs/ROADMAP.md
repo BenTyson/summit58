@@ -44,33 +44,54 @@ Created: 2026-03-07
 - [x] Subscription data exposed in layout for all pages
 - [x] Manual actions documented in `docs/ben.md`
 
-### Phase 4: Growth Features (3-4 sessions)
+### Phase 4: Growth Features [DONE]
 - [x] Share button component (native share / clipboard fallback)
 - [x] Trip sharing (is_public toggle, public trip pages at `/trips/[id]`)
 - [x] Friends activity feed (followed users' activity on homepage)
 - [x] Peak page share button
 - [x] Social sharing ("I summited [Peak]!" post-summit share prompt)
 - [x] Peak watchlist (watch/unwatch toggle, profile section with conditions)
-- [ ] Notifications system (follows, achievements, trail reports)
-- [ ] Email digests (weekly/monthly)
 - [x] Advanced stats (Pro) -- pace trends, seasonal analysis, personal records
 
-### Phase 5: Content & SEO (2 sessions)
-- [ ] Complete Learn section (difficulty ratings, FAQ)
-- [ ] Peak detail SEO (longer descriptions, "Hikers Also Climbed")
-- [ ] Blog/Updates page
-- [ ] Google Search Console setup
+### Phase 5: Content & SEO [DONE]
+- [x] Complete Learn section (difficulty ratings guide at `/learn/difficulty-ratings`, FAQ at `/learn/faq`)
+- [x] Peak detail SEO (AggregateRating + BreadcrumbList JSON-LD, "Hikers Also Climbed" section)
+- [x] Blog (`/blog` hub, welcome post, origin story post, Blog in nav)
+- [x] Structured data: FAQPage on learn hub, BreadcrumbList on all learn pages + blog
+- [x] Sitemap expanded with learn, blog, leaderboard, pricing URLs
+- [x] Google Search Console setup (manual steps in `docs/ben.md`)
 
-### Phase 6: Affiliate & Partnerships (1-2 sessions)
+### Phase 6: User-Generated Content (2-3 sessions) [HIGH PRIORITY]
+- [ ] User photo uploads on peak pages (remove admin-only gate)
+  - Multi-photo upload with drag-and-drop
+  - Image optimization pipeline (already exists via Sharp)
+  - Photo attribution (uploader name/link displayed in gallery)
+  - NSFW/spam moderation: admin review queue or flag-based system
+  - Photo reporting (flag inappropriate content)
+  - Upload limits (e.g. 5 photos/peak for free, unlimited for Pro)
+- [ ] User GPX upload on routes
+  - Upload GPX file, parse to GeoJSON (pipeline exists: `src/lib/server/gpx.ts`)
+  - Community-sourced trail data with voting/quality scoring
+  - Best trace selected for route display
+  - Attribution to uploader
+- [ ] Content moderation dashboard (admin)
+  - Review flagged photos and GPX submissions
+  - Approve/reject queue
+  - Ban/warn users for policy violations
+- [ ] Community guidelines page (`/guidelines`)
+
+### Phase 7: Affiliate & Partnerships (1-2 sessions)
 - [ ] Contextual gear recommendations on peak/route pages
 - [ ] Affiliate link tracking
 - [ ] Guide service featured listings
 - [ ] Partner page (`/partners`)
 
-### Phase 7: Quality of Life (Ongoing)
+### Phase 8: Quality of Life (Ongoing)
+- [ ] Notifications system (follows, achievements, trail reports, watchlist alerts) -- needs push/email service
+- [ ] Email digests (weekly/monthly) -- needs email provider (Resend, SendGrid, etc.)
 - [ ] Sentry error monitoring
 - [ ] Rate limiting on form actions
-- [ ] Image upload improvements (drag-and-drop, multi-image)
+
 - [ ] Accessibility audit
 - [ ] Admin dashboard
 - [ ] Remaining hero images (15 missing)
@@ -84,7 +105,9 @@ Created: 2026-03-07
 | 1: Launch Polish | 2-3 | YES -- before launch |
 | 2: GPX Data | SKIPPED | NO -- deferred |
 | 3: Monetization | 1 | NO -- launch free first |
-| 4-7 | Ongoing | NO -- post-launch |
+| 4-5 | Ongoing | NO -- post-launch |
+| 6: UGC | 2-3 | HIGH PRIORITY -- core to value prop |
+| 7-8 | Ongoing | NO -- post-launch |
 
 **Minimum viable launch = Phase 0 + Phase 1** (3-5 sessions)
 **Recommended launch = Phase 0 + Phase 1 + Phase 2** (5-8 sessions)

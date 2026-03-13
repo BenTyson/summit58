@@ -24,7 +24,8 @@
     { href: '/ranges', label: 'Ranges' },
     { href: '/leaderboard', label: 'Leaderboard' },
     { href: '/map', label: 'Map' },
-    { href: '/learn', label: 'Learn' }
+    { href: '/learn', label: 'Learn' },
+    { href: '/blog', label: 'Blog' }
   ];
 
   function closeMobileMenu() {

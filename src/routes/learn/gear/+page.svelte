@@ -22,6 +22,15 @@
     name="description"
     content="What to wear, what to pack, and how to prepare for climbing Colorado 14ers. Layering systems, gear lists, and preparation tips."
   />
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://cairn58.com/learn" },
+      { "@type": "ListItem", "position": 3, "name": "Gear & Preparation", "item": "https://cairn58.com/learn/gear" }
+    ]
+  })}</script>`}
 </svelte:head>
 
 <LearnHero

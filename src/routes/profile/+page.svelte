@@ -14,6 +14,8 @@
   import { enhance } from '$app/forms';
   import { invalidateAll } from '$app/navigation';
   import { page } from '$app/stores';
+  import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+  import { createBrowserClient } from '@supabase/ssr';
 
   interface Props {
     data: PageData;
@@ -50,8 +52,7 @@
   const watchlist = $derived(data.watchlist);
   const advancedStats = $derived(data.advancedStats);
 
-  // Get supabase client from page store
-  const supabase = $derived($page.data.supabase);
+  const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
   // Tabs configuration
   const tabs = $derived([

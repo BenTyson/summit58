@@ -33,7 +33,17 @@ export const GET: RequestHandler = async ({ cookies }) => {
     { loc: '/', priority: '1.0' },
     { loc: '/peaks', priority: '0.9' },
     { loc: '/ranges', priority: '0.9' },
-    { loc: '/map', priority: '0.8' }
+    { loc: '/map', priority: '0.8' },
+    { loc: '/learn', priority: '0.7' },
+    { loc: '/learn/first-fourteener', priority: '0.6' },
+    { loc: '/learn/safety', priority: '0.6' },
+    { loc: '/learn/gear', priority: '0.6' },
+    { loc: '/learn/parking', priority: '0.6' },
+    { loc: '/learn/difficulty-ratings', priority: '0.6' },
+    { loc: '/learn/faq', priority: '0.6' },
+    { loc: '/leaderboard', priority: '0.6' },
+    { loc: '/pricing', priority: '0.5' },
+    { loc: '/blog', priority: '0.6' }
   ];
 
   // Add range URLs

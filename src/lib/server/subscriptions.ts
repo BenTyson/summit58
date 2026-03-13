@@ -19,14 +19,24 @@ export async function getSubscription(
   supabase: SupabaseClient<Database>,
   userId: string
 ): Promise<Subscription | null> {
-  const { data, error } = await supabase
-    .from('user_subscriptions')
-    .select('*')
-    .eq('user_id', userId)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('user_subscriptions')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
 
-  if (error && error.code !== 'PGRST116') throw error;
-  return data as Subscription | null;
+    if (error) {
+      // PGRST116 = row not found (expected for users without subscription)
+      if (error.code === 'PGRST116') return null;
+      // Any other error (table doesn't exist, etc.) -- treat as no subscription
+      return null;
+    }
+    return data as Subscription | null;
+  } catch {
+    // Table doesn't exist yet (migration not pushed)
+    return null;
+  }
 }
 
 export function isPro(subscription: Subscription | null): boolean {

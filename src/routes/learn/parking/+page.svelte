@@ -22,6 +22,15 @@
     name="description"
     content="A complete guide to trailhead parking at Colorado 14ers. Timing strategies, permit requirements, shuttle options, and what to do when the lot is full."
   />
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://cairn58.com/learn" },
+      { "@type": "ListItem", "position": 3, "name": "Trailhead Parking", "item": "https://cairn58.com/learn/parking" }
+    ]
+  })}</script>`}
 </svelte:head>
 
 <LearnHero

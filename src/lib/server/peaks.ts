@@ -126,6 +126,58 @@ export async function getRouteBySlug(
 }
 
 /**
+ * Get related peaks in the same range, sorted by elevation proximity
+ */
+export async function getRelatedPeaks(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: SupabaseClient<any>,
+  peakId: string,
+  range: string,
+  elevation: number
+): Promise<PeakWithStandardRoute[]> {
+  const { data, error } = await supabase
+    .from('peaks')
+    .select(
+      `
+      *,
+      routes (
+        id,
+        name,
+        slug,
+        distance_miles,
+        elevation_gain_ft,
+        difficulty_class,
+        typical_time_hours,
+        is_standard
+      )
+    `
+    )
+    .eq('range', range)
+    .neq('id', peakId)
+    .order('rank', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching related peaks:', error);
+    throw error;
+  }
+
+  const peaks = (data || []) as PeakWithRoutesRaw[];
+  const transformed = peaks.map((peak) => {
+    const standardRoute = peak.routes?.find((r) => r.is_standard);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { routes, ...peakWithoutRoutes } = peak;
+    return {
+      ...peakWithoutRoutes,
+      standard_route: standardRoute
+    } as PeakWithStandardRoute;
+  });
+
+  return transformed
+    .sort((a, b) => Math.abs(a.elevation - elevation) - Math.abs(b.elevation - elevation))
+    .slice(0, 4);
+}
+
+/**
  * Get featured peaks for homepage (first N by rank)
  */
 export async function getFeaturedPeaks(

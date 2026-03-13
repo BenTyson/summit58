@@ -119,7 +119,8 @@ src/
 │   ├── ranges/[slug]/+page.svelte → Range detail
 │   ├── leaderboard/+page.svelte  → Global rankings + activity
 │   ├── map/+page.svelte          → Full interactive map (peaks + trail overlay)
-│   ├── learn/                    → Educational guides (first-fourteener, safety, gear, parking)
+│   ├── learn/                    → Educational guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq)
+│   ├── blog/                     → Blog hub + posts (welcome, why-we-built-cairn58)
 │   ├── users/[id]/+page.svelte   → Public user profile
 │   └── profile/+page.svelte      → "My 58" dashboard + achievements
 
@@ -232,6 +233,13 @@ static/images/peaks/              → Custom peak hero images
 - Follow system with follower/following lists and suggestions
 - Trip planning with create/edit (delete not yet wired to UI)
 
+### Content & SEO
+- Learn section: 6 guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq)
+- Blog at `/blog` with welcome + origin story posts
+- JSON-LD structured data: Place + AggregateRating on peaks, FAQPage on learn hub, BreadcrumbList on all content pages, Article on blog posts
+- "Hikers Also Climbed" section on peak detail (same range, elevation proximity)
+- Sitemap includes all static and dynamic routes
+
 ---
 
 ## Svelte 5 Patterns
@@ -331,6 +339,7 @@ Dark mode: `.dark` class on html element.
 - 2026-02-28: All 58 peak hero images complete (optimized JPEG)
 - 2026-03-07: Launch audit, monetization strategy, roadmap created
 - 2026-03-08: Phase 3 (monetization stubs) + Phase 4 (sharing, watchlist, advanced stats, friends feed)
+- 2026-03-08: Phase 5 (SEO structured data, learn guides, blog, sitemap, "Hikers Also Climbed")
 
 ---
 

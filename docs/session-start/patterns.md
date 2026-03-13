@@ -89,6 +89,11 @@ export const actions: Actions = {
 | AdvancedStats | `components/profile/` | Pro stats: pace, seasonal, records, conditions |
 | ReloadPrompt | `components/pwa/` | PWA update notification |
 | WeatherCard | `components/weather/` | 7-day summit forecast |
+| LearnHero | `components/learn/` | Hero banner for learn + blog pages |
+| TopicCard | `components/learn/` | Card linking to learn guides |
+| ContentSection | `components/learn/` | Themed content block for guides |
+| TableOfContents | `components/learn/` | Sidebar/inline TOC for guides |
+| CalloutBox | `components/learn/` | Warning/tip/info callout |
 
 ## Key Routes
 
@@ -109,6 +114,11 @@ export const actions: Actions = {
 | `/pricing` | Free vs Pro comparison |
 | `/trips/[id]` | Public trip detail page |
 | `/learn/parking` | Trailhead parking guide |
+| `/learn/difficulty-ratings` | YDS difficulty rating guide |
+| `/learn/faq` | FAQ (17 questions, 4 categories) |
+| `/blog` | Blog hub |
+| `/blog/welcome` | Welcome to Cairn58 post |
+| `/blog/why-we-built-cairn58` | Origin story post |
 | `/auth` | Login/signup |
 
 ---

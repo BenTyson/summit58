@@ -1,6 +1,6 @@
 import type { PageServerLoad, Actions } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
-import { getPeakBySlug } from '$lib/server/peaks';
+import { getPeakBySlug, getRelatedPeaks } from '$lib/server/peaks';
 import { getUserSummitsForPeak, createSummit, deleteSummit } from '$lib/server/summits';
 import { canLogSummit } from '$lib/server/subscriptions';
 import {
@@ -54,12 +54,13 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
   }
 
   // Get all reviews, stats, images, weather conditions, and trail reports
-  const [reviews, reviewStats, images, conditions, trailReports] = await Promise.all([
+  const [reviews, reviewStats, images, conditions, trailReports, relatedPeaks] = await Promise.all([
     getPeakReviews(supabase, peak.id),
     getPeakReviewStats(supabase, peak.id),
     getImagesForPeak(supabase, peak.id),
     getConditionsForPeak(supabase, peak.id),
-    getRecentTrailReports(supabase, peak.id)
+    getRecentTrailReports(supabase, peak.id),
+    getRelatedPeaks(supabase, peak.id, peak.range, peak.elevation)
   ]);
 
   return {
@@ -75,6 +76,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     images,
     conditions,
     trailReports,
+    relatedPeaks,
     summitLimit,
     isWatched
   };

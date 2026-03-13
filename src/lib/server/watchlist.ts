@@ -4,7 +4,7 @@ import type { Database } from '$lib/types/database';
 export interface WatchlistItem {
   id: string;
   peak_id: string;
-  created_at: string;
+  created_at: string | null;
   peak: {
     id: string;
     name: string;
@@ -32,7 +32,7 @@ export async function getUserWatchlist(
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
 
-  if (error) throw error;
+  if (error) return [];
 
   // Fetch latest conditions for each watched peak
   const peakIds = (data ?? []).map(d => d.peak_id);
@@ -75,7 +75,7 @@ export async function isOnWatchlist(
     .eq('user_id', userId)
     .eq('peak_id', peakId);
 
-  if (error) throw error;
+  if (error) return false;
   return (count ?? 0) > 0;
 }
 
@@ -88,7 +88,10 @@ export async function addToWatchlist(
     .from('peak_watchlist')
     .insert({ user_id: userId, peak_id: peakId });
 
-  if (error) throw error;
+  if (error) {
+    if (error.message?.includes('relation') || error.code === '42P01') return;
+    throw error;
+  }
 }
 
 export async function removeFromWatchlist(
@@ -102,5 +105,8 @@ export async function removeFromWatchlist(
     .eq('user_id', userId)
     .eq('peak_id', peakId);
 
-  if (error) throw error;
+  if (error) {
+    if (error.message?.includes('relation') || error.code === '42P01') return;
+    throw error;
+  }
 }

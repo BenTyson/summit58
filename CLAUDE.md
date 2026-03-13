@@ -61,7 +61,8 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 | `/pricing` | Free vs Pro comparison |
 | `/trips/[id]` | Public trip detail |
 | `/auth` | Login/signup |
-| `/learn/*` | Educational guides |
+| `/learn/*` | Educational guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq) |
+| `/blog`, `/blog/*` | Blog hub + posts |
 
 ## Known Issues
 

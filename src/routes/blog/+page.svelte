@@ -1,0 +1,72 @@
+<script lang="ts">
+  import Container from '$lib/components/ui/Container.svelte';
+  import LearnHero from '$lib/components/learn/LearnHero.svelte';
+
+  const posts = [
+    {
+      href: '/blog/welcome',
+      title: 'Welcome to Cairn58',
+      date: 'March 2026',
+      excerpt: 'Introducing a new way to track your Colorado 14er journey. Log summits, read reviews, check conditions, and connect with the hiking community.'
+    },
+    {
+      href: '/blog/why-we-built-cairn58',
+      title: 'Why We Built Cairn58',
+      date: 'March 2026',
+      excerpt: 'The story behind building a better 14er tracking app. From fragmented tools to a modern, community-driven experience.'
+    }
+  ];
+</script>
+
+<svelte:head>
+  <title>Blog | Cairn58</title>
+  <meta
+    name="description"
+    content="Updates, stories, and insights from the trail. Read about Cairn58 development, Colorado 14er tips, and community highlights."
+  />
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://cairn58.com/blog" }
+    ]
+  })}</script>`}
+</svelte:head>
+
+<LearnHero
+  title="Blog"
+  subtitle="Updates, stories, and insights from the trail"
+/>
+
+<Container class="py-12 sm:py-16">
+  <div class="max-w-3xl mx-auto">
+    <div class="space-y-6 animate-fade-in-up">
+      {#each posts as post}
+        <a
+          href={post.href}
+          class="
+            block p-6 sm:p-8 rounded-2xl
+            border border-slate-200 dark:border-slate-700
+            bg-white dark:bg-slate-800
+            shadow-sm hover:shadow-card
+            transition-all duration-200
+            group
+          "
+        >
+          <div class="text-sm text-slate-500 dark:text-slate-400 mb-2">{post.date}</div>
+          <h2 class="text-xl sm:text-2xl font-display font-bold text-slate-900 dark:text-white group-hover:text-sunrise transition-colors mb-3">
+            {post.title}
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 leading-relaxed">{post.excerpt}</p>
+          <span class="inline-flex items-center gap-1 mt-4 text-sm font-medium text-sunrise group-hover:gap-2 transition-all">
+            Read more
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </span>
+        </a>
+      {/each}
+    </div>
+  </div>
+</Container>

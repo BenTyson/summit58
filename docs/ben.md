@@ -30,6 +30,14 @@ Set these in Railway (and locally in `.env` for dev):
 - [ ] Replace stub functions in `src/lib/server/stripe.ts` with real Stripe SDK calls
 - [ ] Uncomment Supabase import in `src/routes/api/webhooks/stripe/+server.ts`
 
-## Other (Carried Over)
+## Google Search Console
+
+- [ ] Go to https://search.google.com/search-console
+- [ ] Add property: `https://cairn58.com`
+- [ ] Verify via DNS TXT record (recommended) or HTML file upload
+- [ ] Submit sitemap: `https://cairn58.com/sitemap.xml`
+- [ ] Request indexing for key pages: `/`, `/peaks`, `/learn`, `/blog`
+
+## Other
 
 - [ ] Set up Plausible analytics account at plausible.io for cairn58.com

@@ -10,6 +10,44 @@
     name="description"
     content="Everything you need to summit your first Colorado 14er. Guides on safety, gear, planning, and finding the right peak for you."
   />
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a 14er?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A \"fourteener\" or \"14er\" is a mountain peak with an elevation of at least 14,000 feet (4,267 meters). Colorado has 58 named 14ers—more than any other state—ranging from relatively straightforward hikes to serious technical climbs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When is the best time to climb?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The prime season is mid-June through early September when most trails are snow-free. July and August offer the most stable conditions, but also the highest crowds. Start early—aim to be off the summit by noon to avoid afternoon thunderstorms."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How fit do I need to be?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You should be comfortable hiking 6-10 miles with 3,000-4,000 feet of elevation gain. If you can do that at lower altitude, you're ready for an easier 14er—just expect it to feel harder up high. Start training at least 6-8 weeks before your first attempt."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does \"Class 1-4\" mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Yosemite Decimal System rates terrain difficulty. Class 1: Trail hiking. Class 2: Off-trail, hands for balance. Class 3: Scrambling, exposure. Class 4: Climbing, ropes recommended. Start with Class 1 or easy Class 2 routes for your first 14er."
+        }
+      }
+    ]
+  })}</script>`}
 </svelte:head>
 
 <LearnHero
@@ -70,6 +108,22 @@
         icon="car"
         color="amber"
         number={4}
+      />
+      <TopicCard
+        href="/learn/difficulty-ratings"
+        title="Difficulty Ratings"
+        description="Deep dive into Class 1-4 terrain with examples from actual peaks."
+        icon="chart"
+        color="violet"
+        number={5}
+      />
+      <TopicCard
+        href="/learn/faq"
+        title="FAQ"
+        description="Answers to common questions about Colorado 14ers, from getting started to tracking your summits."
+        icon="question"
+        color="blue"
+        number={6}
       />
     </div>
   </section>
@@ -186,29 +240,13 @@
       More guides are on the way to help you level up your mountain skills.
     </p>
 
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <TopicCard
-        href="#"
-        title="Difficulty Ratings"
-        description="Deep dive into Class 1-4 terrain with examples from actual peaks."
-        icon="chart"
-        color="amber"
-        comingSoon={true}
-      />
+    <div class="grid gap-6 max-w-sm mx-auto">
       <TopicCard
         href="#"
         title="Trip Planning"
         description="Route selection, conditions checking, and making go/no-go decisions."
         icon="map"
         color="violet"
-        comingSoon={true}
-      />
-      <TopicCard
-        href="#"
-        title="FAQ"
-        description="Searchable answers to common questions from the community."
-        icon="question"
-        color="blue"
         comingSoon={true}
       />
     </div>

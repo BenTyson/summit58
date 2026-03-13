@@ -9,6 +9,7 @@
   import StatsBar from '$lib/components/peak/StatsBar.svelte';
   import QuickFacts from '$lib/components/peak/QuickFacts.svelte';
   import RouteCard from '$lib/components/route/RouteCard.svelte';
+  import PeakCard from '$lib/components/peak/PeakCard.svelte';
   import ShareButton from '$lib/components/ui/ShareButton.svelte';
   import SummitButton from '$lib/components/summit/SummitButton.svelte';
   import SummitModal from '$lib/components/summit/SummitModal.svelte';
@@ -43,6 +44,7 @@
   const trailReports = $derived(data.trailReports);
   const summitLimit = $derived(data.summitLimit);
   const isWatched = $derived(data.isWatched);
+  const relatedPeaks = $derived(data.relatedPeaks);
 
   let modalOpen = $state(false);
   let showUpgradePrompt = $state(false);
@@ -227,25 +229,46 @@
   <!-- Structured Data (JSON-LD) -->
   {@html `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
-    "@type": "Place",
-    "name": peak.name,
-    "description": peak.description,
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": peak.latitude,
-      "longitude": peak.longitude,
-      "elevation": {
-        "@type": "QuantitativeValue",
-        "value": peak.elevation,
-        "unitCode": "FOT"
+    "@graph": [
+      {
+        "@type": "Place",
+        "name": peak.name,
+        "description": peak.description,
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": peak.latitude,
+          "longitude": peak.longitude,
+          "elevation": {
+            "@type": "QuantitativeValue",
+            "value": peak.elevation,
+            "unitCode": "FOT"
+          }
+        },
+        "containedInPlace": {
+          "@type": "AdministrativeArea",
+          "name": peak.range + ", Colorado"
+        },
+        "url": canonicalUrl,
+        "image": ogImage,
+        ...(totalReviews > 0 ? {
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": avgRating.toFixed(1),
+            "reviewCount": totalReviews,
+            "bestRating": 5,
+            "worstRating": 1
+          }
+        } : {})
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Peaks", "item": "https://cairn58.com/peaks" },
+          { "@type": "ListItem", "position": 3, "name": peak.name, "item": canonicalUrl }
+        ]
       }
-    },
-    "containedInPlace": {
-      "@type": "AdministrativeArea",
-      "name": peak.range + ", Colorado"
-    },
-    "url": canonicalUrl,
-    "image": ogImage
+    ]
   })}</script>`}
 </svelte:head>
 
@@ -594,6 +617,27 @@
     </div>
   </div>
 </section>
+
+<!-- Hikers Also Climbed -->
+{#if relatedPeaks.length > 0}
+  <section class="mt-12 animate-fade-in-up">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="heading-section text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+        <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-sunrise/10">
+          <svg class="h-5 w-5 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
+          </svg>
+        </span>
+        Hikers Also Climbed
+      </h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {#each relatedPeaks as relatedPeak (relatedPeak.id)}
+          <PeakCard peak={relatedPeak} />
+        {/each}
+      </div>
+    </div>
+  </section>
+{/if}
 
 <!-- Summit Limit Indicator (free users) -->
 {#if isLoggedIn && summitLimit && !summitLimit.isPro}
