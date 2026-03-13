@@ -185,12 +185,13 @@
   }
 
   // Image upload handler
-  async function handleImageUpload(file: File, caption: string, isPrivate: boolean) {
+  async function handleImageUpload(file: File, caption: string, isPrivate: boolean, category: string) {
     const form = new FormData();
     form.set('peak_id', peak.id);
     form.set('file', file);
     if (caption) form.set('caption', caption);
     if (isPrivate) form.set('is_private', 'true');
+    if (category) form.set('category', category);
 
     const response = await fetch('?/uploadImage', {
       method: 'POST',

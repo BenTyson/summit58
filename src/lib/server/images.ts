@@ -5,6 +5,7 @@ import { getSubscription, isPro } from './subscriptions';
 
 export type PeakImage = Tables<'peak_images'>;
 export type PeakImageInsert = TablesInsert<'peak_images'>;
+export { PHOTO_CATEGORIES, type PhotoCategory } from '$lib/data/categories';
 
 export type PeakImageWithUploader = PeakImage & {
   uploader: { id: string; display_name: string | null } | null;
@@ -104,7 +105,8 @@ export async function uploadPeakImage(
   userId: string,
   file: File,
   caption?: string,
-  isPrivate?: boolean
+  isPrivate?: boolean,
+  category?: string
 ): Promise<PeakImage> {
   const arrayBuffer = await file.arrayBuffer();
   const optimizedBuffer = await optimizeImage(arrayBuffer, {
@@ -142,7 +144,8 @@ export async function uploadPeakImage(
       storage_path: filename,
       caption: caption || null,
       display_order: nextOrder,
-      is_private: isPrivate ?? false
+      is_private: isPrivate ?? false,
+      category: category || null
     })
     .select()
     .single();

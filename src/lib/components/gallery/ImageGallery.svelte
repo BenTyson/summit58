@@ -1,5 +1,6 @@
 <script lang="ts">
   import Lightbox from './Lightbox.svelte';
+  import { PHOTO_CATEGORIES } from '$lib/data/categories';
   import type { PeakImageWithUploader } from '$lib/server/images';
 
   interface Props {
@@ -10,6 +11,16 @@
   }
 
   let { images, getImageUrl, currentUserId, onFlag }: Props = $props();
+
+  let selectedCategory = $state<string | null>(null);
+
+  const availableCategories = $derived(
+    PHOTO_CATEGORIES.filter(cat => images.some(img => img.category === cat))
+  );
+
+  const filteredImages = $derived(
+    selectedCategory ? images.filter(img => img.category === selectedCategory) : images
+  );
 
   let lightboxOpen = $state(false);
   let currentIndex = $state(0);
@@ -54,15 +65,45 @@
     </h2>
     {#if images.length > 0}
       <span class="text-sm text-slate-500 dark:text-slate-400">
-        {images.length} {images.length === 1 ? 'photo' : 'photos'}
+        {filteredImages.length} {filteredImages.length === 1 ? 'photo' : 'photos'}
       </span>
     {/if}
   </div>
 
   {#if images.length > 0}
+    <!-- Category Filter Chips -->
+    {#if availableCategories.length > 0}
+      <div class="flex gap-2 mb-4 overflow-x-auto pb-1 -mx-1 px-1">
+        <button
+          onclick={() => selectedCategory = null}
+          class="
+            flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors
+            {selectedCategory === null
+              ? 'bg-sunrise text-white'
+              : 'bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}
+          "
+        >
+          All
+        </button>
+        {#each availableCategories as cat}
+          <button
+            onclick={() => selectedCategory = cat}
+            class="
+              flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors
+              {selectedCategory === cat
+                ? 'bg-sunrise text-white'
+                : 'bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}
+            "
+          >
+            {cat}
+          </button>
+        {/each}
+      </div>
+    {/if}
+
     <!-- Image Grid -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-      {#each images as image, i}
+      {#each filteredImages as image, i}
         <div class="group relative">
           <button
             onclick={() => openLightbox(i)}
@@ -97,6 +138,13 @@
                 </p>
               {/if}
             </div>
+
+            <!-- Category badge -->
+            {#if image.category}
+              <div class="absolute bottom-2 left-2 px-2 py-0.5 rounded-full bg-black/50 text-white text-[10px] font-medium leading-tight">
+                {image.category}
+              </div>
+            {/if}
 
             <!-- Expand icon -->
             <div class="
@@ -157,7 +205,7 @@
 <!-- Lightbox -->
 {#if lightboxOpen}
   <Lightbox
-    {images}
+    images={filteredImages}
     {currentIndex}
     {getImageUrl}
     onClose={closeLightbox}

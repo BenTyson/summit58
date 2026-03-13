@@ -37,6 +37,11 @@
     return img.caption || null;
   }
 
+  function getCategory(img: typeof currentImage): string | null {
+    if ('category' in img) return (img.category as string) || null;
+    return null;
+  }
+
   function getUploader(img: typeof currentImage): { id: string; display_name: string | null } | null {
     if ('uploader' in img) return img.uploader as { id: string; display_name: string | null } | null;
     return null;
@@ -137,6 +142,11 @@
 
     <!-- Caption + uploader -->
     <div class="mt-4 text-center max-w-xl px-4">
+      {#if getCategory(currentImage)}
+        <span class="inline-block px-2.5 py-0.5 rounded-full bg-white/15 text-white/80 text-xs font-medium mb-2">
+          {getCategory(currentImage)}
+        </span>
+      {/if}
       {#if getCaption(currentImage)}
         <p class="text-white/90">{getCaption(currentImage)}</p>
       {/if}

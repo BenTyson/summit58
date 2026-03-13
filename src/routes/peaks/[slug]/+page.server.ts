@@ -274,6 +274,7 @@ export const actions: Actions = {
     const file = formData.get('file') as File;
     const caption = formData.get('caption') as string | null;
     const isPrivate = formData.get('is_private') === 'true';
+    const category = formData.get('category') as string | null;
 
     if (!peakId || !file) {
       return fail(400, { message: 'Peak ID and file required' });
@@ -288,7 +289,7 @@ export const actions: Actions = {
     }
 
     try {
-      await uploadPeakImage(supabase, peakId, session.user.id, file, caption || undefined, isPrivate);
+      await uploadPeakImage(supabase, peakId, session.user.id, file, caption || undefined, isPrivate, category || undefined);
       return { success: true };
     } catch (e) {
       console.error('Error uploading image:', e);

@@ -121,6 +121,7 @@ export type Database = {
       peak_images: {
         Row: {
           caption: string | null
+          category: string | null
           created_at: string | null
           display_order: number | null
           flag_count: number | null
@@ -134,6 +135,7 @@ export type Database = {
         }
         Insert: {
           caption?: string | null
+          category?: string | null
           created_at?: string | null
           display_order?: number | null
           flag_count?: number | null
@@ -147,6 +149,7 @@ export type Database = {
         }
         Update: {
           caption?: string | null
+          category?: string | null
           created_at?: string | null
           display_order?: number | null
           flag_count?: number | null

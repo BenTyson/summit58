@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { PHOTO_CATEGORIES } from '$lib/data/categories';
+
   interface Props {
     peakId: string;
-    onUpload: (file: File, caption: string, isPrivate: boolean) => Promise<void>;
+    onUpload: (file: File, caption: string, isPrivate: boolean, category: string) => Promise<void>;
   }
 
   let { peakId, onUpload }: Props = $props();
@@ -9,6 +11,7 @@
   let fileInput: HTMLInputElement;
   let selectedFile = $state<File | null>(null);
   let caption = $state('');
+  let category = $state('');
   let isPrivate = $state(false);
   let isUploading = $state(false);
   let isDragging = $state(false);
@@ -64,6 +67,7 @@
   function clearSelection() {
     selectedFile = null;
     caption = '';
+    category = '';
     isPrivate = false;
     previewUrl = null;
     error = null;
@@ -78,7 +82,7 @@
     error = null;
 
     try {
-      await onUpload(selectedFile, caption, isPrivate);
+      await onUpload(selectedFile, caption, isPrivate, category);
       clearSelection();
     } catch (err) {
       error = err instanceof Error ? err.message : 'Upload failed. Please try again.';
@@ -167,6 +171,27 @@
               transition-colors resize-none
             "
           ></textarea>
+
+          <label for="category" class="block text-sm font-medium text-slate-700 dark:text-slate-200 mt-3 mb-1.5">
+            Category (optional)
+          </label>
+          <select
+            id="category"
+            bind:value={category}
+            class="
+              w-full rounded-lg border border-slate-300 dark:border-slate-600
+              bg-white dark:bg-slate-700
+              px-4 py-2.5
+              text-slate-900 dark:text-white text-sm
+              focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+              transition-colors
+            "
+          >
+            <option value="">No category</option>
+            {#each PHOTO_CATEGORIES as cat}
+              <option value={cat}>{cat}</option>
+            {/each}
+          </select>
 
           <label class="mt-3 flex items-center gap-2 cursor-pointer">
             <input
