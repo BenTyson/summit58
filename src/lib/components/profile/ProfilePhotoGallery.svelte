@@ -60,14 +60,24 @@
         </div>
 
         <!-- Peak badge (always visible) -->
-        <div class="absolute top-2 left-2 px-2 py-1 rounded-md bg-black/50 backdrop-blur-sm">
-          <a
-            href="/peaks/{photo.peak.slug}"
-            class="text-white text-xs font-medium hover:underline"
-            onclick={(e) => e.stopPropagation()}
-          >
-            {photo.peak.name}
-          </a>
+        <div class="absolute top-2 left-2 flex items-center gap-1.5">
+          <div class="px-2 py-1 rounded-md bg-black/50 backdrop-blur-sm">
+            <a
+              href="/peaks/{photo.peak.slug}"
+              class="text-white text-xs font-medium hover:underline"
+              onclick={(e) => e.stopPropagation()}
+            >
+              {photo.peak.name}
+            </a>
+          </div>
+          {#if photo.is_private}
+            <div class="px-2 py-1 rounded-md bg-black/50 backdrop-blur-sm flex items-center gap-1">
+              <svg class="h-3 w-3 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span class="text-white/70 text-xs">Private</span>
+            </div>
+          {/if}
         </div>
       </button>
     {/each}

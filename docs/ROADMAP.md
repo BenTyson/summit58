@@ -61,24 +61,33 @@ Created: 2026-03-07
 - [x] Sitemap expanded with learn, blog, leaderboard, pricing URLs
 - [x] Google Search Console setup (manual steps in `docs/ben.md`)
 
-### Phase 6: User-Generated Content (2-3 sessions) [HIGH PRIORITY]
-- [ ] User photo uploads on peak pages (remove admin-only gate)
-  - Multi-photo upload with drag-and-drop
-  - Image optimization pipeline (already exists via Sharp)
-  - Photo attribution (uploader name/link displayed in gallery)
-  - NSFW/spam moderation: admin review queue or flag-based system
-  - Photo reporting (flag inappropriate content)
-  - Upload limits (e.g. 5 photos/peak for free, unlimited for Pro)
+### Phase 6: User Photo Uploads + Moderation [DONE]
+- [x] User photo uploads on peak pages (admin-only gate removed)
+  - Image optimization pipeline (Sharp)
+  - Photo attribution (uploader name/link in gallery + lightbox)
+  - Flag-based moderation: auto-hides at 3 flags, admin reviews at `/admin`
+  - Upload limits: 5 public photos/peak free, unlimited Pro
+  - Private photos (visible only to uploader)
+- [x] Content moderation dashboard (`/admin`)
+  - Review flagged photos, approve/remove
+  - Pending content flags queue (dismiss/action)
+- [x] Community guidelines page (`/guidelines`)
+- [x] Generic `content_flags` table (covers photos, reviews, trail reports)
+
+### Phase 6b: Photo Categories + Gallery Filters [TODO]
+- [ ] Photo category/tag field on `peak_images` (e.g. `category TEXT`)
+  - Categories: Summit, Trailhead, Trail, Hazards, Vistas, Wildlife, Parking & Road Access, Wildflowers, Winter Conditions, Camping
+  - Category selector in ImageUploader (dropdown or chip picker)
+- [ ] Gallery filtering on peak pages (filter chips above photo grid)
+- [ ] Category badge overlay on gallery thumbnails
+- [ ] Category shown in lightbox view
+
+### Phase 6c: User GPX Uploads [TODO]
 - [ ] User GPX upload on routes
   - Upload GPX file, parse to GeoJSON (pipeline exists: `src/lib/server/gpx.ts`)
   - Community-sourced trail data with voting/quality scoring
   - Best trace selected for route display
   - Attribution to uploader
-- [ ] Content moderation dashboard (admin)
-  - Review flagged photos and GPX submissions
-  - Approve/reject queue
-  - Ban/warn users for policy violations
-- [ ] Community guidelines page (`/guidelines`)
 
 ### Phase 7: Affiliate & Partnerships (1-2 sessions)
 - [ ] Contextual gear recommendations on peak/route pages

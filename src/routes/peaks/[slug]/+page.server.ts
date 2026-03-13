@@ -15,7 +15,9 @@ import {
   getImagesForPeak,
   uploadPeakImage,
   deletePeakImage,
-  isAdmin
+  isAdmin,
+  canUploadPhoto,
+  flagImage
 } from '$lib/server/images';
 import { getConditionsForPeak } from '$lib/server/conditions';
 import { getRecentTrailReports, createTrailReport } from '$lib/server/trailReports';
@@ -34,26 +36,25 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     });
   }
 
-  // Get current user session
   const { data: { session } } = await supabase.auth.getSession();
 
-  // Get user's summits for this peak if logged in
   let userSummits: Awaited<ReturnType<typeof getUserSummitsForPeak>> = [];
   let userReview: Awaited<ReturnType<typeof getUserReviewForPeak>> = null;
 
   let summitLimit: { allowed: boolean; remaining: number; isPro: boolean } | null = null;
+  let photoLimit: { allowed: boolean; remaining: number; isPro: boolean } | null = null;
   let isWatched = false;
 
   if (session?.user) {
-    [userSummits, userReview, summitLimit, isWatched] = await Promise.all([
+    [userSummits, userReview, summitLimit, isWatched, photoLimit] = await Promise.all([
       getUserSummitsForPeak(supabase, session.user.id, peak.id),
       getUserReviewForPeak(supabase, session.user.id, peak.id),
       canLogSummit(supabase, session.user.id),
-      isOnWatchlist(supabase, session.user.id, peak.id)
+      isOnWatchlist(supabase, session.user.id, peak.id),
+      canUploadPhoto(supabase, session.user.id, peak.id)
     ]);
   }
 
-  // Get all reviews, stats, images, weather conditions, and trail reports
   const [reviews, reviewStats, images, conditions, trailReports, relatedPeaks] = await Promise.all([
     getPeakReviews(supabase, peak.id),
     getPeakReviewStats(supabase, peak.id),
@@ -78,6 +79,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     trailReports,
     relatedPeaks,
     summitLimit,
+    photoLimit,
     isWatched
   };
 };
@@ -105,7 +107,6 @@ export const actions: Actions = {
       return fail(400, { message: 'Peak ID and date are required' });
     }
 
-    // Check summit limit for free users
     const summitCheck = await canLogSummit(supabase, session.user.id);
     if (!summitCheck.allowed) {
       return fail(403, { limitReached: true, remaining: 0 });
@@ -124,7 +125,6 @@ export const actions: Actions = {
         party_size: partySize ? parseInt(partySize, 10) : null
       });
 
-      // Check for new achievements
       const newAchievements = await checkAndAwardAchievements(supabase, session.user.id, 'summit');
 
       return { success: true, newAchievements };
@@ -158,7 +158,6 @@ export const actions: Actions = {
     }
   },
 
-  // Review actions
   submitReview: async ({ request, cookies }) => {
     const supabase = createSupabaseServerClient(cookies);
     const { data: { session } } = await supabase.auth.getSession();
@@ -190,7 +189,6 @@ export const actions: Actions = {
         conditions: conditions || null
       });
 
-      // Check for new achievements
       const newAchievements = await checkAndAwardAchievements(supabase, session.user.id, 'review');
 
       return { success: true, newAchievements };
@@ -263,26 +261,34 @@ export const actions: Actions = {
     }
   },
 
-  // Image actions (admin only)
   uploadImage: async ({ request, cookies }) => {
     const supabase = createSupabaseServerClient(cookies);
     const { data: { session } } = await supabase.auth.getSession();
 
-    if (!session?.user || !isAdmin(session.user.id)) {
-      return fail(403, { message: 'Admin access required' });
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in to upload photos' });
     }
 
     const formData = await request.formData();
     const peakId = formData.get('peak_id') as string;
     const file = formData.get('file') as File;
     const caption = formData.get('caption') as string | null;
+    const isPrivate = formData.get('is_private') === 'true';
 
     if (!peakId || !file) {
       return fail(400, { message: 'Peak ID and file required' });
     }
 
+    // Check photo limit (only for public photos)
+    if (!isPrivate) {
+      const photoCheck = await canUploadPhoto(supabase, session.user.id, peakId);
+      if (!photoCheck.allowed) {
+        return fail(403, { photoLimitReached: true });
+      }
+    }
+
     try {
-      await uploadPeakImage(supabase, peakId, session.user.id, file, caption || undefined);
+      await uploadPeakImage(supabase, peakId, session.user.id, file, caption || undefined, isPrivate);
       return { success: true };
     } catch (e) {
       console.error('Error uploading image:', e);
@@ -294,8 +300,8 @@ export const actions: Actions = {
     const supabase = createSupabaseServerClient(cookies);
     const { data: { session } } = await supabase.auth.getSession();
 
-    if (!session?.user || !isAdmin(session.user.id)) {
-      return fail(403, { message: 'Admin access required' });
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in' });
     }
 
     const formData = await request.formData();
@@ -303,6 +309,19 @@ export const actions: Actions = {
 
     if (!imageId) {
       return fail(400, { message: 'Image ID required' });
+    }
+
+    // Verify ownership or admin
+    if (!isAdmin(session.user.id)) {
+      const { data: image } = await supabase
+        .from('peak_images')
+        .select('uploaded_by')
+        .eq('id', imageId)
+        .single();
+
+      if (image?.uploaded_by !== session.user.id) {
+        return fail(403, { message: 'Can only delete your own photos' });
+      }
     }
 
     try {
@@ -314,7 +333,35 @@ export const actions: Actions = {
     }
   },
 
-  // Watchlist actions
+  flagImage: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user) {
+      return fail(401, { message: 'Must be logged in to report photos' });
+    }
+
+    const formData = await request.formData();
+    const imageId = formData.get('image_id') as string;
+    const reason = formData.get('reason') as 'inappropriate' | 'spam' | 'inaccurate' | 'other';
+    const details = formData.get('details') as string | null;
+
+    if (!imageId || !reason) {
+      return fail(400, { message: 'Image ID and reason required' });
+    }
+
+    try {
+      await flagImage(supabase, imageId, session.user.id, reason, details || undefined);
+      return { success: true };
+    } catch (e: any) {
+      if (e.message === 'You have already reported this photo') {
+        return fail(400, { message: e.message });
+      }
+      console.error('Error flagging image:', e);
+      return fail(500, { message: 'Failed to report photo' });
+    }
+  },
+
   addToWatchlist: async ({ request, cookies }) => {
     const supabase = createSupabaseServerClient(cookies);
     const { data: { session } } = await supabase.auth.getSession();
@@ -363,7 +410,6 @@ export const actions: Actions = {
     }
   },
 
-  // Trail report actions
   submitTrailReport: async ({ request, cookies }) => {
     const supabase = createSupabaseServerClient(cookies);
     const { data: { session } } = await supabase.auth.getSession();
@@ -401,7 +447,6 @@ export const actions: Actions = {
         notes: notes || null
       });
 
-      // Check for new achievements
       const newAchievements = await checkAndAwardAchievements(supabase, session.user.id, 'trail_report');
 
       return { success: true, newAchievements };

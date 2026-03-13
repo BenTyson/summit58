@@ -64,7 +64,7 @@ export const actions: Actions = {
 | SummitButton | `components/summit/` | Log summit CTA |
 | ReviewSection | `components/review/` | Reviews display + form |
 | ImageGallery | `components/gallery/` | Photo grid + lightbox |
-| ImageUploader | `components/gallery/` | Admin photo upload |
+| ImageUploader | `components/gallery/` | Photo upload (all users, private toggle) |
 | SearchModal | `components/search/` | Global search (⌘K) |
 | PeakMap | `components/map/` | Main map with peaks + trail overlay |
 | TrailMap | `components/map/` | Route detail trail polyline |
@@ -119,6 +119,8 @@ export const actions: Actions = {
 | `/blog` | Blog hub |
 | `/blog/welcome` | Welcome to Cairn58 post |
 | `/blog/why-we-built-cairn58` | Origin story post |
+| `/admin` | Moderation dashboard (admin-only) |
+| `/guidelines` | Community guidelines |
 | `/auth` | Login/signup |
 
 ---

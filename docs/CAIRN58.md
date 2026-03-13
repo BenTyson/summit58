@@ -231,7 +231,7 @@ static/images/peaks/              → Custom peak hero images
 - Quick stats bar showing peaks, progress, summits, badges
 - Profile tabs fully implemented: Activity, Photos, Trips, Buddies
 - Follow system with follower/following lists and suggestions
-- Trip planning with create/edit (delete not yet wired to UI)
+- Trip planning with create/edit/delete
 
 ### Content & SEO
 - Learn section: 6 guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq)
@@ -340,6 +340,7 @@ Dark mode: `.dark` class on html element.
 - 2026-03-07: Launch audit, monetization strategy, roadmap created
 - 2026-03-08: Phase 3 (monetization stubs) + Phase 4 (sharing, watchlist, advanced stats, friends feed)
 - 2026-03-08: Phase 5 (SEO structured data, learn guides, blog, sitemap, "Hikers Also Climbed")
+- 2026-03-12: Phase 6 (UGC photo uploads, moderation, flagging, admin page, community guidelines)
 
 ---
 

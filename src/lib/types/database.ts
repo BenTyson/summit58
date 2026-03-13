@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      content_flags: {
+        Row: {
+          content_id: string
+          content_type: string
+          created_at: string | null
+          details: string | null
+          id: string
+          reason: string
+          reported_by: string
+          reviewed_by: string | null
+          status: string | null
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          created_at?: string | null
+          details?: string | null
+          id?: string
+          reason: string
+          reported_by: string
+          reviewed_by?: string | null
+          status?: string | null
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          created_at?: string | null
+          details?: string | null
+          id?: string
+          reason?: string
+          reported_by?: string
+          reviewed_by?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       peak_conditions: {
         Row: {
           cloud_cover_percent: number | null
@@ -87,9 +123,12 @@ export type Database = {
           caption: string | null
           created_at: string | null
           display_order: number | null
+          flag_count: number | null
           id: string
           is_hero: boolean | null
+          is_private: boolean | null
           peak_id: string
+          status: string | null
           storage_path: string
           uploaded_by: string
         }
@@ -97,9 +136,12 @@ export type Database = {
           caption?: string | null
           created_at?: string | null
           display_order?: number | null
+          flag_count?: number | null
           id?: string
           is_hero?: boolean | null
+          is_private?: boolean | null
           peak_id: string
+          status?: string | null
           storage_path: string
           uploaded_by: string
         }
@@ -107,9 +149,12 @@ export type Database = {
           caption?: string | null
           created_at?: string | null
           display_order?: number | null
+          flag_count?: number | null
           id?: string
           is_hero?: boolean | null
+          is_private?: boolean | null
           peak_id?: string
+          status?: string | null
           storage_path?: string
           uploaded_by?: string
         }

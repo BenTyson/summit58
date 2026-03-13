@@ -1,12 +1,15 @@
 <script lang="ts">
+  import type { PeakImageWithUploader } from '$lib/server/images';
   import type { PeakImage } from '$lib/server/images';
 
   interface Props {
-    images: PeakImage[];
+    images: (PeakImageWithUploader | PeakImage | { url: string; caption: string | null })[];
     currentIndex: number;
-    getImageUrl: (path: string) => string;
+    getImageUrl?: (path: string) => string;
     onClose: () => void;
     onNavigate: (index: number) => void;
+    currentUserId?: string;
+    onFlag?: (imageId: string, reason: string) => Promise<void>;
   }
 
   let {
@@ -14,12 +17,40 @@
     currentIndex,
     getImageUrl,
     onClose,
-    onNavigate
+    onNavigate,
+    currentUserId,
+    onFlag
   }: Props = $props();
 
   const currentImage = $derived(images[currentIndex]);
   const hasPrev = $derived(currentIndex > 0);
   const hasNext = $derived(currentIndex < images.length - 1);
+
+  // Helper to get image src — works with storage_path or direct url
+  function getSrc(img: typeof currentImage): string {
+    if ('url' in img && img.url) return img.url;
+    if ('storage_path' in img && getImageUrl) return getImageUrl(img.storage_path);
+    return '';
+  }
+
+  function getCaption(img: typeof currentImage): string | null {
+    return img.caption || null;
+  }
+
+  function getUploader(img: typeof currentImage): { id: string; display_name: string | null } | null {
+    if ('uploader' in img) return img.uploader as { id: string; display_name: string | null } | null;
+    return null;
+  }
+
+  function getImageId(img: typeof currentImage): string | null {
+    if ('id' in img) return img.id as string;
+    return null;
+  }
+
+  function getUploadedBy(img: typeof currentImage): string | null {
+    if ('uploaded_by' in img) return img.uploaded_by as string;
+    return null;
+  }
 
   function handleKeydown(e: KeyboardEvent) {
     switch (e.key) {
@@ -99,16 +130,37 @@
   <!-- Image container -->
   <div class="max-w-[90vw] max-h-[85vh] flex flex-col items-center">
     <img
-      src={getImageUrl(currentImage.storage_path)}
-      alt={currentImage.caption || 'Peak image'}
+      src={getSrc(currentImage)}
+      alt={getCaption(currentImage) || 'Peak image'}
       class="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl animate-fade-in"
     />
 
-    <!-- Caption -->
-    {#if currentImage.caption}
-      <p class="mt-4 text-white/90 text-center max-w-xl px-4">
-        {currentImage.caption}
-      </p>
+    <!-- Caption + uploader -->
+    <div class="mt-4 text-center max-w-xl px-4">
+      {#if getCaption(currentImage)}
+        <p class="text-white/90">{getCaption(currentImage)}</p>
+      {/if}
+      {#if getUploader(currentImage)?.display_name}
+        <p class="text-white/60 text-sm mt-1">
+          Photo by <a href="/users/{getUploadedBy(currentImage)}" class="text-sunrise hover:text-sunrise-coral">{getUploader(currentImage)?.display_name}</a>
+        </p>
+      {/if}
+    </div>
+
+    <!-- Flag button in lightbox -->
+    {#if onFlag && currentUserId && getImageId(currentImage) && getUploadedBy(currentImage) !== currentUserId}
+      <button
+        onclick={() => {
+          const id = getImageId(currentImage);
+          if (id) onFlag(id, 'inappropriate');
+        }}
+        class="mt-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 text-white/60 text-xs hover:bg-red-500/30 hover:text-white transition-colors"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+        </svg>
+        Report
+      </button>
     {/if}
   </div>
 
@@ -125,7 +177,7 @@
           aria-label="Go to image {i + 1}"
         >
           <img
-            src={getImageUrl(image.storage_path)}
+            src={getSrc(image)}
             alt=""
             class="w-full h-full object-cover"
           />

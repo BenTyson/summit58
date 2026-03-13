@@ -1,27 +1,67 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database, Tables, TablesInsert } from '$lib/types/database';
 import { optimizeImage } from './imageOptimizer';
+import { getSubscription, isPro } from './subscriptions';
 
 export type PeakImage = Tables<'peak_images'>;
 export type PeakImageInsert = TablesInsert<'peak_images'>;
 
+export type PeakImageWithUploader = PeakImage & {
+  uploader: { id: string; display_name: string | null } | null;
+};
+
 const ADMIN_USER_ID = 'c983d602-d0e0-4da6-be9d-f91a456bfdb0';
 const STORAGE_BUCKET = 'peak-images';
+const FREE_PHOTO_LIMIT = 5;
 
-// Check if user is admin
 export function isAdmin(userId: string | undefined): boolean {
   return userId === ADMIN_USER_ID;
 }
 
-// Get all images for a peak
+// Check if user can upload another photo for a peak
+export async function canUploadPhoto(
+  supabase: SupabaseClient<Database>,
+  userId: string,
+  peakId: string
+): Promise<{ allowed: boolean; remaining: number; isPro: boolean }> {
+  const subscription = await getSubscription(supabase, userId);
+  const userIsPro = isPro(subscription);
+
+  if (userIsPro) {
+    return { allowed: true, remaining: Infinity, isPro: true };
+  }
+
+  // Count user's public photos for this peak
+  const { count, error } = await supabase
+    .from('peak_images')
+    .select('id', { count: 'exact', head: true })
+    .eq('uploaded_by', userId)
+    .eq('peak_id', peakId)
+    .eq('is_private', false);
+
+  if (error) throw error;
+
+  const photoCount = count ?? 0;
+  const remaining = Math.max(0, FREE_PHOTO_LIMIT - photoCount);
+
+  return {
+    allowed: photoCount < FREE_PHOTO_LIMIT,
+    remaining,
+    isPro: false
+  };
+}
+
+// Get images for a peak (approved + public only, with uploader info)
 export async function getImagesForPeak(
   supabase: SupabaseClient<Database>,
   peakId: string
-): Promise<PeakImage[]> {
+): Promise<PeakImageWithUploader[]> {
   const { data, error } = await supabase
     .from('peak_images')
     .select('*')
     .eq('peak_id', peakId)
+    .eq('status', 'approved')
+    .eq('is_private', false)
     .order('display_order', { ascending: true })
     .order('created_at', { ascending: false });
 
@@ -29,10 +69,24 @@ export async function getImagesForPeak(
     console.error('Error fetching peak images:', error);
     return [];
   }
-  return data ?? [];
+
+  if (!data || data.length === 0) return [];
+
+  // Get uploader profiles
+  const uploaderIds = [...new Set(data.map((img) => img.uploaded_by))];
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('id, display_name')
+    .in('id', uploaderIds);
+
+  const profileMap = new Map(profiles?.map((p) => [p.id, p]) ?? []);
+
+  return data.map((img) => ({
+    ...img,
+    uploader: profileMap.get(img.uploaded_by) ?? null
+  }));
 }
 
-// Get public URL for an image
 export function getImageUrl(
   supabase: SupabaseClient<Database>,
   storagePath: string
@@ -49,9 +103,9 @@ export async function uploadPeakImage(
   peakId: string,
   userId: string,
   file: File,
-  caption?: string
+  caption?: string,
+  isPrivate?: boolean
 ): Promise<PeakImage> {
-  // Convert file to buffer and optimize
   const arrayBuffer = await file.arrayBuffer();
   const optimizedBuffer = await optimizeImage(arrayBuffer, {
     maxWidth: 1600,
@@ -59,21 +113,18 @@ export async function uploadPeakImage(
     quality: 80
   });
 
-  // Generate unique filename (always .jpg after optimization)
   const filename = `${peakId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
 
-  // Upload optimized image to storage
   const { error: uploadError } = await supabase.storage
     .from(STORAGE_BUCKET)
     .upload(filename, optimizedBuffer, {
-      cacheControl: '31536000', // 1 year cache for optimized images
+      cacheControl: '31536000',
       contentType: 'image/jpeg',
       upsert: false
     });
 
   if (uploadError) throw uploadError;
 
-  // Get current max display_order
   const { data: existing } = await supabase
     .from('peak_images')
     .select('display_order')
@@ -83,7 +134,6 @@ export async function uploadPeakImage(
 
   const nextOrder = (existing?.[0]?.display_order ?? -1) + 1;
 
-  // Insert record
   const { data, error } = await supabase
     .from('peak_images')
     .insert({
@@ -91,13 +141,13 @@ export async function uploadPeakImage(
       uploaded_by: userId,
       storage_path: filename,
       caption: caption || null,
-      display_order: nextOrder
+      display_order: nextOrder,
+      is_private: isPrivate ?? false
     })
     .select()
     .single();
 
   if (error) {
-    // Clean up uploaded file on insert failure
     await supabase.storage.from(STORAGE_BUCKET).remove([filename]);
     throw error;
   }
@@ -105,12 +155,10 @@ export async function uploadPeakImage(
   return data;
 }
 
-// Delete an image
 export async function deletePeakImage(
   supabase: SupabaseClient<Database>,
   imageId: string
 ): Promise<void> {
-  // Get the image record first
   const { data: image, error: fetchError } = await supabase
     .from('peak_images')
     .select('storage_path')
@@ -119,7 +167,6 @@ export async function deletePeakImage(
 
   if (fetchError) throw fetchError;
 
-  // Delete from storage
   const { error: storageError } = await supabase.storage
     .from(STORAGE_BUCKET)
     .remove([image.storage_path]);
@@ -128,7 +175,6 @@ export async function deletePeakImage(
     console.error('Error deleting from storage:', storageError);
   }
 
-  // Delete record
   const { error } = await supabase
     .from('peak_images')
     .delete()
@@ -137,7 +183,6 @@ export async function deletePeakImage(
   if (error) throw error;
 }
 
-// Update image caption
 export async function updateImageCaption(
   supabase: SupabaseClient<Database>,
   imageId: string,
@@ -154,13 +199,11 @@ export async function updateImageCaption(
   return data;
 }
 
-// Reorder images
 export async function reorderImages(
   supabase: SupabaseClient<Database>,
   peakId: string,
   imageIds: string[]
 ): Promise<void> {
-  // Update each image's display_order
   const updates = imageIds.map((id, index) =>
     supabase
       .from('peak_images')
@@ -170,6 +213,128 @@ export async function reorderImages(
   );
 
   await Promise.all(updates);
+}
+
+// Flag an image — increments flag_count and auto-flags at threshold
+export async function flagImage(
+  supabase: SupabaseClient<Database>,
+  imageId: string,
+  userId: string,
+  reason: 'inappropriate' | 'spam' | 'inaccurate' | 'other',
+  details?: string
+): Promise<void> {
+  // Insert the flag
+  const { error: flagError } = await supabase
+    .from('content_flags')
+    .insert({
+      content_type: 'photo',
+      content_id: imageId,
+      reported_by: userId,
+      reason,
+      details: details || null
+    });
+
+  if (flagError) {
+    if (flagError.code === '23505') {
+      throw new Error('You have already reported this photo');
+    }
+    throw flagError;
+  }
+
+  // Increment flag_count on the image
+  const { data: image } = await supabase
+    .from('peak_images')
+    .select('flag_count')
+    .eq('id', imageId)
+    .single();
+
+  const newCount = (image?.flag_count ?? 0) + 1;
+  const updates: Record<string, unknown> = { flag_count: newCount };
+
+  // Auto-flag at 3 reports
+  if (newCount >= 3) {
+    updates.status = 'flagged';
+  }
+
+  await supabase
+    .from('peak_images')
+    .update(updates)
+    .eq('id', imageId);
+}
+
+export type FlaggedImage = PeakImage & {
+  peak: { id: string; name: string; slug: string };
+  uploader: { id: string; display_name: string | null } | null;
+};
+
+// Get flagged images for admin moderation
+export async function getFlaggedImages(
+  supabase: SupabaseClient<Database>
+): Promise<FlaggedImage[]> {
+  const { data, error } = await supabase
+    .from('peak_images')
+    .select(`
+      *,
+      peak:peaks(id, name, slug)
+    `)
+    .eq('status', 'flagged')
+    .order('flag_count', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching flagged images:', error);
+    return [];
+  }
+
+  if (!data || data.length === 0) return [];
+
+  // Get uploader profiles
+  const uploaderIds = [...new Set(data.map((img) => img.uploaded_by))];
+  const { data: profiles } = await supabase
+    .from('profiles')
+    .select('id, display_name')
+    .in('id', uploaderIds);
+
+  const profileMap = new Map(profiles?.map((p) => [p.id, p]) ?? []);
+
+  return data.map((img) => ({
+    ...img,
+    peak: img.peak as FlaggedImage['peak'],
+    uploader: profileMap.get(img.uploaded_by) ?? null
+  }));
+}
+
+// Admin moderation action
+export async function moderateImage(
+  supabase: SupabaseClient<Database>,
+  imageId: string,
+  action: 'approve' | 'remove',
+  reviewerId: string
+): Promise<void> {
+  const newStatus = action === 'approve' ? 'approved' : 'removed';
+
+  // Update image status (and reset flag_count if approving)
+  const updates: Record<string, unknown> = { status: newStatus };
+  if (action === 'approve') {
+    updates.flag_count = 0;
+  }
+
+  const { error } = await supabase
+    .from('peak_images')
+    .update(updates)
+    .eq('id', imageId);
+
+  if (error) throw error;
+
+  // Resolve related content flags
+  await supabase
+    .from('content_flags')
+    .update({
+      status: action === 'approve' ? 'dismissed' : 'actioned',
+      reviewed_by: reviewerId
+    })
+    .eq('content_type', 'photo')
+    .eq('content_id', imageId)
+    .eq('status', 'pending');
 }
 
 // Extended type with peak info for user's photo gallery
@@ -182,7 +347,6 @@ export type UserPhotoWithPeak = PeakImage & {
   url: string;
 };
 
-// Get all photos uploaded by a user
 export async function getUserPhotos(
   supabase: SupabaseClient<Database>,
   userId: string
@@ -201,7 +365,6 @@ export async function getUserPhotos(
     return [];
   }
 
-  // Add public URLs
   return (data ?? []).map((photo) => ({
     ...photo,
     peak: photo.peak as UserPhotoWithPeak['peak'],

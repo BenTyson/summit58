@@ -1,16 +1,21 @@
 <script lang="ts">
   import Lightbox from './Lightbox.svelte';
-  import type { PeakImage } from '$lib/server/images';
+  import type { PeakImageWithUploader } from '$lib/server/images';
 
   interface Props {
-    images: PeakImage[];
+    images: PeakImageWithUploader[];
     getImageUrl: (path: string) => string;
+    currentUserId?: string;
+    onFlag?: (imageId: string, reason: string) => Promise<void>;
   }
 
-  let { images, getImageUrl }: Props = $props();
+  let { images, getImageUrl, currentUserId, onFlag }: Props = $props();
 
   let lightboxOpen = $state(false);
   let currentIndex = $state(0);
+  let flaggingImageId = $state<string | null>(null);
+  let flagReason = $state('inappropriate');
+  let flagSubmitting = $state(false);
 
   function openLightbox(index: number) {
     currentIndex = index;
@@ -23,6 +28,18 @@
 
   function navigateLightbox(index: number) {
     currentIndex = index;
+  }
+
+  async function submitFlag() {
+    if (!flaggingImageId || !onFlag) return;
+    flagSubmitting = true;
+    try {
+      await onFlag(flaggingImageId, flagReason);
+      flaggingImageId = null;
+      flagReason = 'inappropriate';
+    } finally {
+      flagSubmitting = false;
+    }
   }
 </script>
 
@@ -46,47 +63,83 @@
     <!-- Image Grid -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
       {#each images as image, i}
-        <button
-          onclick={() => openLightbox(i)}
-          class="
-            group relative aspect-square rounded-xl overflow-hidden
-            bg-slate-100 dark:bg-slate-800
-            hover:ring-2 hover:ring-sunrise hover:ring-offset-2 dark:hover:ring-offset-slate-900
-            transition-all duration-200
-            focus:outline-none focus:ring-2 focus:ring-sunrise focus:ring-offset-2
-          "
-        >
-          <img
-            src={getImageUrl(image.storage_path)}
-            alt={image.caption || 'Peak photo'}
-            loading="lazy"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+        <div class="group relative">
+          <button
+            onclick={() => openLightbox(i)}
+            class="
+              w-full aspect-square rounded-xl overflow-hidden
+              bg-slate-100 dark:bg-slate-800
+              hover:ring-2 hover:ring-sunrise hover:ring-offset-2 dark:hover:ring-offset-slate-900
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-sunrise focus:ring-offset-2
+            "
+          >
+            <img
+              src={getImageUrl(image.storage_path)}
+              alt={image.caption || 'Peak photo'}
+              loading="lazy"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
 
-          <!-- Hover overlay with caption -->
-          {#if image.caption}
+            <!-- Hover overlay with caption + uploader -->
             <div class="
               absolute inset-x-0 bottom-0 p-3
               bg-gradient-to-t from-black/70 to-transparent
               opacity-0 group-hover:opacity-100
               transition-opacity duration-200
             ">
-              <p class="text-white text-sm line-clamp-2">{image.caption}</p>
+              {#if image.caption}
+                <p class="text-white text-sm line-clamp-1">{image.caption}</p>
+              {/if}
+              {#if image.uploader?.display_name}
+                <p class="text-white/70 text-xs mt-0.5">
+                  by {image.uploader.display_name}
+                </p>
+              {/if}
             </div>
+
+            <!-- Expand icon -->
+            <div class="
+              absolute top-2 right-2
+              p-1.5 rounded-full bg-black/30
+              opacity-0 group-hover:opacity-100
+              transition-opacity duration-200
+            ">
+              <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+            </div>
+          </button>
+
+          <!-- Flag button (not on own photos) -->
+          {#if onFlag && currentUserId && image.uploaded_by !== currentUserId}
+            <button
+              onclick={() => { flaggingImageId = image.id; }}
+              class="
+                absolute top-2 left-2
+                p-1.5 rounded-full bg-black/30
+                opacity-0 group-hover:opacity-100
+                transition-opacity duration-200
+                text-white hover:bg-red-500/80
+              "
+              title="Report photo"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+              </svg>
+            </button>
           {/if}
 
-          <!-- Expand icon -->
-          <div class="
-            absolute top-2 right-2
-            p-1.5 rounded-full bg-black/30
-            opacity-0 group-hover:opacity-100
-            transition-opacity duration-200
-          ">
-            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-            </svg>
-          </div>
-        </button>
+          <!-- Uploader attribution below image -->
+          {#if image.uploader?.display_name}
+            <a
+              href="/users/{image.uploaded_by}"
+              class="block mt-1 text-xs text-slate-500 dark:text-slate-400 hover:text-sunrise truncate"
+            >
+              {image.uploader.display_name}
+            </a>
+          {/if}
+        </div>
       {/each}
     </div>
   {:else}
@@ -109,5 +162,43 @@
     {getImageUrl}
     onClose={closeLightbox}
     onNavigate={navigateLightbox}
+    {currentUserId}
+    {onFlag}
   />
+{/if}
+
+<!-- Flag Modal -->
+{#if flaggingImageId}
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-sm w-full mx-4 p-6">
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Report Photo</h3>
+
+      <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Reason</label>
+      <select
+        bind:value={flagReason}
+        class="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white mb-4"
+      >
+        <option value="inappropriate">Inappropriate content</option>
+        <option value="spam">Spam</option>
+        <option value="inaccurate">Wrong peak / inaccurate</option>
+        <option value="other">Other</option>
+      </select>
+
+      <div class="flex gap-3">
+        <button
+          onclick={() => { flaggingImageId = null; }}
+          class="flex-1 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50"
+        >
+          Cancel
+        </button>
+        <button
+          onclick={submitFlag}
+          disabled={flagSubmitting}
+          class="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 disabled:opacity-50"
+        >
+          {flagSubmitting ? 'Reporting...' : 'Report'}
+        </button>
+      </div>
+    </div>
+  </div>
 {/if}

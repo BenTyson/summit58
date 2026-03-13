@@ -6,12 +6,16 @@
   import ReloadPrompt from '$lib/components/pwa/ReloadPrompt.svelte';
   import type { LayoutData } from './$types';
 
+  const ADMIN_USER_ID = 'c983d602-d0e0-4da6-be9d-f91a456bfdb0';
+
   interface Props {
     children: import('svelte').Snippet;
     data: LayoutData;
   }
 
   let { children, data }: Props = $props();
+
+  const isAdmin = $derived(data.session?.user?.id === ADMIN_USER_ID);
 </script>
 
 <a
@@ -22,7 +26,7 @@
 </a>
 
 <div class="flex min-h-screen flex-col">
-  <Header session={data.session} profile={data.profile} peaks={data.peaks} />
+  <Header session={data.session} profile={data.profile} peaks={data.peaks} {isAdmin} />
   <main id="main-content" class="flex-1">
     {@render children()}
   </main>

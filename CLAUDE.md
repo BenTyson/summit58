@@ -39,8 +39,8 @@ scripts/              Utility scripts (image optimization, GPX import)
 ## Database (Quick Ref)
 
 Core: `peaks` (58), `routes` (66), `peak_conditions` (weather)
-User: `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`, `peak_watchlist`, `user_subscriptions`
-Storage buckets: `peak-images` (gallery), `profile-images` (avatar/cover)
+User: `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`, `peak_watchlist`, `user_subscriptions`, `content_flags`
+Storage buckets: `peak-images` (gallery, all authenticated users), `profile-images` (avatar/cover)
 RLS: public read on most tables, users CRUD own data
 
 See [docs/session-start/database.md](docs/session-start/database.md) for full schema.
@@ -63,6 +63,8 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 | `/auth` | Login/signup |
 | `/learn/*` | Educational guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq) |
 | `/blog`, `/blog/*` | Blog hub + posts |
+| `/admin` | Moderation dashboard (admin-only) |
+| `/guidelines` | Community guidelines |
 
 ## Known Issues
 
@@ -75,7 +77,7 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 - PWA glob warning is harmless (ignore it)
 - `semver` circular dependency warning in node_modules (harmless)
 - API endpoints: `/api/webhooks/weather`, `/api/checkout`, `/api/portal`, `/api/webhooks/stripe` (last 3 are stubs)
-- Admin check: hardcoded user ID in `src/lib/server/images.ts`
+- Admin check: hardcoded user ID in `src/lib/server/images.ts` (used for admin page gate + moderation)
 
 ## Deep Dive Docs
 

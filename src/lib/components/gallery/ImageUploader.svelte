@@ -1,7 +1,7 @@
 <script lang="ts">
   interface Props {
     peakId: string;
-    onUpload: (file: File, caption: string) => Promise<void>;
+    onUpload: (file: File, caption: string, isPrivate: boolean) => Promise<void>;
   }
 
   let { peakId, onUpload }: Props = $props();
@@ -9,6 +9,7 @@
   let fileInput: HTMLInputElement;
   let selectedFile = $state<File | null>(null);
   let caption = $state('');
+  let isPrivate = $state(false);
   let isUploading = $state(false);
   let isDragging = $state(false);
   let previewUrl = $state<string | null>(null);
@@ -63,6 +64,7 @@
   function clearSelection() {
     selectedFile = null;
     caption = '';
+    isPrivate = false;
     previewUrl = null;
     error = null;
     if (fileInput) fileInput.value = '';
@@ -76,7 +78,7 @@
     error = null;
 
     try {
-      await onUpload(selectedFile, caption);
+      await onUpload(selectedFile, caption, isPrivate);
       clearSelection();
     } catch (err) {
       error = err instanceof Error ? err.message : 'Upload failed. Please try again.';
@@ -165,6 +167,16 @@
               transition-colors resize-none
             "
           ></textarea>
+
+          <label class="mt-3 flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              bind:checked={isPrivate}
+              class="rounded border-slate-300 dark:border-slate-600 text-sunrise focus:ring-sunrise"
+            />
+            <span class="text-sm text-slate-600 dark:text-slate-400">Private photo</span>
+            <span class="text-xs text-slate-400 dark:text-slate-500">(only visible to you)</span>
+          </label>
 
           <button
             type="submit"

@@ -56,12 +56,13 @@ The `routes.trail_geometry` JSONB column stores trail paths (data was removed du
 | `user_reviews` | Peak reviews | user_id, peak_id, rating (1-5), title, body |
 | `user_achievements` | Earned achievements | user_id, achievement_id, earned_at, notified |
 | `trail_reports` | Trail conditions | user_id, peak_id, hike_date, trail_status, snow_depth, hazards |
-| `peak_images` | Photo gallery | peak_id, storage_path, caption, display_order |
+| `peak_images` | Photo gallery | peak_id, storage_path, caption, display_order, status, is_private, flag_count |
 | `user_follows` | Follow system | follower_id, following_id, created_at |
 | `planned_trips` | Trip planning | user_id, title, start_date, end_date, status, is_public |
 | `planned_trip_peaks` | Trip peak list | trip_id, peak_id, route_id, day_number, sort_order |
 | `peak_watchlist` | Peak watch/bookmark | user_id, peak_id, created_at (unique user+peak) |
 | `user_subscriptions` | Pro subscriptions | user_id, plan, status, stripe_customer_id, current_period_end |
+| `content_flags` | Content moderation flags | content_type (photo/review/trail_report), content_id, reported_by, reason, status |
 
 ### Profile Fields
 
@@ -93,7 +94,7 @@ The `routes.trail_geometry` JSONB column stores trail paths (data was removed du
 
 | Bucket | Purpose | Access |
 |--------|---------|--------|
-| `peak-images` | Gallery photos | Public read, admin write |
+| `peak-images` | Gallery photos | Public read, authenticated write |
 | `profile-images` | Avatar & cover photos | Public read, own user write |
 
 ## RLS Policies
@@ -106,7 +107,8 @@ The `routes.trail_geometry` JSONB column stores trail paths (data was removed du
 | user_reviews | Public | Own only (one per peak) |
 | user_achievements | Public | Own only |
 | trail_reports | Public | Own only |
-| peak_images | Public | Admin only |
+| peak_images | Approved+public or own | Own + admin |
+| content_flags | Own + admin | Own insert, admin update |
 | user_follows | Public | Own only (follower_id) |
 | planned_trips | Own + public trips | Own only |
 | planned_trip_peaks | Via parent trip | Via parent trip |
@@ -140,7 +142,8 @@ const { data } = await supabase
 | `src/lib/server/peaks.ts` | Peak queries |
 | `src/lib/server/summits.ts` | Summit CRUD + stats |
 | `src/lib/server/reviews.ts` | Review CRUD |
-| `src/lib/server/images.ts` | Image gallery CRUD |
+| `src/lib/server/images.ts` | Image gallery CRUD + moderation |
+| `src/lib/server/flags.ts` | Content flagging CRUD |
 | `src/lib/server/conditions.ts` | Weather fetch + queries |
 | `src/lib/server/trailReports.ts` | Trail report CRUD |
 | `src/lib/server/achievements.ts` | Achievement checking + awarding |
