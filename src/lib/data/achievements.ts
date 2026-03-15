@@ -1,4 +1,4 @@
-// Achievement definitions for Cairn58
+// Achievement definitions for SaltGoat
 // These are static definitions - actual earned achievements are stored in user_achievements table
 
 export type AchievementCategory = 'milestone' | 'range' | 'class' | 'community' | 'seasonal';

@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-  <title>Difficulty Ratings | Learn | Cairn58</title>
+  <title>Difficulty Ratings | Learn | SaltGoat</title>
   <meta
     name="description"
     content="Understanding the Yosemite Decimal System for Colorado 14ers. Class 1 through Class 4 terrain explained with real peak examples."
@@ -26,9 +26,9 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://cairn58.com/learn" },
-      { "@type": "ListItem", "position": 3, "name": "Difficulty Ratings", "item": "https://cairn58.com/learn/difficulty-ratings" }
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://saltgoat.co/" },
+      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://saltgoat.co/learn" },
+      { "@type": "ListItem", "position": 3, "name": "Difficulty Ratings", "item": "https://saltgoat.co/learn/difficulty-ratings" }
     ]
   })}</script>`}
 </svelte:head>

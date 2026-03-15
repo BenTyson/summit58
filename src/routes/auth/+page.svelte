@@ -78,7 +78,7 @@
 </script>
 
 <svelte:head>
-  <title>{mode === 'login' ? 'Log In' : mode === 'signup' ? 'Sign Up' : 'Reset Password'} | Cairn58</title>
+  <title>{mode === 'login' ? 'Log In' : mode === 'signup' ? 'Sign Up' : 'Reset Password'} | SaltGoat</title>
   <meta name="description" content="Sign in or create an account to track your Colorado 14er summits, log reviews, and earn achievements." />
 </svelte:head>
 
@@ -86,7 +86,7 @@
   <div class="mx-auto max-w-md">
     <div class="text-center mb-8 animate-fade-in-up">
       <h1 class="heading-page text-slate-900 dark:text-white">
-        {mode === 'login' ? 'Welcome Back' : mode === 'signup' ? 'Join Cairn58' : 'Reset Password'}
+        {mode === 'login' ? 'Welcome Back' : mode === 'signup' ? 'Join SaltGoat' : 'Reset Password'}
       </h1>
       <p class="mt-3 text-slate-600 dark:text-slate-400">
         {mode === 'login' ? 'Log in to track your summits' : mode === 'signup' ? 'Create an account to start bagging peaks' : 'Enter your email to receive a reset link'}

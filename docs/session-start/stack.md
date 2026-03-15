@@ -21,7 +21,7 @@
 ## URLs
 
 - **Dev:** http://localhost:4466
-- **Prod:** https://cairn58.com
+- **Prod:** https://saltgoat.co
 
 ## Commands
 

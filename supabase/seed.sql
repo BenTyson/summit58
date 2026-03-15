@@ -1,5 +1,5 @@
 -- ========================================
--- SUMMIT58 SEED DATA
+-- SALTGOAT SEED DATA
 -- 10 Pilot Peaks with Standard Routes
 -- Data verified from NGS 2024, 14ers.com, AllTrails, CMC
 -- ========================================

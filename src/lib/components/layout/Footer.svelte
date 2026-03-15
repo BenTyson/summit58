@@ -37,7 +37,7 @@
           <span
             class="font-display text-xl font-semibold text-slate-700 dark:text-slate-200"
           >
-            Cairn58
+            SaltGoat
           </span>
         </a>
         <span class="hidden sm:inline text-slate-300 dark:text-slate-600">|</span>
@@ -54,7 +54,7 @@
           <a href="/legal/privacy" class="text-slate-500 dark:text-slate-400 hover:text-sunrise transition-colors">Privacy</a>
         </div>
         <p class="text-sm text-slate-500 dark:text-slate-400">
-          &copy; {currentYear} Cairn58. All rights reserved.
+          &copy; {currentYear} SaltGoat. All rights reserved.
         </p>
       </div>
     </div>

@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-  <title>Gear & Preparation | Learn | Cairn58</title>
+  <title>Gear & Preparation | Learn | SaltGoat</title>
   <meta
     name="description"
     content="What to wear, what to pack, and how to prepare for climbing Colorado 14ers. Layering systems, gear lists, and preparation tips."
@@ -26,9 +26,9 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://cairn58.com/learn" },
-      { "@type": "ListItem", "position": 3, "name": "Gear & Preparation", "item": "https://cairn58.com/learn/gear" }
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://saltgoat.co/" },
+      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://saltgoat.co/learn" },
+      { "@type": "ListItem", "position": 3, "name": "Gear & Preparation", "item": "https://saltgoat.co/learn/gear" }
     ]
   })}</script>`}
 </svelte:head>

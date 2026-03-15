@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-  <title>Error {$page.status} | Cairn58</title>
+  <title>Error {$page.status} | SaltGoat</title>
 </svelte:head>
 
 <div class="min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">

@@ -108,7 +108,7 @@
 </script>
 
 <svelte:head>
-  <title>My Profile | Cairn58</title>
+  <title>My Profile | SaltGoat</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
@@ -496,7 +496,7 @@
                   <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
                 </svg>
               </div>
-              <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">Welcome to Cairn58!</h3>
+              <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">Welcome to SaltGoat!</h3>
               <p class="text-slate-600 dark:text-slate-400">
                 Here's how to get started on your 14er journey:
               </p>

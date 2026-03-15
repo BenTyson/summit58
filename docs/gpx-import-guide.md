@@ -1,7 +1,7 @@
 # GPX Import Guide
 
 ## Overview
-This guide explains how to create accurate GPX trail data for Cairn58 using CalTopo.
+This guide explains how to create accurate GPX trail data for SaltGoat using CalTopo.
 
 ## Legal Note
 - **CalTopo traces using USGS base maps** = Public domain, safe to use

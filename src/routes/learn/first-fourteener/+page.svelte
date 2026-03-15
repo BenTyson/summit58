@@ -24,7 +24,7 @@
 </script>
 
 <svelte:head>
-  <title>Your First 14er | Learn | Cairn58</title>
+  <title>Your First 14er | Learn | SaltGoat</title>
   <meta
     name="description"
     content="A complete guide to climbing your first Colorado 14er. What to expect, when to go, and an interactive quiz to find the perfect peak for you."
@@ -33,9 +33,9 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://cairn58.com/learn" },
-      { "@type": "ListItem", "position": 3, "name": "Your First 14er", "item": "https://cairn58.com/learn/first-fourteener" }
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://saltgoat.co/" },
+      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://saltgoat.co/learn" },
+      { "@type": "ListItem", "position": 3, "name": "Your First 14er", "item": "https://saltgoat.co/learn/first-fourteener" }
     ]
   })}</script>`}
 </svelte:head>

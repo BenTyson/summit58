@@ -43,8 +43,8 @@
 </script>
 
 <svelte:head>
-  <title>Reset Password | Cairn58</title>
-  <meta name="description" content="Set a new password for your Cairn58 account." />
+  <title>Reset Password | SaltGoat</title>
+  <meta name="description" content="Set a new password for your SaltGoat account." />
 </svelte:head>
 
 <Container class="py-12 sm:py-20">

@@ -3,14 +3,14 @@
 </script>
 
 <svelte:head>
-  <title>Community Guidelines | Cairn58</title>
-  <meta name="description" content="Community guidelines for photos, reviews, and trail reports on Cairn58." />
+  <title>Community Guidelines | SaltGoat</title>
+  <meta name="description" content="Community guidelines for photos, reviews, and trail reports on SaltGoat." />
   {@html `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Community Guidelines", "item": "https://cairn58.com/guidelines" }
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://saltgoat.co/" },
+      { "@type": "ListItem", "position": 2, "name": "Community Guidelines", "item": "https://saltgoat.co/guidelines" }
     ]
   })}</script>`}
 </svelte:head>
@@ -18,7 +18,7 @@
 <Container class="py-12 max-w-3xl">
   <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-2">Community Guidelines</h1>
   <p class="text-lg text-slate-600 dark:text-slate-400 mb-10">
-    Cairn58 is built by hikers, for hikers. These guidelines help keep the community helpful and respectful.
+    SaltGoat is built by hikers, for hikers. These guidelines help keep the community helpful and respectful.
   </p>
 
   <!-- Photo Guidelines -->

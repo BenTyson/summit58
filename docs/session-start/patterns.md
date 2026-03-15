@@ -117,8 +117,8 @@ export const actions: Actions = {
 | `/learn/difficulty-ratings` | YDS difficulty rating guide |
 | `/learn/faq` | FAQ (17 questions, 4 categories) |
 | `/blog` | Blog hub |
-| `/blog/welcome` | Welcome to Cairn58 post |
-| `/blog/why-we-built-cairn58` | Origin story post |
+| `/blog/welcome` | Welcome to SaltGoat post |
+| `/blog/why-we-built-saltgoat` | Origin story post |
 | `/admin` | Moderation dashboard (admin-only) |
 | `/guidelines` | Community guidelines |
 | `/auth` | Login/signup |

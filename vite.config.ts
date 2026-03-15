@@ -8,8 +8,8 @@ export default defineConfig({
     SvelteKitPWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Cairn58',
-        short_name: 'Cairn58',
+        name: 'SaltGoat',
+        short_name: 'SaltGoat',
         description: 'Track your Colorado 14er summits',
         theme_color: '#f97316',
         background_color: '#0f172a',

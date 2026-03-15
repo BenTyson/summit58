@@ -26,18 +26,18 @@
   }
 
   const ownerName = $derived(trip.owner?.display_name || trip.owner?.username || 'A climber');
-  const canonicalUrl = $derived(`https://cairn58.com/trips/${trip.id}`);
+  const canonicalUrl = $derived(`https://saltgoat.co/trips/${trip.id}`);
 </script>
 
 <svelte:head>
-  <title>{trip.title} | Cairn58</title>
+  <title>{trip.title} | SaltGoat</title>
   <meta name="description" content="{ownerName}'s trip plan: {trip.peaks?.map(p => p.peak.name).join(', ')}" />
   <link rel="canonical" href={canonicalUrl} />
   <meta property="og:type" content="website" />
   <meta property="og:url" content={canonicalUrl} />
-  <meta property="og:title" content="{trip.title} | Cairn58" />
+  <meta property="og:title" content="{trip.title} | SaltGoat" />
   <meta property="og:description" content="{ownerName}'s trip plan: {trip.peaks?.map(p => p.peak.name).join(', ')}" />
-  <meta property="og:site_name" content="Cairn58" />
+  <meta property="og:site_name" content="SaltGoat" />
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50 dark:bg-slate-900">
@@ -77,7 +77,7 @@
               {trip.is_public ? 'Public' : 'Private'}
             </span>
             {#if trip.is_public}
-              <ShareButton url={canonicalUrl} title={trip.title} text="{ownerName}'s trip plan on Cairn58" />
+              <ShareButton url={canonicalUrl} title={trip.title} text="{ownerName}'s trip plan on SaltGoat" />
             {/if}
           </div>
         </div>

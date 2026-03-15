@@ -3,8 +3,8 @@
 </script>
 
 <svelte:head>
-  <title>Terms of Service | Cairn58</title>
-  <meta name="description" content="Cairn58 Terms of Service - Rules and guidelines for using the Cairn58 platform." />
+  <title>Terms of Service | SaltGoat</title>
+  <meta name="description" content="SaltGoat Terms of Service - Rules and guidelines for using the SaltGoat platform." />
 </svelte:head>
 
 <Container class="py-12 sm:py-20">
@@ -16,14 +16,14 @@
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">1. Acceptance of Terms</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          By accessing or using Cairn58 ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service.
+          By accessing or using SaltGoat ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service.
         </p>
       </section>
 
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">2. Description of Service</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Cairn58 is a Colorado 14ers tracking platform that allows users to log summit attempts, write reviews, submit trail reports, and track their progress across all 58 peaks above 14,000 feet in Colorado.
+          SaltGoat is a Colorado 14ers tracking platform that allows users to log summit attempts, write reviews, submit trail reports, and track their progress across all 58 peaks above 14,000 feet in Colorado.
         </p>
       </section>
 
@@ -37,14 +37,14 @@
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">4. User Content</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          You retain ownership of content you submit (reviews, trail reports, photos, etc.). By posting content, you grant Cairn58 a non-exclusive, royalty-free license to display, distribute, and promote your content within the Service. You agree not to post content that is unlawful, defamatory, or infringes on the rights of others.
+          You retain ownership of content you submit (reviews, trail reports, photos, etc.). By posting content, you grant SaltGoat a non-exclusive, royalty-free license to display, distribute, and promote your content within the Service. You agree not to post content that is unlawful, defamatory, or infringes on the rights of others.
         </p>
       </section>
 
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">5. Safety Disclaimer</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          <strong class="text-slate-700 dark:text-slate-300">Mountain climbing is inherently dangerous.</strong> Information on Cairn58 -- including trail reports, weather data, route descriptions, and difficulty ratings -- is provided for informational purposes only. It may be inaccurate, outdated, or incomplete. You are solely responsible for your own safety decisions. Cairn58 is not liable for any injury, loss, or damage resulting from your use of information found on this platform.
+          <strong class="text-slate-700 dark:text-slate-300">Mountain climbing is inherently dangerous.</strong> Information on SaltGoat -- including trail reports, weather data, route descriptions, and difficulty ratings -- is provided for informational purposes only. It may be inaccurate, outdated, or incomplete. You are solely responsible for your own safety decisions. SaltGoat is not liable for any injury, loss, or damage resulting from your use of information found on this platform.
         </p>
       </section>
 
@@ -70,7 +70,7 @@
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">8. Limitation of Liability</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Cairn58 is provided "as is" without warranties of any kind. To the fullest extent permitted by law, Cairn58 shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service.
+          SaltGoat is provided "as is" without warranties of any kind. To the fullest extent permitted by law, SaltGoat shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service.
         </p>
       </section>
 
@@ -84,7 +84,7 @@
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">10. Contact</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Questions about these terms? Contact us at <a href="mailto:hello@cairn58.com" class="text-sunrise hover:text-sunrise-coral transition-colors">hello@cairn58.com</a>.
+          Questions about these terms? Contact us at <a href="mailto:hello@saltgoat.co" class="text-sunrise hover:text-sunrise-coral transition-colors">hello@saltgoat.co</a>.
         </p>
       </section>
     </div>

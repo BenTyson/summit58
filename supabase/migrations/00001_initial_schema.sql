@@ -1,5 +1,5 @@
 -- ========================================
--- SUMMIT58 DATABASE SCHEMA
+-- SALTGOAT DATABASE SCHEMA
 -- Phase 1 MVP: Peaks and Routes
 -- ========================================
 

@@ -19,22 +19,22 @@
 </script>
 
 <svelte:head>
-  <title>Cairn58 - The Modern Guide to Colorado's 14ers</title>
+  <title>SaltGoat - The Modern Guide to Colorado's 14ers</title>
   <meta
     name="description"
     content="Beautiful, mobile-first guide to all 58 Colorado fourteeners. Stats at a glance, conditions reports, and everything you need to summit."
   />
-  <link rel="canonical" href="https://cairn58.com" />
+  <link rel="canonical" href="https://saltgoat.co" />
   {@html `<script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "Cairn58",
-      "url": "https://cairn58.com",
+      "name": "SaltGoat",
+      "url": "https://saltgoat.co",
       "description": "The modern guide to Colorado's 58 fourteeners",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://cairn58.com/peaks?q={search_term_string}",
+        "target": "https://saltgoat.co/peaks?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     }
@@ -108,7 +108,7 @@
         <span class="text-white/90 text-sm font-medium">58 peaks. 66 routes. One goal.</span>
       </div>
       <h1 class="heading-hero text-white">
-        Cairn<span class="text-sunrise">58</span>
+        Salt<span class="text-sunrise">Goat</span>
       </h1>
       <p class="mx-auto mt-6 max-w-2xl text-xl text-white/90 sm:text-2xl font-light">
         Your companion for conquering Colorado's fourteeners

@@ -27,7 +27,7 @@ Check each file below. Skip any that are already accurate.
 - Project structure changes (new directories, major new files)
 - Build notes changed
 
-**`docs/CAIRN58.md`** -- Update if features were added, removed, or significantly changed. Keep the Timeline section current with a one-line entry for this session.
+**`docs/SALTGOAT.md`** -- Update if features were added, removed, or significantly changed. Keep the Timeline section current with a one-line entry for this session.
 
 **`docs/session-start/database.md`** -- Update if tables, columns, RLS policies, or storage buckets changed.
 
@@ -51,7 +51,7 @@ Check `docs/` for any `.md` files not linked from `CLAUDE.md` or `docs/session-s
 Quickly scan for contradictions across docs:
 - CLAUDE.md "Known Issues" vs ROADMAP.md completed items (remove resolved issues)
 - MEMORY.md status vs ROADMAP.md status (should agree)
-- CAIRN58.md feature descriptions vs actual code state
+- SALTGOAT.md feature descriptions vs actual code state
 
 ### Output
 

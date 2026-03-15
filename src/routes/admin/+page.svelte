@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-  <title>Admin Moderation | Cairn58</title>
+  <title>Admin Moderation | SaltGoat</title>
 </svelte:head>
 
 <Container class="py-12">

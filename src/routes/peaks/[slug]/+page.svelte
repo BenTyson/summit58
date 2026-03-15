@@ -224,22 +224,22 @@
 
   // SEO meta values
   const ogDescription = $derived(`${peak.name} is Colorado's #${peak.rank} highest peak at ${peak.elevation.toLocaleString()} feet. ${peak.description?.slice(0, 100) || ''}`);
-  const ogImage = $derived(peak.hero_image_url || `https://cairn58.com/images/peaks/${peak.slug}.jpg`);
-  const canonicalUrl = $derived(`https://cairn58.com/peaks/${peak.slug}`);
+  const ogImage = $derived(peak.hero_image_url || `https://saltgoat.co/images/peaks/${peak.slug}.jpg`);
+  const canonicalUrl = $derived(`https://saltgoat.co/peaks/${peak.slug}`);
 </script>
 
 <svelte:head>
-  <title>{peak.name} ({peak.elevation.toLocaleString()}') | Cairn58</title>
+  <title>{peak.name} ({peak.elevation.toLocaleString()}') | SaltGoat</title>
   <meta name="description" content={ogDescription} />
   <link rel="canonical" href={canonicalUrl} />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content={canonicalUrl} />
-  <meta property="og:title" content="{peak.name} - {peak.elevation.toLocaleString()}' | Cairn58" />
+  <meta property="og:title" content="{peak.name} - {peak.elevation.toLocaleString()}' | SaltGoat" />
   <meta property="og:description" content={ogDescription} />
   <meta property="og:image" content={ogImage} />
-  <meta property="og:site_name" content="Cairn58" />
+  <meta property="og:site_name" content="SaltGoat" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -284,8 +284,8 @@
       {
         "@type": "BreadcrumbList",
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
-          { "@type": "ListItem", "position": 2, "name": "Peaks", "item": "https://cairn58.com/peaks" },
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://saltgoat.co/" },
+          { "@type": "ListItem", "position": 2, "name": "Peaks", "item": "https://saltgoat.co/peaks" },
           { "@type": "ListItem", "position": 3, "name": peak.name, "item": canonicalUrl }
         ]
       }
@@ -363,8 +363,8 @@
           {/if}
           <ShareButton
             url={canonicalUrl}
-            title="{peak.name} ({peak.elevation.toLocaleString()}') | Cairn58"
-            text="Check out {peak.name} on Cairn58"
+            title="{peak.name} ({peak.elevation.toLocaleString()}') | SaltGoat"
+            text="Check out {peak.name} on SaltGoat"
           />
           <SummitButton
             summits={userSummits}
@@ -703,7 +703,7 @@
         Free Summit Limit Reached
       </h3>
       <p class="text-slate-600 dark:text-slate-400 mb-6">
-        You've used all 5 free summits. Upgrade to Cairn58 Pro for unlimited summit logging.
+        You've used all 5 free summits. Upgrade to SaltGoat Pro for unlimited summit logging.
       </p>
       <div class="flex flex-col gap-3">
         <a
@@ -771,9 +771,9 @@
           <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Share your achievement</p>
           <div class="mt-2">
             <ShareButton
-              url="https://cairn58.com/peaks/{peak.slug}"
+              url="https://saltgoat.co/peaks/{peak.slug}"
               title="I just summited {peak.name}!"
-              text="I summited {peak.name} ({peak.elevation.toLocaleString()}') on Cairn58"
+              text="I summited {peak.name} ({peak.elevation.toLocaleString()}') on SaltGoat"
             />
           </div>
         </div>

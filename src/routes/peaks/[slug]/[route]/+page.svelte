@@ -90,7 +90,7 @@
 </script>
 
 <svelte:head>
-  <title>{route.name} - {peak.name} | Cairn58</title>
+  <title>{route.name} - {peak.name} | SaltGoat</title>
   <meta
     name="description"
     content="{route.name} route on {peak.name}. {route.distance_miles} miles, {route.elevation_gain_ft.toLocaleString()}' gain, Class {route.difficulty_class}. {route.description?.slice(0, 100)}..."

@@ -3,8 +3,8 @@
 </script>
 
 <svelte:head>
-  <title>Privacy Policy | Cairn58</title>
-  <meta name="description" content="Cairn58 Privacy Policy - How we collect, use, and protect your data." />
+  <title>Privacy Policy | SaltGoat</title>
+  <meta name="description" content="SaltGoat Privacy Policy - How we collect, use, and protect your data." />
 </svelte:head>
 
 <Container class="py-12 sm:py-20">
@@ -84,7 +84,7 @@
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">8. Children's Privacy</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Cairn58 is not directed at children under 13. We do not knowingly collect personal data from children under 13. If we become aware of such data, we will delete it promptly.
+          SaltGoat is not directed at children under 13. We do not knowingly collect personal data from children under 13. If we become aware of such data, we will delete it promptly.
         </p>
       </section>
 
@@ -98,7 +98,7 @@
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">10. Contact</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Privacy questions? Contact us at <a href="mailto:hello@cairn58.com" class="text-sunrise hover:text-sunrise-coral transition-colors">hello@cairn58.com</a>.
+          Privacy questions? Contact us at <a href="mailto:hello@saltgoat.co" class="text-sunrise hover:text-sunrise-coral transition-colors">hello@saltgoat.co</a>.
         </p>
       </section>
     </div>

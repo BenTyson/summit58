@@ -39,7 +39,7 @@
     },
     {
       question: 'Do I need a permit?',
-      answer: 'Most 14ers don\'t require permits, but some trailheads (like Mt. Sneffels, Maroon Bells) require reservations during peak season. Check the specific peak page on Cairn58 or the managing agency\'s website before your trip.'
+      answer: 'Most 14ers don\'t require permits, but some trailheads (like Mt. Sneffels, Maroon Bells) require reservations during peak season. Check the specific peak page on SaltGoat or the managing agency\'s website before your trip.'
     }
   ];
 
@@ -84,15 +84,15 @@
   const afterTheHike: FaqItem[] = [
     {
       question: 'How do I track my summits?',
-      answer: 'Create a free Cairn58 account to log summits, write reviews, and track your progress toward all 58. You can also upload photos, share your achievements, and see how you compare on the leaderboard.'
+      answer: 'Create a free SaltGoat account to log summits, write reviews, and track your progress toward all 58. You can also upload photos, share your achievements, and see how you compare on the leaderboard.'
     },
     {
       question: 'What\'s the "58 Club"?',
-      answer: 'Summiting all 58 Colorado 14ers is a bucket-list achievement. Many hikers spend years (or decades!) completing the list. Cairn58 tracks your progress and awards achievements along the way.'
+      answer: 'Summiting all 58 Colorado 14ers is a bucket-list achievement. Many hikers spend years (or decades!) completing the list. SaltGoat tracks your progress and awards achievements along the way.'
     },
     {
       question: 'How do I leave a trail report?',
-      answer: 'Visit any peak page on Cairn58 and submit a trail report with current conditions to help fellow hikers. Include details like snow coverage, trail status, and any hazards you encountered.'
+      answer: 'Visit any peak page on SaltGoat and submit a trail report with current conditions to help fellow hikers. Include details like snow coverage, trail status, and any hazards you encountered.'
     }
   ];
 
@@ -105,7 +105,7 @@
 </script>
 
 <svelte:head>
-  <title>FAQ | Learn | Cairn58</title>
+  <title>FAQ | Learn | SaltGoat</title>
   <meta
     name="description"
     content="Frequently asked questions about climbing Colorado's 58 fourteeners. Getting started, safety, gear, and tracking your progress."
@@ -114,9 +114,9 @@
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://cairn58.com/learn" },
-      { "@type": "ListItem", "position": 3, "name": "FAQ", "item": "https://cairn58.com/learn/faq" }
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://saltgoat.co/" },
+      { "@type": "ListItem", "position": 2, "name": "Learn", "item": "https://saltgoat.co/learn" },
+      { "@type": "ListItem", "position": 3, "name": "FAQ", "item": "https://saltgoat.co/learn/faq" }
     ]
   })}</script>`}
   {@html `<script type="application/ld+json">${JSON.stringify({

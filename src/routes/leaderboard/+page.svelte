@@ -38,7 +38,7 @@
 </script>
 
 <svelte:head>
-  <title>Leaderboard | Cairn58</title>
+  <title>Leaderboard | SaltGoat</title>
   <meta name="description" content="See who's leading the charge to summit all 58 Colorado 14ers. Track your rank among fellow peak baggers." />
 </svelte:head>
 

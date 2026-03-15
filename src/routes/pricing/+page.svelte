@@ -30,8 +30,8 @@
 </script>
 
 <svelte:head>
-  <title>Pricing | Cairn58</title>
-  <meta name="description" content="Cairn58 pricing. Free tier to get started, Pro for unlimited summit tracking." />
+  <title>Pricing | SaltGoat</title>
+  <meta name="description" content="SaltGoat pricing. Free tier to get started, Pro for unlimited summit tracking." />
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
@@ -95,7 +95,7 @@
         </div>
 
         <div class="mb-6">
-          <h2 class="text-xl font-bold text-slate-900 dark:text-white">Cairn58 Pro</h2>
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">SaltGoat Pro</h2>
           <div class="mt-3 flex items-baseline gap-1">
             <span class="text-4xl font-bold text-slate-900 dark:text-white">$29.99</span>
             <span class="text-slate-500 dark:text-slate-400">/year</span>

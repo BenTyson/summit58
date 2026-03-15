@@ -43,8 +43,8 @@
 </script>
 
 <svelte:head>
-  <title>{profile.display_name || 'Climber'} | Cairn58</title>
-  <meta name="description" content="View {profile.display_name || 'this climber'}'s 14er progress on Cairn58." />
+  <title>{profile.display_name || 'Climber'} | SaltGoat</title>
+  <meta name="description" content="View {profile.display_name || 'this climber'}'s 14er progress on SaltGoat." />
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">

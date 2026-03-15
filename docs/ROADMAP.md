@@ -1,11 +1,11 @@
-# Cairn58 Launch Roadmap
+# SaltGoat Launch Roadmap
 
 Created: 2026-03-07
 
 ## Monetization: Freemium
 
 - **Free tier:** Browse peaks, log up to 5 summits, view leaderboard/profiles/reports
-- **Cairn58 Pro ($29.99/yr):** Unlimited summits, offline data, advanced stats, GPX export, custom lists, pro badge
+- **SaltGoat Pro ($29.99/yr):** Unlimited summits, offline data, advanced stats, GPX export, custom lists, pro badge
 - **Additional:** Affiliate partnerships (REI, Backcountry), guide service listings, merch
 
 ## Phases
@@ -15,7 +15,7 @@ Created: 2026-03-07
 
 ### Phase 0: Pre-Launch Critical Fixes [DONE]
 - [x] Password reset flow (forgot password link on login, reset page at /auth/reset-password)
-- [x] Analytics (Plausible script tag in app.html -- needs Plausible account setup)
+- [x] Analytics (Umami self-hosted on Railway)
 - [x] Terms of Service + Privacy Policy pages (`/legal/terms`, `/legal/privacy`)
 - [x] Trips UI: delete button wired up on planned trips
 - [x] OG image fallback (all 58 peaks have hero_image_url set -- no action needed)

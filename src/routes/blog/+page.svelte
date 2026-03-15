@@ -5,13 +5,13 @@
   const posts = [
     {
       href: '/blog/welcome',
-      title: 'Welcome to Cairn58',
+      title: 'Welcome to SaltGoat',
       date: 'March 2026',
       excerpt: 'Introducing a new way to track your Colorado 14er journey. Log summits, read reviews, check conditions, and connect with the hiking community.'
     },
     {
-      href: '/blog/why-we-built-cairn58',
-      title: 'Why We Built Cairn58',
+      href: '/blog/why-we-built-saltgoat',
+      title: 'Why We Built SaltGoat',
       date: 'March 2026',
       excerpt: 'The story behind building a better 14er tracking app. From fragmented tools to a modern, community-driven experience.'
     }
@@ -19,17 +19,17 @@
 </script>
 
 <svelte:head>
-  <title>Blog | Cairn58</title>
+  <title>Blog | SaltGoat</title>
   <meta
     name="description"
-    content="Updates, stories, and insights from the trail. Read about Cairn58 development, Colorado 14er tips, and community highlights."
+    content="Updates, stories, and insights from the trail. Read about SaltGoat development, Colorado 14er tips, and community highlights."
   />
   {@html `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://cairn58.com/blog" }
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://saltgoat.co/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://saltgoat.co/blog" }
     ]
   })}</script>`}
 </svelte:head>

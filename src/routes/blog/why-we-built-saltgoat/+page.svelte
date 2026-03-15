@@ -4,32 +4,32 @@
 </script>
 
 <svelte:head>
-  <title>Why We Built Cairn58 | Blog | Cairn58</title>
+  <title>Why We Built SaltGoat | Blog | SaltGoat</title>
   <meta
     name="description"
-    content="The story behind Cairn58. Why we built a modern 14er tracking app, what makes it different, and where we're headed."
+    content="The story behind SaltGoat. Why we built a modern 14er tracking app, what makes it different, and where we're headed."
   />
   {@html `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Why We Built Cairn58",
+    "headline": "Why We Built SaltGoat",
     "datePublished": "2026-03-08",
-    "author": { "@type": "Organization", "name": "Cairn58" },
-    "publisher": { "@type": "Organization", "name": "Cairn58", "url": "https://cairn58.com" }
+    "author": { "@type": "Organization", "name": "SaltGoat" },
+    "publisher": { "@type": "Organization", "name": "SaltGoat", "url": "https://saltgoat.co" }
   })}</script>`}
   {@html `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://cairn58.com/" },
-      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://cairn58.com/blog" },
-      { "@type": "ListItem", "position": 3, "name": "Why We Built Cairn58", "item": "https://cairn58.com/blog/why-we-built-cairn58" }
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://saltgoat.co/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://saltgoat.co/blog" },
+      { "@type": "ListItem", "position": 3, "name": "Why We Built SaltGoat", "item": "https://saltgoat.co/blog/why-we-built-saltgoat" }
     ]
   })}</script>`}
 </svelte:head>
 
 <LearnHero
-  title="Why We Built Cairn58"
+  title="Why We Built SaltGoat"
   subtitle="The story behind a better 14er tracking app"
 />
 
@@ -39,7 +39,7 @@
     <ol class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
       <li><a href="/blog" class="hover:text-sunrise transition-colors">Blog</a></li>
       <li class="text-slate-400">/</li>
-      <li class="text-slate-900 dark:text-white font-medium">Why We Built Cairn58</li>
+      <li class="text-slate-900 dark:text-white font-medium">Why We Built SaltGoat</li>
     </ol>
   </nav>
 
@@ -63,7 +63,7 @@
           We wanted something that felt like a modern app. Fast, clean, mobile-friendly. Something you could check at the trailhead on your phone just as easily as you could browse at home on a laptop.
         </p>
         <p class="mt-4 text-slate-600 dark:text-slate-400 leading-relaxed">
-          Cairn58 is built with current web technology. It loads fast, works on any device, and supports dark mode for those pre-dawn alpine starts when you're reviewing your route one last time.
+          SaltGoat is built with current web technology. It loads fast, works on any device, and supports dark mode for those pre-dawn alpine starts when you're reviewing your route one last time.
         </p>
       </section>
 
@@ -71,7 +71,7 @@
       <section>
         <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white mb-4">Built for the Community</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          The best information about 14ers comes from the people who climb them. That's why Cairn58 puts community data front and center: reviews from real hikers, trail reports with current conditions, and a photo gallery that shows you what the mountain actually looks like right now.
+          The best information about 14ers comes from the people who climb them. That's why SaltGoat puts community data front and center: reviews from real hikers, trail reports with current conditions, and a photo gallery that shows you what the mountain actually looks like right now.
         </p>
         <p class="mt-4 text-slate-600 dark:text-slate-400 leading-relaxed">
           Leaderboards and follow features aren't about competition for its own sake. They're about motivation, accountability, and celebrating each other's progress. Climbing all 58 is a serious commitment. Having a community behind you makes it better.
@@ -91,12 +91,12 @@
 
       <!-- The name -->
       <section>
-        <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white mb-4">Why "Cairn58"</h2>
+        <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white mb-4">Why "SaltGoat"</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          A cairn is a stack of rocks that marks the trail. Above treeline, where there are no blazes on trees and the path across a boulder field can be hard to see, cairns are what guide you. They're built by the people who came before you, for the benefit of everyone who comes after.
+          If you've spent time above treeline in Colorado, you've probably had a mountain goat walk right up to you. They're not being friendly -- they're after your salt. Sweat, pee spots near the trail, a dropped snack -- mountain goats seek out sodium wherever they can find it. It's a quirk that every experienced 14er hiker knows.
         </p>
         <p class="mt-4 text-slate-600 dark:text-slate-400 leading-relaxed">
-          That's the idea behind this app. Each review, trail report, and summit log is a stone on the cairn -- a small contribution that helps the next person find their way. And 58 is the number that defines the challenge: every fourteener in Colorado.
+          We liked the name because it signals insider knowledge. If you know why a goat is following you at 14,000 feet, you've been up there. That's the community we're building for -- people who know these mountains and want a better tool for tracking their time on them.
         </p>
       </section>
 
@@ -104,10 +104,10 @@
       <section>
         <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white mb-4">Where We're Headed</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Cairn58 is just getting started. We're working on accurate trail data with proper GPS tracks, so you can see the actual route on a map. We want to build guided experiences for first-time 14er hikers. Better trip planning tools. More ways to share your adventures.
+          SaltGoat is just getting started. We're working on accurate trail data with proper GPS tracks, so you can see the actual route on a map. We want to build guided experiences for first-time 14er hikers. Better trip planning tools. More ways to share your adventures.
         </p>
         <p class="mt-4 text-slate-600 dark:text-slate-400 leading-relaxed">
-          The 14er community in Colorado is incredible -- passionate, welcoming, and deeply connected to these mountains. We're building Cairn58 to serve that community, and we're excited to see where it goes.
+          The 14er community in Colorado is incredible -- passionate, welcoming, and deeply connected to these mountains. We're building SaltGoat to serve that community, and we're excited to see where it goes.
         </p>
       </section>
 
@@ -144,7 +144,7 @@
         <svg class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-        Welcome to Cairn58
+        Welcome to SaltGoat
       </a>
       <a
         href="/blog"

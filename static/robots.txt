@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cairn58.com/sitemap.xml
+Sitemap: https://saltgoat.co/sitemap.xml

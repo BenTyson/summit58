@@ -1,4 +1,4 @@
-# Cairn58 - Agent Guide
+# SaltGoat - Agent Guide
 
 Colorado 14ers tracking app. Users log summits, write reviews, track progress across all 58 peaks.
 
@@ -70,7 +70,7 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 
 - GPX trail data was REMOVED (bad data, only 7-25 points per route) -- no trails on map
 - No rate limiting, no error monitoring (Sentry)
-- Plausible analytics script added but needs account setup at plausible.io
+- Umami analytics configured (self-hosted on Railway)
 
 ## Build Notes
 
@@ -84,5 +84,5 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 - [Database Schema](docs/session-start/database.md)
 - [Code Patterns](docs/session-start/patterns.md)
 - [Stack & Infrastructure](docs/session-start/stack.md)
-- [Full Reference](docs/CAIRN58.md)
+- [Full Reference](docs/SALTGOAT.md)
 - [Launch Roadmap](docs/ROADMAP.md)

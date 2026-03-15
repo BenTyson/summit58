@@ -43,12 +43,12 @@
 </script>
 
 <svelte:head>
-  <title>{rangeInfo.name} | Cairn58</title>
+  <title>{rangeInfo.name} | SaltGoat</title>
   <meta name="description" content="{rangeInfo.description}" />
-  <meta property="og:title" content="{rangeInfo.name} - Colorado 14ers | Cairn58" />
+  <meta property="og:title" content="{rangeInfo.name} - Colorado 14ers | SaltGoat" />
   <meta property="og:description" content="{rangeInfo.description}" />
   <meta property="og:type" content="website" />
-  <link rel="canonical" href="https://cairn58.com/ranges/{rangeInfo.slug}" />
+  <link rel="canonical" href="https://saltgoat.co/ranges/{rangeInfo.slug}" />
 </svelte:head>
 
 <!-- Hero Section -->

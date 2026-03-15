@@ -1,8 +1,8 @@
-# Cairn58 - Full Reference
+# SaltGoat - Full Reference
 
 > **Quick start?** See [session-start/README.md](./session-start/README.md) for fast onboarding.
 
-Comprehensive reference for Cairn58 development.
+Comprehensive reference for SaltGoat development.
 
 ---
 
@@ -13,7 +13,7 @@ Comprehensive reference for Cairn58 development.
 | **Stack** | SvelteKit 5 + Supabase (cloud) + Tailwind 3 + Railway |
 | **Status** | Production ready - all features + launch audit complete |
 | **Dev** | `npm run dev` → http://localhost:4466 |
-| **Prod** | https://cairn58.com |
+| **Prod** | https://saltgoat.co |
 | **Deploy** | `railway up -d` |
 | **DB Push** | `supabase db push` |
 
@@ -120,7 +120,7 @@ src/
 │   ├── leaderboard/+page.svelte  → Global rankings + activity
 │   ├── map/+page.svelte          → Full interactive map (peaks + trail overlay)
 │   ├── learn/                    → Educational guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq)
-│   ├── blog/                     → Blog hub + posts (welcome, why-we-built-cairn58)
+│   ├── blog/                     → Blog hub + posts (welcome, why-we-built-saltgoat)
 │   ├── users/[id]/+page.svelte   → Public user profile
 │   └── profile/+page.svelte      → "My 58" dashboard + achievements
 
@@ -331,7 +331,7 @@ Dark mode: `.dark` class on html element.
 - 2025-12-24: Image gallery, weather, trail reports
 - 2025-12-25: Achievements (23 badges)
 - 2025-12-26: Leaderboard, public profiles, GPX trail mapping
-- 2025-12-27: Parking, data audit (2024 NGS), rebrand Summit58 -> Cairn58, UI polish
+- 2025-12-27: Parking, data audit (2024 NGS), rebrand Summit58 -> SaltGoat, UI polish
 - 2025-12-28: Homepage storytelling, peak hero images
 - 2025-12-30: GPX data removed (bad quality), import infrastructure created
 - 2026-01-02: Social profile infrastructure, edit profile modal
@@ -343,6 +343,7 @@ Dark mode: `.dark` class on html element.
 - 2026-03-12: Phase 6 (UGC photo uploads, moderation, flagging, admin page, community guidelines)
 - 2026-03-12: Phase 6b (photo categories + gallery filters)
 - 2026-03-13: Phase 6c started (GPX trace infrastructure, post-login redirect for auth CTAs)
+- 2026-03-14: Rebrand Cairn58 → SaltGoat (domain saltgoat.co), Plausible → Umami analytics
 
 ---
 
