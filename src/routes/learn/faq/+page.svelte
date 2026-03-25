@@ -142,7 +142,7 @@
   <!-- Breadcrumb -->
   <nav class="mb-8 animate-fade-in-up">
     <ol class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-      <li><a href="/learn" class="hover:text-sunrise transition-colors">Learn</a></li>
+      <li><a href="/learn" class="hover:text-accent transition-colors">Learn</a></li>
       <li class="text-slate-400">/</li>
       <li class="text-slate-900 dark:text-white font-medium">FAQ</li>
     </ol>
@@ -157,8 +157,8 @@
             <details class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm hover:shadow-card transition-shadow">
               <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
                 <span class="font-semibold text-slate-900 dark:text-white">{item.question}</span>
-                <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-sunrise/10 transition-colors">
-                  <svg class="h-5 w-5 text-slate-400 group-open:text-sunrise transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-accent/10 transition-colors">
+                  <svg class="h-5 w-5 text-slate-400 group-open:text-accent transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -177,8 +177,8 @@
             <details class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm hover:shadow-card transition-shadow">
               <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
                 <span class="font-semibold text-slate-900 dark:text-white">{item.question}</span>
-                <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-sunrise/10 transition-colors">
-                  <svg class="h-5 w-5 text-slate-400 group-open:text-sunrise transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-accent/10 transition-colors">
+                  <svg class="h-5 w-5 text-slate-400 group-open:text-accent transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -197,8 +197,8 @@
             <details class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm hover:shadow-card transition-shadow">
               <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
                 <span class="font-semibold text-slate-900 dark:text-white">{item.question}</span>
-                <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-sunrise/10 transition-colors">
-                  <svg class="h-5 w-5 text-slate-400 group-open:text-sunrise transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-accent/10 transition-colors">
+                  <svg class="h-5 w-5 text-slate-400 group-open:text-accent transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -217,8 +217,8 @@
             <details class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm hover:shadow-card transition-shadow">
               <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
                 <span class="font-semibold text-slate-900 dark:text-white">{item.question}</span>
-                <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-sunrise/10 transition-colors">
-                  <svg class="h-5 w-5 text-slate-400 group-open:text-sunrise transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-accent/10 transition-colors">
+                  <svg class="h-5 w-5 text-slate-400 group-open:text-accent transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -235,7 +235,7 @@
       <div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-4 justify-between">
         <a
           href="/learn/parking"
-          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
         >
           <svg class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -244,7 +244,7 @@
         </a>
         <a
           href="/learn"
-          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors sm:flex-row-reverse"
+          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors sm:flex-row-reverse"
         >
           All Guides
           <svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

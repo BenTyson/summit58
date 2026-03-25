@@ -110,7 +110,7 @@
   <!-- Header -->
   <div class="mb-10">
     <h1 class="heading-page text-slate-900 dark:text-white">
-      Colorado <span class="text-sunrise">14ers</span>
+      Colorado <span class="text-accent">14ers</span>
     </h1>
     <p class="mt-4 text-lg text-slate-600 dark:text-slate-400">
       All {data.peaks.length} fourteeners, sorted by elevation
@@ -133,7 +133,7 @@
           bg-white dark:bg-slate-800
           text-slate-900 dark:text-white
           placeholder-slate-400 dark:placeholder-slate-500
-          focus:border-sunrise focus:outline-none focus:ring-2 focus:ring-sunrise/20
+          focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
           transition-all duration-200
         "
       />
@@ -203,7 +203,7 @@
             bg-white dark:bg-slate-700
             px-4 py-2.5 text-sm
             text-slate-900 dark:text-white
-            focus:border-sunrise focus:outline-none focus:ring-2 focus:ring-sunrise/20
+            focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
             transition-all duration-200
           "
         >
@@ -231,7 +231,7 @@
             bg-white dark:bg-slate-700
             px-4 py-2.5 text-sm
             text-slate-900 dark:text-white
-            focus:border-sunrise focus:outline-none focus:ring-2 focus:ring-sunrise/20
+            focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
             transition-all duration-200
           "
         >
@@ -248,7 +248,7 @@
             onclick={() => hideSummited = !hideSummited}
             class="
               relative w-11 h-6 rounded-full transition-colors duration-200
-              {hideSummited ? 'bg-sunrise' : 'bg-slate-300 dark:bg-slate-600'}
+              {hideSummited ? 'bg-accent' : 'bg-slate-300 dark:bg-slate-600'}
             "
             role="switch"
             aria-checked={hideSummited}

@@ -42,7 +42,7 @@
       <!-- Route Name -->
       <div class="flex items-center gap-2 flex-wrap">
         <h3
-          class="font-semibold text-lg text-slate-900 transition-colors group-hover:text-mountain-blue dark:text-white dark:group-hover:text-sunrise"
+          class="font-semibold text-lg text-slate-900 transition-colors group-hover:text-mountain-blue dark:text-white dark:group-hover:text-accent"
         >
           {route.name}
         </h3>
@@ -60,7 +60,7 @@
           <span class="stats-number font-medium">{route.distance_miles} mi</span>
         </span>
         <span class="flex items-center gap-1.5 text-slate-600 dark:text-slate-400">
-          <svg class="h-4 w-4 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-4 w-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
           </svg>
           <span class="stats-number font-medium">{route.elevation_gain_ft.toLocaleString()}' gain</span>
@@ -112,7 +112,7 @@
         bg-slate-100 dark:bg-slate-700
         text-slate-400
         transition-all duration-300
-        group-hover:bg-sunrise/10 group-hover:text-sunrise
+        group-hover:bg-accent/10 group-hover:text-accent
         group-hover:translate-x-1
       "
     >

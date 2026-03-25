@@ -26,34 +26,34 @@
   }
 
   const trailStatusConfig: Record<string, { label: string; color: string; icon: string }> = {
-    clear: { label: 'Clear', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400', icon: '✓' },
-    muddy: { label: 'Muddy', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400', icon: '💧' },
+    clear: { label: 'Clear', color: 'bg-semantic-success/10 text-semantic-success-dark dark:bg-semantic-success/20 dark:text-semantic-success-light', icon: '✓' },
+    muddy: { label: 'Muddy', color: 'bg-semantic-warning/10 text-semantic-warning-dark dark:bg-semantic-warning/20 dark:text-semantic-warning-light', icon: '💧' },
     snowy: { label: 'Snowy', color: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400', icon: '❄️' },
     icy: { label: 'Icy', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', icon: '🧊' },
     mixed: { label: 'Mixed', color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', icon: '⚡' }
   };
 
   const crowdConfig: Record<string, { label: string; color: string }> = {
-    empty: { label: 'Empty', color: 'text-emerald-600 dark:text-emerald-400' },
-    light: { label: 'Light', color: 'text-green-600 dark:text-green-400' },
-    moderate: { label: 'Moderate', color: 'text-amber-600 dark:text-amber-400' },
-    crowded: { label: 'Crowded', color: 'text-orange-600 dark:text-orange-400' },
-    packed: { label: 'Packed', color: 'text-red-600 dark:text-red-400' }
+    empty: { label: 'Empty', color: 'text-semantic-success-dark dark:text-semantic-success-light' },
+    light: { label: 'Light', color: 'text-semantic-success-dark dark:text-semantic-success-light' },
+    moderate: { label: 'Moderate', color: 'text-semantic-warning-dark dark:text-semantic-warning-light' },
+    crowded: { label: 'Crowded', color: 'text-semantic-warning-dark dark:text-semantic-warning-light' },
+    packed: { label: 'Packed', color: 'text-semantic-danger-dark dark:text-semantic-danger-light' }
   };
 
   const roadConfig: Record<string, { label: string; color: string }> = {
-    open: { label: 'Open', color: 'text-emerald-600' },
-    rough: { label: 'Rough', color: 'text-amber-600' },
-    '4wd_required': { label: '4WD', color: 'text-orange-600' },
-    closed: { label: 'Closed', color: 'text-red-600' }
+    open: { label: 'Open', color: 'text-semantic-success-dark' },
+    rough: { label: 'Rough', color: 'text-semantic-warning-dark' },
+    '4wd_required': { label: '4WD', color: 'text-semantic-warning-dark' },
+    closed: { label: 'Closed', color: 'text-semantic-danger-dark' }
   };
 
   const parkingConfig: Record<string, { label: string; color: string }> = {
-    empty: { label: 'Empty', color: 'text-emerald-600 dark:text-emerald-400' },
-    filling: { label: 'Filling', color: 'text-green-600 dark:text-green-400' },
-    nearly_full: { label: 'Nearly Full', color: 'text-amber-600 dark:text-amber-400' },
-    full: { label: 'Full', color: 'text-red-600 dark:text-red-400' },
-    overflow: { label: 'Overflow', color: 'text-red-600 dark:text-red-400' }
+    empty: { label: 'Empty', color: 'text-semantic-success-dark dark:text-semantic-success-light' },
+    filling: { label: 'Filling', color: 'text-semantic-success-dark dark:text-semantic-success-light' },
+    nearly_full: { label: 'Nearly Full', color: 'text-semantic-warning-dark dark:text-semantic-warning-light' },
+    full: { label: 'Full', color: 'text-semantic-danger-dark dark:text-semantic-danger-light' },
+    overflow: { label: 'Overflow', color: 'text-semantic-danger-dark dark:text-semantic-danger-light' }
   };
 
   const hazardLabels: Record<string, string> = {
@@ -149,7 +149,7 @@
   {#if report.hazards && report.hazards.length > 0}
     <div class="mt-3 flex flex-wrap gap-1">
       {#each report.hazards as hazard}
-        <span class="px-2 py-0.5 rounded text-xs bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+        <span class="px-2 py-0.5 rounded text-xs bg-semantic-warning/10 text-semantic-warning-dark dark:bg-semantic-warning/20 dark:text-semantic-warning-light">
           {hazardLabels[hazard] || hazard}
         </span>
       {/each}

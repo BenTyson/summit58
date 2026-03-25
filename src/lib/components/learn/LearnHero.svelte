@@ -35,7 +35,7 @@
   {/each}
 
   <!-- Decorative glow -->
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-sunrise/10 rounded-full blur-3xl"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-accent/10 rounded-full blur-3xl"></div>
 
   <!-- Mountain silhouettes -->
   <div class="absolute inset-x-0 bottom-0 h-32 pointer-events-none">
@@ -63,7 +63,7 @@
     <div class="max-w-4xl mx-auto text-center">
       <!-- Badge -->
       {#if variant === 'hub'}
-        <p class="text-sunrise font-medium tracking-widest uppercase text-sm mb-4 animate-fade-in-up">
+        <p class="text-accent font-medium tracking-widest uppercase text-sm mb-4 animate-fade-in-up">
           The Complete Guide
         </p>
       {/if}
@@ -93,7 +93,7 @@
         <div class="mt-10 animate-fade-in-up" style="animation-delay: 300ms">
           <a
             href="#start"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-sunrise text-white font-semibold hover:bg-sunrise-coral transition-colors shadow-lg shadow-sunrise/25"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-semibold hover:bg-accent-warm transition-colors shadow-lg shadow-accent/25"
           >
             Start Learning
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

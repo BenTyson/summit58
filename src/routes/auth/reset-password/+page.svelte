@@ -64,13 +64,13 @@
       "
       style="animation-delay: 100ms"
     >
-      <div class="h-1.5 bg-gradient-to-r from-sunrise to-sunrise-coral"></div>
+      <div class="h-1.5 bg-gradient-to-r from-accent to-accent-warm"></div>
 
       <div class="p-6 sm:p-8">
         {#if success}
           <div class="text-center">
-            <div class="mx-auto h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-              <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mx-auto h-12 w-12 rounded-full bg-semantic-success/10 dark:bg-semantic-success/20 flex items-center justify-center mb-4">
+              <svg class="h-6 w-6 text-semantic-success-dark dark:text-semantic-success-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
@@ -94,7 +94,7 @@
                   border border-slate-200 dark:border-slate-600
                   bg-white dark:bg-slate-700
                   text-slate-900 dark:text-white
-                  focus:border-sunrise focus:outline-none focus:ring-2 focus:ring-sunrise/20
+                  focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
                   transition-all duration-200
                 "
                 placeholder="At least 6 characters"
@@ -116,7 +116,7 @@
                   border border-slate-200 dark:border-slate-600
                   bg-white dark:bg-slate-700
                   text-slate-900 dark:text-white
-                  focus:border-sunrise focus:outline-none focus:ring-2 focus:ring-sunrise/20
+                  focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
                   transition-all duration-200
                 "
                 placeholder="Confirm your new password"
@@ -124,7 +124,7 @@
             </div>
 
             {#if error}
-              <div class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+              <div class="p-3 rounded-lg bg-semantic-danger/5 dark:bg-semantic-danger/15 text-semantic-danger-dark dark:text-semantic-danger-light text-sm">
                 {error}
               </div>
             {/if}

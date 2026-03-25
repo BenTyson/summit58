@@ -1,10 +1,9 @@
 <script lang="ts">
   interface Props {
-    routeId: string;
     onUpload: (file: File) => Promise<void>;
   }
 
-  let { routeId, onUpload }: Props = $props();
+  let { onUpload }: Props = $props();
 
   let fileInput: HTMLInputElement;
   let selectedFile = $state<File | null>(null);
@@ -86,7 +85,7 @@
       <div
         class="
           flex flex-col items-center justify-center py-6 cursor-pointer rounded-lg transition-colors
-          {isDragging ? 'bg-sunrise/10' : ''}
+          {isDragging ? 'bg-accent/10' : ''}
         "
         ondrop={handleDrop}
         ondragover={handleDragOver}
@@ -175,7 +174,7 @@
     {/if}
 
     {#if error}
-      <p class="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>
+      <p class="mt-3 text-sm text-semantic-danger-dark dark:text-semantic-danger-light">{error}</p>
     {/if}
   </form>
 </div>

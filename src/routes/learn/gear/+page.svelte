@@ -42,7 +42,7 @@
   <!-- Breadcrumb -->
   <nav class="mb-8 animate-fade-in-up">
     <ol class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-      <li><a href="/learn" class="hover:text-sunrise transition-colors">Learn</a></li>
+      <li><a href="/learn" class="hover:text-accent transition-colors">Learn</a></li>
       <li class="text-slate-400">/</li>
       <li class="text-slate-900 dark:text-white font-medium">Gear</li>
     </ol>
@@ -74,17 +74,17 @@
           </ul>
         </div>
 
-        <div class="p-5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800">
+        <div class="p-5 rounded-xl bg-gradient-to-br from-semantic-warning/5 to-semantic-warning/5 dark:from-semantic-warning/15 dark:to-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
           <div class="flex items-center gap-2 mb-3">
-            <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/20">
-              <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-semantic-warning/20">
+              <svg class="w-4 h-4 text-semantic-warning-dark dark:text-semantic-warning-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
               </svg>
             </span>
-            <h4 class="font-semibold text-amber-900 dark:text-amber-200">Mid Layer</h4>
+            <h4 class="font-semibold text-semantic-warning-dark dark:text-semantic-warning-light">Mid Layer</h4>
           </div>
-          <p class="text-sm text-amber-800 dark:text-amber-300 mb-2">Insulation. Traps body heat.</p>
-          <ul class="text-xs text-amber-700 dark:text-amber-300/80 space-y-1">
+          <p class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light mb-2">Insulation. Traps body heat.</p>
+          <ul class="text-xs text-semantic-warning-dark dark:text-semantic-warning-light/80 space-y-1">
             <li>• Fleece breathes well</li>
             <li>• Puffy packs smaller</li>
             <li>• For breaks & summits</li>
@@ -230,7 +230,7 @@
     <div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-4 justify-between">
       <a
         href="/learn/safety"
-        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
       >
         <svg class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -239,7 +239,7 @@
       </a>
       <a
         href="/learn"
-        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors sm:flex-row-reverse"
+        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors sm:flex-row-reverse"
       >
         Back to Learn
         <svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

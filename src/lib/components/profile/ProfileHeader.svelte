@@ -39,7 +39,7 @@
 </script>
 
 <!-- Cover Photo -->
-<div class="relative h-32 sm:h-48 md:h-56 bg-gradient-to-br from-mountain-blue via-mountain-mist to-sunrise overflow-hidden">
+<div class="relative h-32 sm:h-48 md:h-56 bg-gradient-to-br from-mountain-blue via-mountain-mist to-accent overflow-hidden">
   {#if profile.cover_image_url}
     <img
       src={profile.cover_image_url}
@@ -65,7 +65,7 @@
             class="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white dark:border-slate-800 shadow-lg object-cover bg-white dark:bg-slate-800"
           />
         {:else}
-          <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white dark:border-slate-800 shadow-lg bg-gradient-to-br from-sunrise to-sunrise-coral flex items-center justify-center">
+          <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white dark:border-slate-800 shadow-lg bg-gradient-to-br from-accent to-accent-warm flex items-center justify-center">
             <span class="text-3xl sm:text-4xl font-bold text-white">{initials}</span>
           </div>
         {/if}
@@ -76,7 +76,7 @@
         <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
           {profile.display_name || 'Peak Bagger'}
           {#if isPro}
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-sunrise/10 text-sunrise">PRO</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-accent/10 text-accent">PRO</span>
           {/if}
         </h1>
 
@@ -140,7 +140,7 @@
 
   <!-- Favorite Peak -->
   {#if favoritePeak}
-    <div class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sunrise/10 text-sunrise text-sm font-medium">
+    <div class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium">
       <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
       </svg>

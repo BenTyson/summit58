@@ -17,22 +17,22 @@
       title: 'text-blue-900 dark:text-blue-200'
     },
     warning: {
-      bg: 'bg-amber-50 dark:bg-amber-900/20',
-      border: 'border-amber-500',
-      icon: 'text-amber-500',
-      title: 'text-amber-900 dark:text-amber-200'
+      bg: 'bg-semantic-warning/5 dark:bg-semantic-warning/15',
+      border: 'border-semantic-warning',
+      icon: 'text-semantic-warning',
+      title: 'text-semantic-warning-dark dark:text-semantic-warning-light'
     },
     danger: {
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-500',
-      icon: 'text-red-500',
-      title: 'text-red-900 dark:text-red-200'
+      bg: 'bg-semantic-danger/5 dark:bg-semantic-danger/15',
+      border: 'border-semantic-danger',
+      icon: 'text-semantic-danger',
+      title: 'text-semantic-danger-dark dark:text-semantic-danger-light'
     },
     tip: {
-      bg: 'bg-green-50 dark:bg-green-900/20',
-      border: 'border-green-500',
-      icon: 'text-green-500',
-      title: 'text-green-900 dark:text-green-200'
+      bg: 'bg-semantic-success/5 dark:bg-semantic-success/15',
+      border: 'border-semantic-success',
+      icon: 'text-semantic-success',
+      title: 'text-semantic-success-dark dark:text-semantic-success-light'
     }
   };
 

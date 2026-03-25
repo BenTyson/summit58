@@ -124,7 +124,7 @@
 {#if hasTrail}
   <section class="animate-fade-in-up" style="animation-delay: 175ms">
     <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-      <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
       </svg>
       Trail Map & Elevation
@@ -245,8 +245,8 @@
                   class="
                     inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors
                     {selectedTrace.userVoted
-                      ? 'bg-sunrise/10 text-sunrise border border-sunrise/30'
-                      : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 hover:border-sunrise hover:text-sunrise'}
+                      ? 'bg-accent/10 text-accent border border-accent/30'
+                      : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 hover:border-accent hover:text-accent'}
                   "
                 >
                   <svg class="h-4 w-4" fill={selectedTrace.userVoted ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
@@ -272,7 +272,7 @@
               {#if selectedTrace && currentUserId === selectedTrace.uploaderId}
                 <button
                   onclick={() => selectedTrace && handleDelete(selectedTrace.id)}
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-white dark:bg-slate-700 text-red-500 border border-slate-300 dark:border-slate-600 hover:border-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-white dark:bg-slate-700 text-semantic-danger border border-slate-300 dark:border-slate-600 hover:border-semantic-danger-light hover:bg-semantic-danger/5 dark:hover:bg-semantic-danger/15 transition-colors"
                 >
                   <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -297,7 +297,7 @@
 
           {#if showUploader && onUpload}
             <div class="mt-3">
-              <GpxUploader routeId="" {onUpload} />
+              <GpxUploader {onUpload} />
             </div>
           {/if}
         </div>
@@ -327,7 +327,7 @@
   <!-- No trail data: community contribution CTA -->
   <section class="animate-fade-in-up" style="animation-delay: 175ms">
     <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-      <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
       </svg>
       Trail Map
@@ -346,14 +346,14 @@
         </p>
         {#if !isLoggedIn}
           <p class="text-sm text-slate-400 dark:text-slate-500">
-            <a href="/auth?redirectTo={encodeURIComponent($page.url.pathname)}" class="text-mountain-blue dark:text-sunrise hover:underline">Log in</a> to upload a GPX file.
+            <a href="/auth?redirectTo={encodeURIComponent($page.url.pathname)}" class="text-mountain-blue dark:text-accent hover:underline">Log in</a> to upload a GPX file.
           </p>
         {/if}
       </div>
 
       {#if isLoggedIn && onUpload}
         <div class="border-t border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-slate-800/50">
-          <GpxUploader routeId="" {onUpload} />
+          <GpxUploader {onUpload} />
         </div>
       {/if}
     </div>

@@ -62,7 +62,7 @@
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 class="heading-page text-slate-900 dark:text-white flex items-center gap-3">
-            <svg class="h-8 w-8 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
             </svg>
             Peak Map
@@ -80,19 +80,19 @@
         <div class="flex flex-wrap items-center gap-4 text-sm">
           <span class="text-slate-500 dark:text-slate-400">Class:</span>
           <div class="flex items-center gap-1">
-            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#22c55e" stroke="white" stroke-width="1.5"/></svg>
+            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#5A9E78" stroke="white" stroke-width="1.5"/></svg>
             <span class="text-slate-600 dark:text-slate-300 font-medium">1</span>
           </div>
           <div class="flex items-center gap-1">
-            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#3b82f6" stroke="white" stroke-width="1.5"/></svg>
+            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#4A7FB5" stroke="white" stroke-width="1.5"/></svg>
             <span class="text-slate-600 dark:text-slate-300 font-medium">2</span>
           </div>
           <div class="flex items-center gap-1">
-            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#eab308" stroke="white" stroke-width="1.5"/></svg>
+            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#C4943F" stroke="white" stroke-width="1.5"/></svg>
             <span class="text-slate-600 dark:text-slate-300 font-medium">3</span>
           </div>
           <div class="flex items-center gap-1">
-            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#ef4444" stroke="white" stroke-width="1.5"/></svg>
+            <svg class="w-5 h-5" viewBox="0 0 20 20"><path d="M10 2L18 16H2Z" fill="#B84C4C" stroke="white" stroke-width="1.5"/></svg>
             <span class="text-slate-600 dark:text-slate-300 font-medium">4</span>
           </div>
         </div>
@@ -106,7 +106,7 @@
             class="
               px-3 py-1.5 rounded-full text-sm border transition-all flex items-center gap-1.5
               {showTrails
-                ? 'border-sunrise bg-sunrise/10 text-sunrise font-medium'
+                ? 'border-accent bg-accent/10 text-accent font-medium'
                 : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-slate-300'}
             "
           >
@@ -123,7 +123,7 @@
             class="
               px-3 py-1.5 rounded-full text-sm border transition-all
               {showSummitedOnly
-                ? 'border-sunrise bg-sunrise/10 text-sunrise font-medium'
+                ? 'border-accent bg-accent/10 text-accent font-medium'
                 : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-slate-300'}
             "
           >
@@ -139,7 +139,7 @@
             border border-slate-200 dark:border-slate-600
             bg-white dark:bg-slate-700
             text-slate-700 dark:text-slate-200
-            focus:border-sunrise focus:ring-1 focus:ring-sunrise
+            focus:border-accent focus:ring-1 focus:ring-accent
           "
         >
           <option value={null}>All Classes</option>
@@ -157,7 +157,7 @@
             border border-slate-200 dark:border-slate-600
             bg-white dark:bg-slate-700
             text-slate-700 dark:text-slate-200
-            focus:border-sunrise focus:ring-1 focus:ring-sunrise
+            focus:border-accent focus:ring-1 focus:ring-accent
           "
         >
           <option value={null}>All Ranges</option>

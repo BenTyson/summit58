@@ -30,9 +30,9 @@
   }
 
   function getRankStyle(rank: number): string {
-    if (rank === 1) return 'bg-gradient-to-r from-amber-400 to-yellow-500 text-white';
+    if (rank === 1) return 'bg-gradient-to-r from-accent-light to-accent text-mountain-navy';
     if (rank === 2) return 'bg-gradient-to-r from-slate-300 to-slate-400 text-slate-800';
-    if (rank === 3) return 'bg-gradient-to-r from-amber-600 to-amber-700 text-white';
+    if (rank === 3) return 'bg-gradient-to-r from-accent-muted to-accent-dark text-white';
     return 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
   }
 </script>
@@ -47,7 +47,7 @@
     <!-- Header -->
     <div class="mb-10">
       <h1 class="heading-page text-slate-900 dark:text-white flex items-center gap-3">
-        <svg class="h-8 w-8 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
         </svg>
         Leaderboard
@@ -60,7 +60,7 @@
     <!-- Stats Overview -->
     <div class="grid grid-cols-3 gap-4 mb-8">
       <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 shadow-card text-center">
-        <div class="text-3xl font-bold text-sunrise">{stats.totalClimbers}</div>
+        <div class="text-3xl font-bold text-accent">{stats.totalClimbers}</div>
         <div class="text-sm text-slate-600 dark:text-slate-400 mt-1">Active Climbers</div>
       </div>
       <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-5 shadow-card text-center">
@@ -92,7 +92,7 @@
               {#each leaderboard as entry, index}
                 <a
                   href="/users/{entry.userId}"
-                  class="grid grid-cols-12 gap-2 px-4 py-3 items-center hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors {index < 3 ? 'bg-gradient-to-r from-transparent via-sunrise/5 to-transparent' : ''}"
+                  class="grid grid-cols-12 gap-2 px-4 py-3 items-center hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors {index < 3 ? 'bg-gradient-to-r from-transparent via-accent/5 to-transparent' : ''}"
                 >
                   <!-- Rank -->
                   <div class="col-span-1 flex justify-center">
@@ -108,14 +108,14 @@
                         {entry.displayName.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-sunrise transition-colors flex items-center gap-1.5">
+                        <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-accent transition-colors flex items-center gap-1.5">
                           {entry.displayName}
                           {#if entry.isPro}
-                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-sunrise/10 text-sunrise">PRO</span>
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-accent/10 text-accent">PRO</span>
                           {/if}
                         </div>
                         {#if entry.uniquePeaks === 58}
-                          <div class="text-xs text-sunrise font-medium flex items-center gap-1">
+                          <div class="text-xs text-accent font-medium flex items-center gap-1">
                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M12 2L2 22h20L12 2z" />
                             </svg>
@@ -141,7 +141,7 @@
                     <div class="flex items-center gap-2">
                       <div class="flex-1 h-2 rounded-full bg-slate-200 dark:bg-slate-600 overflow-hidden">
                         <div
-                          class="h-full rounded-full bg-gradient-to-r from-sunrise to-sunrise-coral transition-all"
+                          class="h-full rounded-full bg-gradient-to-r from-accent to-accent-warm transition-all"
                           style="width: {entry.progress}%"
                         ></div>
                       </div>
@@ -179,7 +179,7 @@
         <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-card overflow-hidden">
           <div class="px-4 py-3 bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">
             <h2 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-              <svg class="w-5 h-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
               Recent Activity
@@ -191,8 +191,8 @@
               {#each recentActivity as activity}
                 <div class="p-4">
                   <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sunrise/20 to-sunrise-coral/20 flex items-center justify-center flex-shrink-0">
-                      <svg class="w-4 h-4 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-accent/20 to-accent-warm/20 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2L2 22h20L12 2z" />
                       </svg>
                     </div>
@@ -200,7 +200,7 @@
                       <p class="text-sm text-slate-900 dark:text-white">
                         <span class="font-medium">{activity.displayName}</span>
                         <span class="text-slate-500 dark:text-slate-400"> summited </span>
-                        <a href="/peaks/{activity.peakSlug}" class="font-medium text-sunrise hover:text-sunrise-coral transition-colors">
+                        <a href="/peaks/{activity.peakSlug}" class="font-medium text-accent hover:text-accent-warm transition-colors">
                           {activity.peakName}
                         </a>
                       </p>
@@ -220,7 +220,7 @@
         </div>
 
         <!-- Call to Action -->
-        <div class="mt-6 rounded-xl bg-gradient-to-br from-sunrise/10 to-sunrise-coral/10 border border-sunrise/20 p-6 text-center">
+        <div class="mt-6 rounded-xl bg-gradient-to-br from-accent/10 to-accent-warm/10 border border-accent/20 p-6 text-center">
           <h3 class="font-semibold text-slate-900 dark:text-white mb-2">
             Join the Challenge
           </h3>
@@ -229,7 +229,7 @@
           </p>
           <a
             href="/auth"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium text-sm hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md hover:shadow-lg"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium text-sm hover:from-accent-warm hover:to-accent transition-all shadow-md hover:shadow-lg"
           >
             Get Started
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

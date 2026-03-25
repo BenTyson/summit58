@@ -55,14 +55,14 @@
     <div class="flex items-start gap-3">
       <div class="flex-shrink-0">
         {#if offlineReady}
-          <div class="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-            <svg class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="h-10 w-10 rounded-full bg-semantic-success/10 dark:bg-semantic-success/20 flex items-center justify-center">
+            <svg class="h-5 w-5 text-semantic-success-dark dark:text-semantic-success-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
           </div>
         {:else}
-          <div class="h-10 w-10 rounded-full bg-sunrise/10 flex items-center justify-center">
-            <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center">
+            <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </div>
@@ -89,7 +89,7 @@
           {#if needRefresh}
             <button
               onclick={updateNow}
-              class="px-3 py-1.5 rounded-lg bg-sunrise text-white text-sm font-medium hover:bg-sunrise-coral transition-colors"
+              class="px-3 py-1.5 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-warm transition-colors"
             >
               Reload
             </button>

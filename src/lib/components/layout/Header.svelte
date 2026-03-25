@@ -12,9 +12,16 @@
     profile?: { display_name?: string; avatar_url?: string } | null;
     peaks?: Peak[];
     isAdmin?: boolean;
+    transparent?: boolean;
   }
 
-  let { session = null, profile = null, peaks = [], isAdmin = false }: Props = $props();
+  let { session = null, profile = null, peaks = [], isAdmin = false, transparent = false }: Props = $props();
+
+  let scrolled = $state(false);
+
+  function handleScroll() {
+    scrolled = window.scrollY > 50;
+  }
 
   let isMobileMenuOpen = $state(false);
   let userMenuOpen = $state(false);
@@ -53,15 +60,15 @@
   }
 </script>
 
-<svelte:window onkeydown={handleGlobalKeydown} />
+<svelte:window onkeydown={handleGlobalKeydown} onscroll={handleScroll} />
 
 <header
   class="
-    sticky top-0 z-50
-    border-b border-slate-200/80
-    bg-white/80 backdrop-blur-md
+    fixed top-0 left-0 right-0 z-50
     transition-all duration-300
-    dark:border-slate-700/80 dark:bg-slate-900/80
+    {transparent && !scrolled
+      ? 'bg-transparent border-b border-transparent'
+      : 'bg-white/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-700/80 dark:bg-slate-900/80'}
   "
 >
   <Container size="wide">
@@ -69,16 +76,14 @@
       <!-- Logo -->
       <a
         href="/"
-        class="group flex items-center gap-2.5 text-xl font-bold text-mountain-blue dark:text-white"
+        class="group flex items-center gap-2.5 text-xl font-bold {transparent && !scrolled ? 'text-white' : 'text-mountain-blue dark:text-white'}"
       >
-        <svg
-          class="h-9 w-9 text-sunrise transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
-          viewBox="0 0 24 24"
-          fill="currentColor"
+        <img
+          src="/brand/SaltGoat_LogoGoat.png"
+          alt=""
+          class="h-9 w-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
           aria-hidden="true"
-        >
-          <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
-        </svg>
+        />
         <span class="font-display text-2xl tracking-tight">SaltGoat</span>
       </a>
 
@@ -89,32 +94,33 @@
           onclick={openSearch}
           class="
             flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg mr-2
-            text-slate-500 dark:text-slate-400
-            hover:bg-slate-100 dark:hover:bg-slate-800
-            hover:text-slate-700 dark:hover:text-slate-200
+            {transparent && !scrolled
+              ? 'text-white/70 hover:bg-white/10 hover:text-white'
+              : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200'}
             transition-colors
           "
         >
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-[10px] font-medium text-slate-500 dark:text-slate-400">
+          <kbd class="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium {transparent && !scrolled ? 'bg-white/10 text-white/50' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'}">
             <span>⌘</span>K
           </kbd>
         </button>
 
-        <div class="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+        <div class="h-5 w-px mx-2 {transparent && !scrolled ? 'bg-white/20' : 'bg-slate-200 dark:bg-slate-700'}"></div>
 
         {#each navLinks as link}
           <a
             href={link.href}
             class="
-              relative px-2.5 py-2 text-slate-600 font-medium text-sm
+              relative px-2.5 py-2 font-medium text-sm
               transition-colors duration-200
-              hover:text-mountain-blue
-              dark:text-slate-300 dark:hover:text-white
+              {transparent && !scrolled
+                ? 'text-white/80 hover:text-white'
+                : 'text-slate-600 hover:text-mountain-blue dark:text-slate-300 dark:hover:text-white'}
               after:absolute after:inset-x-1 after:bottom-0.5 after:h-0.5
-              after:bg-sunrise after:scale-x-0 after:transition-transform after:duration-300
+              after:bg-accent after:scale-x-0 after:transition-transform after:duration-300
               hover:after:scale-x-100
             "
           >
@@ -122,7 +128,7 @@
           </a>
         {/each}
 
-        <div class="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+        <div class="h-5 w-px mx-2 {transparent && !scrolled ? 'bg-white/20' : 'bg-slate-200 dark:bg-slate-700'}"></div>
 
         <ThemeToggle />
 
@@ -135,15 +141,15 @@
                 flex items-center justify-center
                 h-9 w-9 rounded-full
                 border-2 border-transparent
-                hover:border-sunrise transition-colors
-                focus:outline-none focus:border-sunrise
+                hover:border-accent transition-colors
+                focus:outline-none focus:border-accent
               "
               aria-label="User menu"
             >
               {#if profile?.avatar_url}
                 <img src={profile.avatar_url} alt="" class="h-9 w-9 rounded-full" />
               {:else}
-                <div class="h-9 w-9 rounded-full bg-gradient-to-br from-sunrise to-sunrise-coral flex items-center justify-center">
+                <div class="h-9 w-9 rounded-full bg-gradient-to-br from-accent to-accent-warm flex items-center justify-center">
                   <span class="text-white font-bold text-sm">
                     {(profile?.display_name || 'H').charAt(0).toUpperCase()}
                   </span>
@@ -173,7 +179,7 @@
                   onclick={closeUserMenu}
                   class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
                 >
-                  <svg class="h-4 w-4 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+                  <svg class="h-4 w-4 text-accent" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
                   </svg>
                   My 58 Progress
@@ -184,7 +190,7 @@
                     onclick={closeUserMenu}
                     class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
                   >
-                    <svg class="h-4 w-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="h-4 w-4 text-semantic-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                     Admin
@@ -208,9 +214,10 @@
           <a
             href="/auth"
             class="
-              px-4 py-2 rounded-lg text-sm
-              bg-sunrise text-white font-medium
-              hover:bg-sunrise-coral transition-colors
+              px-4 py-2 rounded-lg text-sm font-medium transition-colors
+              {transparent && !scrolled
+                ? 'bg-white/15 text-white border border-white/25 hover:bg-white/25'
+                : 'bg-accent text-white hover:bg-accent-warm'}
             "
           >
             Log In
@@ -223,7 +230,7 @@
         <!-- Mobile Search Button -->
         <button
           onclick={openSearch}
-          class="tap-target flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-mountain-blue dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white transition-colors"
+          class="tap-target flex items-center justify-center rounded-lg p-2 transition-colors {transparent && !scrolled ? 'text-white/80 hover:bg-white/10 hover:text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-mountain-blue dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white'}"
           aria-label="Search"
         >
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,9 +241,10 @@
         <button
           class="
             tap-target flex items-center justify-center rounded-lg p-2
-            text-slate-600 transition-colors
-            hover:bg-slate-100 hover:text-mountain-blue
-            dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white
+            transition-colors
+            {transparent && !scrolled
+              ? 'text-white/80 hover:bg-white/10 hover:text-white'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-mountain-blue dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white'}
           "
           onclick={() => (isMobileMenuOpen = !isMobileMenuOpen)}
           aria-label="Toggle menu"
@@ -279,8 +287,8 @@
                 tap-target flex items-center rounded-lg px-4 py-3
                 text-lg font-medium text-slate-700
                 transition-all duration-200
-                hover:bg-sunrise/10 hover:text-sunrise
-                dark:text-slate-200 dark:hover:bg-sunrise/20
+                hover:bg-accent/10 hover:text-accent
+                dark:text-slate-200 dark:hover:bg-accent/20
                 animate-fade-in-up
               "
               style="animation-delay: {i * 50}ms"
@@ -299,18 +307,18 @@
                 onclick={closeMobileMenu}
                 class="
                   flex items-center gap-3 mx-4 mb-4 px-4 py-3 rounded-xl
-                  bg-gradient-to-r from-sunrise/10 to-sunrise-coral/10
-                  border border-sunrise/30
-                  hover:from-sunrise/20 hover:to-sunrise-coral/20
+                  bg-gradient-to-r from-accent/10 to-accent-warm/10
+                  border border-accent/30
+                  hover:from-accent/20 hover:to-accent-warm/20
                 "
               >
-                <div class="h-10 w-10 rounded-full bg-sunrise/20 flex items-center justify-center">
-                  <svg class="h-5 w-5 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+                <div class="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+                  <svg class="h-5 w-5 text-accent" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
                   </svg>
                 </div>
                 <div>
-                  <span class="font-semibold text-sunrise">My 58</span>
+                  <span class="font-semibold text-accent">My 58</span>
                   <span class="block text-xs text-slate-500 dark:text-slate-400">Track your summits</span>
                 </div>
               </a>
@@ -339,7 +347,7 @@
               <a
                 href="/auth"
                 onclick={closeMobileMenu}
-                class="block mx-4 py-3 text-center rounded-lg bg-sunrise text-white font-medium hover:bg-sunrise-coral transition-colors"
+                class="block mx-4 py-3 text-center rounded-lg bg-accent text-white font-medium hover:bg-accent-warm transition-colors"
               >
                 Log In
               </a>

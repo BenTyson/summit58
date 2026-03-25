@@ -60,10 +60,10 @@
 
   // Difficulty class colors
   const classColors: Record<number, string> = {
-    1: '#22c55e',
-    2: '#3b82f6',
-    3: '#eab308',
-    4: '#ef4444'
+    1: '#5A9E78',
+    2: '#4A7FB5',
+    3: '#C4943F',
+    4: '#B84C4C'
   };
 
   const color = $derived(classColors[difficultyClass] || classColors[1]);
@@ -96,7 +96,7 @@
           </filter>
         </defs>
         <g filter="url(#trailhead-shadow)">
-          <circle cx="20" cy="20" r="16" fill="#16a34a" stroke="white" stroke-width="3"/>
+          <circle cx="20" cy="20" r="16" fill="#3A8168" stroke="white" stroke-width="3"/>
           <text x="20" y="25" text-anchor="middle" font-size="16" font-weight="700" fill="white" font-family="system-ui, sans-serif">P</text>
         </g>
       </svg>
@@ -121,15 +121,15 @@
             <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
           </filter>
           <linearGradient id="summit-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#fb923c"/>
-            <stop offset="100%" stop-color="#ea580c"/>
+            <stop offset="0%" stop-color="#D4BC7E"/>
+            <stop offset="100%" stop-color="#A8873A"/>
           </linearGradient>
         </defs>
         <g filter="url(#summit-shadow)">
           <path d="M22 4 L40 38 L4 38 Z" fill="url(#summit-gradient)" stroke="white" stroke-width="3" stroke-linejoin="round"/>
           <path d="M22 4 L28 15 L16 15 Z" fill="rgba(255,255,255,0.9)" stroke="none"/>
           <circle cx="22" cy="26" r="6" fill="white" opacity="0.95"/>
-          <path d="M19 26 L21 28 L25 23" stroke="#ea580c" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M19 26 L21 28 L25 23" stroke="#A8873A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
         </g>
       </svg>
     `;
@@ -423,13 +423,13 @@
   }
 
   .map-type-btn.active {
-    background: linear-gradient(135deg, #f97316, #fb923c);
+    background: linear-gradient(135deg, #C8A55C, #D4BC7E);
     color: white;
-    box-shadow: 0 2px 6px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 2px 6px rgba(200, 165, 92, 0.3);
   }
 
   :global(.dark) .map-type-btn.active {
-    background: linear-gradient(135deg, #f97316, #fb923c);
+    background: linear-gradient(135deg, #C8A55C, #D4BC7E);
     color: white;
   }
 
@@ -489,11 +489,11 @@
   }
 
   :global(.trail-popup-badge.trailhead) {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+    background: linear-gradient(135deg, #5A9E78, #3A8168);
   }
 
   :global(.trail-popup-badge.summit) {
-    background: linear-gradient(135deg, #f97316, #ea580c);
+    background: linear-gradient(135deg, #C8A55C, #A8873A);
   }
 
   :global(.trail-popup-title) {
@@ -574,7 +574,7 @@
   }
 
   :global(.dark .leaflet-control-attribution a) {
-    color: #f97316;
+    color: #C8A55C;
   }
 </style>
 

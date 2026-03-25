@@ -44,11 +44,11 @@
   <Container class="py-8 sm:py-12">
     <!-- Private trip banner -->
     {#if isOwner && !trip.is_public}
-      <div class="mb-6 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 flex items-center gap-2">
-        <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="mb-6 p-3 rounded-lg bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark flex items-center gap-2">
+        <svg class="w-5 h-5 text-semantic-warning flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
-        <p class="text-sm text-amber-700 dark:text-amber-400">This trip is private. Only you can see this page.</p>
+        <p class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light">This trip is private. Only you can see this page.</p>
       </div>
     {/if}
 
@@ -57,7 +57,7 @@
       <div class="p-6 sm:p-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-4">
-          <a href="/" class="hover:text-sunrise transition-colors">Home</a>
+          <a href="/" class="hover:text-accent transition-colors">Home</a>
           <span>›</span>
           <span>Trip</span>
         </nav>
@@ -73,7 +73,7 @@
           </div>
 
           <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 rounded-full text-xs font-medium {trip.is_public ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'}">
+            <span class="px-2.5 py-1 rounded-full text-xs font-medium {trip.is_public ? 'bg-semantic-success/10 text-semantic-success-dark dark:bg-semantic-success/20 dark:text-semantic-success-light' : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-400'}">
               {trip.is_public ? 'Public' : 'Private'}
             </span>
             {#if trip.is_public}
@@ -94,7 +94,7 @@
                 </svg>
               </div>
             {/if}
-            <a href="/users/{trip.owner.id}" class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sunrise transition-colors">
+            <a href="/users/{trip.owner.id}" class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-accent transition-colors">
               {ownerName}
             </a>
           </div>

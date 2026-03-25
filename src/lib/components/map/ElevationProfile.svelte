@@ -35,10 +35,10 @@
 
   // Difficulty class colors
   const classColors: Record<number, string> = {
-    1: '#22c55e',
-    2: '#3b82f6',
-    3: '#eab308',
-    4: '#ef4444'
+    1: '#5A9E78',
+    2: '#4A7FB5',
+    3: '#C4943F',
+    4: '#B84C4C'
   };
 
   const color = $derived(classColors[difficultyClass] || classColors[1]);

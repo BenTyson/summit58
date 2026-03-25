@@ -40,10 +40,10 @@
 
   // Capacity configuration
   const capacityConfig: Record<string, { label: string; color: string }> = {
-    very_limited: { label: '<20 spots', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
-    limited: { label: '20-50 spots', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' },
-    moderate: { label: '50-100 spots', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
-    large: { label: '100+ spots', color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' },
+    very_limited: { label: '<20 spots', color: 'bg-semantic-danger/10 text-semantic-danger-dark dark:bg-semantic-danger/20 dark:text-semantic-danger-light' },
+    limited: { label: '20-50 spots', color: 'bg-semantic-warning/10 text-semantic-warning-dark dark:bg-semantic-warning/20 dark:text-semantic-warning-light' },
+    moderate: { label: '50-100 spots', color: 'bg-semantic-warning/10 text-semantic-warning-dark dark:bg-semantic-warning/20 dark:text-semantic-warning-light' },
+    large: { label: '100+ spots', color: 'bg-semantic-success/10 text-semantic-success-dark dark:bg-semantic-success/20 dark:text-semantic-success-light' },
     unlimited: { label: 'Dispersed', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' }
   };
 
@@ -69,11 +69,11 @@
 
   // Parking status labels for reports
   const statusConfig: Record<string, { label: string; color: string }> = {
-    empty: { label: 'Empty', color: 'bg-emerald-100 text-emerald-700' },
-    filling: { label: 'Filling', color: 'bg-green-100 text-green-700' },
-    nearly_full: { label: 'Nearly Full', color: 'bg-amber-100 text-amber-700' },
-    full: { label: 'Full', color: 'bg-red-100 text-red-700' },
-    overflow: { label: 'Overflow', color: 'bg-red-100 text-red-700' }
+    empty: { label: 'Empty', color: 'bg-semantic-success/10 text-semantic-success-dark' },
+    filling: { label: 'Filling', color: 'bg-semantic-success/10 text-semantic-success-dark' },
+    nearly_full: { label: 'Nearly Full', color: 'bg-semantic-warning/10 text-semantic-warning-dark' },
+    full: { label: 'Full', color: 'bg-semantic-danger/10 text-semantic-danger-dark' },
+    overflow: { label: 'Overflow', color: 'bg-semantic-danger/10 text-semantic-danger-dark' }
   };
 
   // Cell service labels
@@ -101,7 +101,7 @@
   >
     <div class="p-5">
       <h3 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-        <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17h.01M16 17h.01M9 11h6M5 11l1.5-4.5A2 2 0 018.38 5h7.24a2 2 0 011.88 1.316L19 11M5 11h14v6a1 1 0 01-1 1H6a1 1 0 01-1-1v-6z" />
         </svg>
         Parking & Access
@@ -129,7 +129,7 @@
         {#if route.parking_fee_type && route.parking_fee_type !== 'free'}
           <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
             <dt class="text-slate-500 dark:text-slate-400">Fee</dt>
-            <dd class="font-semibold text-amber-600 dark:text-amber-400">
+            <dd class="font-semibold text-semantic-warning-dark dark:text-semantic-warning-light">
               {#if route.parking_fee_amount}
                 ${route.parking_fee_amount}/day
               {:else}
@@ -145,7 +145,7 @@
         {:else if route.parking_fee_type === 'free'}
           <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
             <dt class="text-slate-500 dark:text-slate-400">Fee</dt>
-            <dd class="font-medium text-green-600 dark:text-green-400">Free</dd>
+            <dd class="font-medium text-semantic-success-dark dark:text-semantic-success-light">Free</dd>
           </div>
         {/if}
 
@@ -154,10 +154,10 @@
           <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
             <dt class="text-slate-500 dark:text-slate-400">Vehicle</dt>
             <dd class="flex items-center gap-1.5">
-              <svg class="h-4 w-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="h-4 w-4 text-semantic-warning" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
               </svg>
-              <span class="font-semibold text-orange-600 dark:text-orange-400">4WD/High Clearance</span>
+              <span class="font-semibold text-semantic-warning-dark dark:text-semantic-warning-light">4WD/High Clearance</span>
             </dd>
           </div>
         {/if}
@@ -166,14 +166,14 @@
         {#if route.recommended_arrival_time}
           <div class="py-2 border-b border-slate-100 dark:border-slate-700">
             <dt class="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Best Arrival (Weekends)</dt>
-            <dd class="font-bold text-sunrise">{route.recommended_arrival_time}</dd>
+            <dd class="font-bold text-accent">{route.recommended_arrival_time}</dd>
           </div>
         {/if}
 
         <!-- Shuttle Available -->
         {#if route.shuttle_available}
           <div class="py-2 border-b border-slate-100 dark:border-slate-700">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-medium">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-semantic-success/10 dark:bg-semantic-success/20 text-semantic-success-dark dark:text-semantic-success-light text-sm font-medium">
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
@@ -256,7 +256,7 @@
     <div class="border-t border-slate-200 dark:border-slate-700 p-4">
       <a
         href="/learn/parking"
-        class="flex items-center justify-center gap-2 text-sm text-sunrise hover:text-sunrise-coral font-medium transition-colors"
+        class="flex items-center justify-center gap-2 text-sm text-accent hover:text-accent-warm font-medium transition-colors"
       >
         Learn about parking strategies
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -75,8 +75,8 @@
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">7. Third-Party Services</h2>
         <ul class="list-disc list-inside text-slate-600 dark:text-slate-400 space-y-1">
-          <li><strong class="text-slate-700 dark:text-slate-300">Supabase:</strong> database and authentication (<a href="https://supabase.com/privacy" class="text-sunrise hover:text-sunrise-coral transition-colors" target="_blank" rel="noopener noreferrer">privacy policy</a>)</li>
-          <li><strong class="text-slate-700 dark:text-slate-300">Google OAuth:</strong> optional sign-in method (<a href="https://policies.google.com/privacy" class="text-sunrise hover:text-sunrise-coral transition-colors" target="_blank" rel="noopener noreferrer">privacy policy</a>)</li>
+          <li><strong class="text-slate-700 dark:text-slate-300">Supabase:</strong> database and authentication (<a href="https://supabase.com/privacy" class="text-accent hover:text-accent-warm transition-colors" target="_blank" rel="noopener noreferrer">privacy policy</a>)</li>
+          <li><strong class="text-slate-700 dark:text-slate-300">Google OAuth:</strong> optional sign-in method (<a href="https://policies.google.com/privacy" class="text-accent hover:text-accent-warm transition-colors" target="_blank" rel="noopener noreferrer">privacy policy</a>)</li>
           <li><strong class="text-slate-700 dark:text-slate-300">Open-Meteo:</strong> weather data (no personal data shared)</li>
         </ul>
       </section>
@@ -98,7 +98,7 @@
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">10. Contact</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Privacy questions? Contact us at <a href="mailto:hello@saltgoat.co" class="text-sunrise hover:text-sunrise-coral transition-colors">hello@saltgoat.co</a>.
+          Privacy questions? Contact us at <a href="mailto:hello@saltgoat.co" class="text-accent hover:text-accent-warm transition-colors">hello@saltgoat.co</a>.
         </p>
       </section>
     </div>

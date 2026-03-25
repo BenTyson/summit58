@@ -36,7 +36,7 @@
         class="w-12 h-12 rounded-full object-cover ring-2 ring-slate-200 dark:ring-slate-600"
       />
     {:else}
-      <div class="w-12 h-12 rounded-full bg-gradient-to-br from-sunrise to-sunrise-coral flex items-center justify-center ring-2 ring-slate-200 dark:ring-slate-600">
+      <div class="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-accent-warm flex items-center justify-center ring-2 ring-slate-200 dark:ring-slate-600">
         <span class="text-white font-semibold text-sm">
           {getInitials(user.display_name)}
         </span>
@@ -47,7 +47,7 @@
   <!-- Info -->
   <div class="flex-1 min-w-0">
     <a href="/users/{user.id}" class="block">
-      <h4 class="font-semibold text-slate-900 dark:text-white truncate hover:text-sunrise transition-colors">
+      <h4 class="font-semibold text-slate-900 dark:text-white truncate hover:text-accent transition-colors">
         {user.display_name || 'Anonymous'}
       </h4>
     </a>
@@ -64,7 +64,7 @@
       </span>
 
       {#if showOverlap && user.peakOverlap}
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-sunrise/10 text-sunrise">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent">
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
@@ -96,7 +96,7 @@
           px-4 py-2 rounded-lg text-sm font-medium transition-all
           {isFollowing
             ? 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
-            : 'bg-gradient-to-r from-sunrise to-sunrise-coral text-white hover:from-sunrise-coral hover:to-sunrise shadow-sm hover:shadow'}
+            : 'bg-gradient-to-r from-accent to-accent-warm text-white hover:from-accent-warm hover:to-accent shadow-sm hover:shadow'}
           disabled:opacity-50 disabled:cursor-not-allowed
         "
       >

@@ -19,22 +19,28 @@
   --color-slate-light: #4a5568;
   --color-slate-dark: #1a202c;
 
-  /* Accent - Sunrise */
-  --color-sunrise: #ed8936;
-  --color-sunrise-light: #f6ad55;
-  --color-sunrise-dark: #dd6b20;
-  --color-sunrise-gold: #fbbf24;
+  /* Accent - Warm Gold */
+  --color-accent: #C8A55C;
+  --color-accent-light: #D4BC7E;
+  --color-accent-dark: #A8873A;
+  --color-accent-warm: #DAC48A;
+  --color-accent-muted: #B09860;
+
+  /* Semantic Colors */
+  --color-semantic-success: #4A9E7E;
+  --color-semantic-danger: #C75454;
+  --color-semantic-warning: #D4A843;
 
   /* Difficulty Class Colors */
-  --color-class-1: #38a169;
-  --color-class-2: #3182ce;
-  --color-class-3: #d69e2e;
-  --color-class-4: #e53e3e;
+  --color-class-1: #5A9E78;
+  --color-class-2: #4A7FB5;
+  --color-class-3: #C4943F;
+  --color-class-4: #B84C4C;
 
   /* Gradients */
   --gradient-alpine: linear-gradient(135deg, #0c1929 0%, #1e3a5f 50%, #3d5a80 100%);
-  --gradient-sunrise: linear-gradient(135deg, #ed8936 0%, #f6ad55 50%, #fbbf24 100%);
-  --gradient-adventure: linear-gradient(180deg, #0c1929 0%, #1a365d 40%, #ed8936 100%);
+  --gradient-accent: linear-gradient(135deg, #C8A55C 0%, #D4BC7E 50%, #DAC48A 100%);
+  --gradient-adventure: linear-gradient(180deg, #0c1929 0%, #1a365d 40%, #C8A55C 100%);
 
   /* Glass morphism */
   --glass-bg: rgba(255, 255, 255, 0.8);
@@ -123,16 +129,16 @@
 
   /* Class-specific background gradients */
   .class-1-gradient {
-    @apply bg-gradient-to-br from-class-1 to-green-700;
+    @apply bg-gradient-to-br from-class-1 to-[#3A7A58];
   }
   .class-2-gradient {
-    @apply bg-gradient-to-br from-class-2 to-blue-700;
+    @apply bg-gradient-to-br from-class-2 to-[#365F8A];
   }
   .class-3-gradient {
-    @apply bg-gradient-to-br from-class-3 to-yellow-700;
+    @apply bg-gradient-to-br from-class-3 to-[#9A7430];
   }
   .class-4-gradient {
-    @apply bg-gradient-to-br from-class-4 to-red-700;
+    @apply bg-gradient-to-br from-class-4 to-[#8E3A3A];
   }
 
   /* Safe area padding for mobile devices */
@@ -250,7 +256,7 @@
 
   /* CTA Button */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-full bg-sunrise px-6 py-3 font-semibold text-white shadow-glow-sunrise transition-all duration-300 hover:bg-sunrise-dark hover:scale-105;
+    @apply inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-mountain-navy shadow-glow-accent transition-all duration-300 hover:bg-accent-dark hover:text-white hover:scale-105;
   }
 
   .btn-secondary {

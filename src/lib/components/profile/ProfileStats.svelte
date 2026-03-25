@@ -19,7 +19,7 @@
         href={stat.href}
         class="group text-center p-3 rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-colors"
       >
-        <div class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white group-hover:text-sunrise transition-colors">
+        <div class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white group-hover:text-accent transition-colors">
           {stat.value}
         </div>
         <div class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">

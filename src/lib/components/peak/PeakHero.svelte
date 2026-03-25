@@ -81,7 +81,7 @@
 
   <!-- Sunrise glow at horizon -->
   <div
-    class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-sunrise/20 to-transparent opacity-60"
+    class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-accent/20 to-transparent opacity-60"
   ></div>
 
   {#if showOverlay}
@@ -95,7 +95,7 @@
         </p>
         <h1 class="heading-page text-white drop-shadow-lg">{peak.name}</h1>
         <p
-          class="mt-2 font-display text-3xl text-sunrise drop-shadow-md"
+          class="mt-2 font-display text-3xl text-accent drop-shadow-md"
         >
           {peak.elevation.toLocaleString()}'
         </p>
@@ -111,7 +111,7 @@
           text-white text-sm font-medium
         "
       >
-        <span class="h-2 w-2 rounded-full bg-sunrise animate-pulse"></span>
+        <span class="h-2 w-2 rounded-full bg-accent animate-pulse"></span>
         Rank #{peak.rank}
       </div>
     </div>

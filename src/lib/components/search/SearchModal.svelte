@@ -161,7 +161,7 @@
                   w-full flex items-center gap-3 px-3 py-2.5 rounded-lg
                   text-left transition-colors
                   {i === selectedIndex
-                    ? 'bg-sunrise/10 text-sunrise'
+                    ? 'bg-accent/10 text-accent'
                     : 'text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'}
                 "
               >
@@ -169,10 +169,10 @@
                 <div class="
                   h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0
                   {i === selectedIndex
-                    ? 'bg-sunrise/20'
+                    ? 'bg-accent/20'
                     : 'bg-slate-100 dark:bg-slate-700'}
                 ">
-                  <svg class="h-5 w-5 {i === selectedIndex ? 'text-sunrise' : 'text-slate-500 dark:text-slate-400'}" fill="currentColor" viewBox="0 0 24 24">
+                  <svg class="h-5 w-5 {i === selectedIndex ? 'text-accent' : 'text-slate-500 dark:text-slate-400'}" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
                   </svg>
                 </div>
@@ -192,7 +192,7 @@
 
                 <!-- Arrow -->
                 {#if i === selectedIndex}
-                  <svg class="h-4 w-4 text-sunrise flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="h-4 w-4 text-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                   </svg>
                 {/if}
@@ -218,7 +218,7 @@
         <a
           href="/peaks"
           onclick={onClose}
-          class="text-xs text-sunrise hover:text-sunrise-coral transition-colors"
+          class="text-xs text-accent hover:text-accent-warm transition-colors"
         >
           Browse all peaks →
         </a>

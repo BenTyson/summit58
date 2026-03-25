@@ -47,8 +47,8 @@
           href="/"
           class="
             inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl
-            bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-semibold
-            hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md hover:shadow-lg
+            bg-gradient-to-r from-accent to-accent-warm text-white font-semibold
+            hover:from-accent-warm hover:to-accent transition-all shadow-md hover:shadow-lg
           "
         >
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

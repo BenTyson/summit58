@@ -78,19 +78,19 @@
       <!-- Stats bar -->
       <div class="flex flex-wrap gap-6">
         <div class="flex items-center gap-2 text-white/90">
-          <svg class="h-5 w-5 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-accent" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
           </svg>
           <span><strong>{stats.totalPeaks}</strong> Peaks</span>
         </div>
         <div class="flex items-center gap-2 text-white/90">
-          <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
           </svg>
           <span><strong>{stats.highestElevation.toLocaleString()}'</strong> Highest</span>
         </div>
         <div class="flex items-center gap-2 text-white/90">
-          <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
           </svg>
           <span>{rangeInfo.location}</span>
@@ -106,12 +106,12 @@
           </div>
           <div class="h-2 rounded-full bg-white/20 overflow-hidden">
             <div
-              class="h-full rounded-full transition-all duration-500 {stats.progress === 100 ? 'bg-emerald-400' : 'bg-sunrise'}"
+              class="h-full rounded-full transition-all duration-500 {stats.progress === 100 ? 'bg-semantic-success-light' : 'bg-accent'}"
               style="width: {stats.progress}%"
             ></div>
           </div>
           {#if stats.progress === 100}
-            <p class="mt-2 text-sm text-emerald-300 font-medium">
+            <p class="mt-2 text-sm text-semantic-success-light font-medium">
               Range complete! You've summited all {stats.totalPeaks} peaks.
             </p>
           {:else if stats.summitedCount > 0}
@@ -165,7 +165,7 @@
           bg-white dark:bg-slate-700
           px-3 py-1.5 text-sm
           text-slate-900 dark:text-white
-          focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+          focus:border-accent focus:ring-2 focus:ring-accent/20
         "
       >
         <option value="elevation">Elevation</option>
@@ -183,7 +183,7 @@
         <PeakCard {peak} />
         <!-- Summit badge overlay -->
         {#if summitDate}
-          <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-emerald-500 text-white text-xs font-semibold shadow-md flex items-center gap-1.5">
+          <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-semantic-success text-white text-xs font-semibold shadow-md flex items-center gap-1.5">
             <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
             </svg>
@@ -198,7 +198,7 @@
   <div class="mt-10 text-center">
     <a
       href="/ranges"
-      class="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+      class="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
     >
       <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />

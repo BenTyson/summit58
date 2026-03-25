@@ -213,7 +213,7 @@
 
     <form onsubmit={handleSubmit} class="p-6 space-y-6">
       {#if error}
-        <div class="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 text-sm text-red-600 dark:text-red-400">
+        <div class="rounded-lg bg-semantic-danger/5 dark:bg-semantic-danger/15 border border-semantic-danger/20 dark:border-semantic-danger-dark p-4 text-sm text-semantic-danger-dark dark:text-semantic-danger-light">
           {error}
         </div>
       {/if}
@@ -223,7 +223,7 @@
         <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
           Cover Photo
         </label>
-        <div class="relative h-32 rounded-lg overflow-hidden bg-gradient-to-br from-mountain-blue via-mountain-mist to-sunrise">
+        <div class="relative h-32 rounded-lg overflow-hidden bg-gradient-to-br from-mountain-blue via-mountain-mist to-accent">
           {#if coverImageUrl}
             <img src={coverImageUrl} alt="Cover" class="w-full h-full object-cover" />
             <button
@@ -280,7 +280,7 @@
                 class="w-20 h-20 rounded-full object-cover border-2 border-slate-200 dark:border-slate-600"
               />
             {:else}
-              <div class="w-20 h-20 rounded-full bg-gradient-to-br from-sunrise to-sunrise-coral flex items-center justify-center border-2 border-slate-200 dark:border-slate-600">
+              <div class="w-20 h-20 rounded-full bg-gradient-to-br from-accent to-accent-warm flex items-center justify-center border-2 border-slate-200 dark:border-slate-600">
                 <span class="text-xl font-bold text-white">{initials}</span>
               </div>
             {/if}
@@ -337,7 +337,7 @@
               bg-white dark:bg-slate-700
               px-4 py-2.5
               text-slate-900 dark:text-white
-              focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+              focus:border-accent focus:ring-2 focus:ring-accent/20
               transition-colors
             "
           />
@@ -359,7 +359,7 @@
                 bg-white dark:bg-slate-700
                 pl-8 pr-4 py-2.5
                 text-slate-900 dark:text-white
-                focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                focus:border-accent focus:ring-2 focus:ring-accent/20
                 transition-colors
               "
             />
@@ -383,7 +383,7 @@
             bg-white dark:bg-slate-700
             px-4 py-2.5
             text-slate-900 dark:text-white
-            focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+            focus:border-accent focus:ring-2 focus:ring-accent/20
             transition-colors
           "
         />
@@ -406,7 +406,7 @@
             bg-white dark:bg-slate-700
             px-4 py-2.5
             text-slate-900 dark:text-white
-            focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+            focus:border-accent focus:ring-2 focus:ring-accent/20
             transition-colors resize-none
           "
         ></textarea>
@@ -430,7 +430,7 @@
               bg-white dark:bg-slate-700
               px-4 py-2.5
               text-slate-900 dark:text-white
-              focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+              focus:border-accent focus:ring-2 focus:ring-accent/20
               transition-colors
             "
           />
@@ -451,7 +451,7 @@
               bg-white dark:bg-slate-700
               px-4 py-2.5
               text-slate-900 dark:text-white
-              focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+              focus:border-accent focus:ring-2 focus:ring-accent/20
               transition-colors
             "
           />
@@ -471,7 +471,7 @@
             bg-white dark:bg-slate-700
             px-4 py-2.5
             text-slate-900 dark:text-white
-            focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+            focus:border-accent focus:ring-2 focus:ring-accent/20
             transition-colors
           "
         >
@@ -501,7 +501,7 @@
                 bg-white dark:bg-slate-700
                 px-4 py-2.5
                 text-slate-900 dark:text-white
-                focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                focus:border-accent focus:ring-2 focus:ring-accent/20
                 transition-colors
               "
             />
@@ -525,7 +525,7 @@
                     bg-white dark:bg-slate-700
                     pl-8 pr-4 py-2.5
                     text-slate-900 dark:text-white
-                    focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                    focus:border-accent focus:ring-2 focus:ring-accent/20
                     transition-colors
                   "
                 />
@@ -546,7 +546,7 @@
                   bg-white dark:bg-slate-700
                   px-4 py-2.5
                   text-slate-900 dark:text-white
-                  focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                  focus:border-accent focus:ring-2 focus:ring-accent/20
                   transition-colors
                 "
               />
@@ -569,9 +569,9 @@
           disabled={isSubmitting || uploadingAvatar || uploadingCover}
           class="
             px-6 py-2.5 rounded-lg
-            bg-gradient-to-r from-sunrise to-sunrise-coral
+            bg-gradient-to-r from-accent to-accent-warm
             text-white text-sm font-semibold
-            hover:from-sunrise-coral hover:to-sunrise
+            hover:from-accent-warm hover:to-accent
             disabled:opacity-50 disabled:cursor-not-allowed
             transition-all duration-300
             shadow-md hover:shadow-lg

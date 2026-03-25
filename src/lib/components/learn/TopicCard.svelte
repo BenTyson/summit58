@@ -4,20 +4,20 @@
     title: string;
     description: string;
     icon: string;
-    color?: 'sunrise' | 'blue' | 'green' | 'amber' | 'violet';
+    color?: 'accent' | 'blue' | 'green' | 'amber' | 'violet';
     comingSoon?: boolean;
     number?: number;
   }
 
-  let { href, title, description, icon, color = 'sunrise', comingSoon = false, number }: Props = $props();
+  let { href, title, description, icon, color = 'accent', comingSoon = false, number }: Props = $props();
 
   const colorConfig = {
-    sunrise: {
-      gradient: 'from-sunrise/20 via-sunrise-coral/15 to-orange-400/20',
-      icon: 'text-sunrise',
-      iconBg: 'bg-sunrise/20',
-      badge: 'bg-sunrise/10 text-sunrise',
-      glow: 'group-hover:shadow-sunrise/20'
+    accent: {
+      gradient: 'from-accent/20 via-accent-warm/15 to-semantic-warning-light/20',
+      icon: 'text-accent',
+      iconBg: 'bg-accent/20',
+      badge: 'bg-accent/10 text-accent',
+      glow: 'group-hover:shadow-accent/20'
     },
     blue: {
       gradient: 'from-blue-500/20 via-blue-400/15 to-cyan-400/20',
@@ -27,18 +27,18 @@
       glow: 'group-hover:shadow-blue-500/20'
     },
     green: {
-      gradient: 'from-emerald-500/20 via-green-400/15 to-teal-400/20',
-      icon: 'text-emerald-500',
-      iconBg: 'bg-emerald-500/20',
-      badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-      glow: 'group-hover:shadow-emerald-500/20'
+      gradient: 'from-semantic-success/20 via-semantic-success-light/15 to-semantic-success-light/20',
+      icon: 'text-semantic-success',
+      iconBg: 'bg-semantic-success/20',
+      badge: 'bg-semantic-success/10 text-semantic-success-dark dark:text-semantic-success-light',
+      glow: 'group-hover:shadow-semantic-success/20'
     },
     amber: {
-      gradient: 'from-amber-500/20 via-yellow-400/15 to-orange-400/20',
-      icon: 'text-amber-500',
-      iconBg: 'bg-amber-500/20',
-      badge: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-      glow: 'group-hover:shadow-amber-500/20'
+      gradient: 'from-semantic-warning/20 via-semantic-warning-light/15 to-semantic-warning-light/20',
+      icon: 'text-semantic-warning',
+      iconBg: 'bg-semantic-warning/20',
+      badge: 'bg-semantic-warning/10 text-semantic-warning-dark dark:text-semantic-warning-light',
+      glow: 'group-hover:shadow-semantic-warning/20'
     },
     violet: {
       gradient: 'from-violet-500/20 via-purple-400/15 to-fuchsia-400/20',
@@ -136,11 +136,11 @@
     <!-- Content -->
     <div class="p-5">
       <div class="flex items-start justify-between gap-2 mb-2">
-        <h3 class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-sunrise transition-colors">
+        <h3 class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-accent transition-colors">
           {title}
         </h3>
         <svg
-          class="flex-shrink-0 h-5 w-5 text-slate-400 group-hover:text-sunrise group-hover:translate-x-1 transition-all mt-0.5"
+          class="flex-shrink-0 h-5 w-5 text-slate-400 group-hover:text-accent group-hover:translate-x-1 transition-all mt-0.5"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

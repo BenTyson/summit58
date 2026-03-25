@@ -32,7 +32,7 @@
       bg-white dark:bg-slate-800
       px-4 py-2
       text-sm font-medium text-slate-600 dark:text-slate-300
-      hover:border-sunrise hover:text-sunrise
+      hover:border-accent hover:text-accent
       transition-colors
     "
   >
@@ -46,23 +46,23 @@
     onclick={onLogSummit}
     class="
       group inline-flex items-center gap-2 rounded-lg
-      border border-emerald-200 dark:border-emerald-700
-      bg-emerald-50 dark:bg-emerald-900/30
+      border border-semantic-success/20 dark:border-semantic-success-dark
+      bg-semantic-success/5 dark:bg-semantic-success/20
       px-4 py-2
-      text-sm font-medium text-emerald-700 dark:text-emerald-300
-      hover:bg-emerald-100 dark:hover:bg-emerald-900/50
-      hover:border-emerald-300 dark:hover:border-emerald-600
+      text-sm font-medium text-semantic-success-dark dark:text-semantic-success-light
+      hover:bg-semantic-success/10 dark:hover:bg-semantic-success/25
+      hover:border-semantic-success-light dark:hover:border-semantic-success-dark
       transition-all
     "
   >
-    <svg class="h-4 w-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+    <svg class="h-4 w-4 text-semantic-success" fill="currentColor" viewBox="0 0 20 20">
       <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
     </svg>
     <span class="flex flex-col items-start leading-tight">
       <span>
         Summited{#if summitCount > 1} {summitCount}x{/if}
       </span>
-      <span class="text-xs text-emerald-600 dark:text-emerald-400">
+      <span class="text-xs text-semantic-success-dark dark:text-semantic-success-light">
         {formatDate(latestSummit.date_summited)}
       </span>
     </span>
@@ -80,10 +80,10 @@
     onclick={onLogSummit}
     class="
       inline-flex items-center gap-2 rounded-lg
-      bg-gradient-to-r from-sunrise to-sunrise-coral
+      bg-gradient-to-r from-accent to-accent-warm
       px-4 py-2
       text-sm font-medium text-white
-      hover:from-sunrise-coral hover:to-sunrise
+      hover:from-accent-warm hover:to-accent
       shadow-md hover:shadow-lg
       transition-all duration-300
       hover:scale-105

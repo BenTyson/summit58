@@ -26,7 +26,7 @@
       'bg-class-4/15 text-class-4 border-class-4/30 dark:bg-class-4/25 dark:border-class-4/40',
     default:
       'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600',
-    gold: 'bg-gradient-to-r from-amber-400/20 to-sunrise/20 text-amber-700 border-amber-400/40 dark:text-amber-300 dark:border-amber-500/40'
+    gold: 'bg-gradient-to-r from-semantic-warning-light/20 to-accent/20 text-semantic-warning-dark border-semantic-warning-light/40 dark:text-semantic-warning-light dark:border-semantic-warning/40'
   };
 
   const sizes: Record<string, string> = {
@@ -41,7 +41,7 @@
     'class-3': 'shadow-glow-class-3',
     'class-4': 'shadow-glow-class-4',
     default: '',
-    gold: 'shadow-glow-sunrise'
+    gold: 'shadow-glow-accent'
   };
 
   const isClassVariant = variant.startsWith('class-');

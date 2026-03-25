@@ -27,7 +27,7 @@
       <div class="flex flex-col items-center gap-3 sm:flex-row sm:items-center">
         <a href="/" class="group flex items-center gap-2">
           <svg
-            class="h-7 w-7 text-sunrise transition-transform duration-300 group-hover:scale-110"
+            class="h-7 w-7 text-accent transition-transform duration-300 group-hover:scale-110"
             viewBox="0 0 24 24"
             fill="currentColor"
             aria-hidden="true"
@@ -49,9 +49,9 @@
       <!-- Links + Copyright -->
       <div class="flex flex-col items-center gap-2 sm:items-end">
         <div class="flex items-center gap-4 text-sm">
-          <a href="/guidelines" class="text-slate-500 dark:text-slate-400 hover:text-sunrise transition-colors">Guidelines</a>
-          <a href="/legal/terms" class="text-slate-500 dark:text-slate-400 hover:text-sunrise transition-colors">Terms</a>
-          <a href="/legal/privacy" class="text-slate-500 dark:text-slate-400 hover:text-sunrise transition-colors">Privacy</a>
+          <a href="/guidelines" class="text-slate-500 dark:text-slate-400 hover:text-accent transition-colors">Guidelines</a>
+          <a href="/legal/terms" class="text-slate-500 dark:text-slate-400 hover:text-accent transition-colors">Terms</a>
+          <a href="/legal/privacy" class="text-slate-500 dark:text-slate-400 hover:text-accent transition-colors">Privacy</a>
         </div>
         <p class="text-sm text-slate-500 dark:text-slate-400">
           &copy; {currentYear} SaltGoat. All rights reserved.
@@ -68,7 +68,7 @@
       "
     >
       <svg
-        class="h-5 w-5 flex-shrink-0 text-sunrise mt-0.5"
+        class="h-5 w-5 flex-shrink-0 text-accent mt-0.5"
         fill="currentColor"
         viewBox="0 0 20 20"
       >

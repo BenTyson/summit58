@@ -44,7 +44,7 @@
           class="h-10 w-10 rounded-full object-cover"
         />
       {:else}
-        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-sunrise to-sunrise-coral flex items-center justify-center">
+        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-accent to-accent-warm flex items-center justify-center">
           <span class="text-sm font-semibold text-white">
             {getInitials(review.profile?.display_name)}
           </span>
@@ -80,7 +80,7 @@
         {#if onDelete}
           <button
             onclick={onDelete}
-            class="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+            class="p-2 rounded-lg text-slate-400 hover:text-semantic-danger hover:bg-semantic-danger/5 dark:hover:bg-semantic-danger/15 transition-colors"
             aria-label="Delete review"
           >
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

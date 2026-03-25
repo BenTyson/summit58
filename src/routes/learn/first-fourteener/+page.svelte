@@ -49,7 +49,7 @@
   <!-- Breadcrumb -->
   <nav class="mb-8 animate-fade-in-up">
     <ol class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-      <li><a href="/learn" class="hover:text-sunrise transition-colors">Learn</a></li>
+      <li><a href="/learn" class="hover:text-accent transition-colors">Learn</a></li>
       <li class="text-slate-400">/</li>
       <li class="text-slate-900 dark:text-white font-medium">Your First 14er</li>
     </ol>
@@ -73,8 +73,8 @@
       </p>
 
       <h3 class="font-semibold text-slate-900 dark:text-white mt-6 mb-3 flex items-center gap-2">
-        <span class="w-6 h-6 rounded-full bg-sunrise/10 flex items-center justify-center">
-          <svg class="w-3.5 h-3.5 text-sunrise" fill="currentColor" viewBox="0 0 20 20">
+        <span class="w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-accent" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
           </svg>
         </span>
@@ -88,17 +88,17 @@
           <span class="flex-shrink-0 w-16 text-xs font-bold text-indigo-600 dark:text-indigo-400">4-6 AM</span>
           <span class="text-sm text-indigo-900 dark:text-indigo-200"><strong>Pre-dawn:</strong> Clear, cold, calm. Best time to start.</span>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-          <span class="flex-shrink-0 w-16 text-xs font-bold text-amber-600 dark:text-amber-400">6-10 AM</span>
-          <span class="text-sm text-amber-900 dark:text-amber-200"><strong>Morning:</strong> Sun warms the valleys. Thermals begin rising.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+          <span class="flex-shrink-0 w-16 text-xs font-bold text-semantic-warning-dark dark:text-semantic-warning-light">6-10 AM</span>
+          <span class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light"><strong>Morning:</strong> Sun warms the valleys. Thermals begin rising.</span>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
-          <span class="flex-shrink-0 w-16 text-xs font-bold text-orange-600 dark:text-orange-400">10-12 PM</span>
-          <span class="text-sm text-orange-900 dark:text-orange-200"><strong>Late morning:</strong> Clouds start building over peaks.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+          <span class="flex-shrink-0 w-16 text-xs font-bold text-semantic-warning-dark dark:text-semantic-warning-light">10-12 PM</span>
+          <span class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light"><strong>Late morning:</strong> Clouds start building over peaks.</span>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-          <span class="flex-shrink-0 w-16 text-xs font-bold text-red-600 dark:text-red-400">12-4 PM</span>
-          <span class="text-sm text-red-900 dark:text-red-200"><strong>Early afternoon:</strong> Thunderstorms develop. Lightning is deadly.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-danger/5 dark:bg-semantic-danger/15 border border-semantic-danger/20 dark:border-semantic-danger-dark">
+          <span class="flex-shrink-0 w-16 text-xs font-bold text-semantic-danger-dark dark:text-semantic-danger-light">12-4 PM</span>
+          <span class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light"><strong>Early afternoon:</strong> Thunderstorms develop. Lightning is deadly.</span>
         </div>
         <div class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
           <span class="flex-shrink-0 w-16 text-xs font-bold text-slate-500 dark:text-slate-400">Evening</span>
@@ -178,7 +178,7 @@
     <!-- Peak Recommender -->
     <section id="recommender" class="mt-12 animate-fade-in-up scroll-mt-24" style="animation-delay: 400ms">
       <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-3 mb-6">
-        <svg class="h-7 w-7 text-sunrise flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+        <svg class="h-7 w-7 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
         </svg>
         Find Your Peak
@@ -208,7 +208,7 @@
           <strong>Tell someone your plan</strong> — Route, start time, expected return, when to call for help.
         </li>
         <li>
-          <strong>Pack right</strong> — See our <a href="/learn/gear" class="text-sunrise hover:underline">gear guide</a> for what to bring.
+          <strong>Pack right</strong> — See our <a href="/learn/gear" class="text-accent hover:underline">gear guide</a> for what to bring.
         </li>
         <li>
           <strong>Get sleep</strong> — You're waking up at 3-4 AM. Don't start exhausted.
@@ -216,7 +216,7 @@
       </ol>
 
       <CalloutBox type="warning" title="It's OK to Turn Back">
-        Weather changes. Bodies don't cooperate. The summit isn't going anywhere. Making the call to turn around is a sign of good judgment, not failure. Read our <a href="/learn/safety" class="text-sunrise hover:underline">safety guide</a> for more.
+        Weather changes. Bodies don't cooperate. The summit isn't going anywhere. Making the call to turn around is a sign of good judgment, not failure. Read our <a href="/learn/safety" class="text-accent hover:underline">safety guide</a> for more.
       </CalloutBox>
     </ContentSection>
 
@@ -224,7 +224,7 @@
     <div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-4 justify-between">
       <a
         href="/learn"
-        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
       >
         <svg class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -233,7 +233,7 @@
       </a>
       <a
         href="/learn/safety"
-        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors sm:flex-row-reverse"
+        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors sm:flex-row-reverse"
       >
         Mountain Safety
         <svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

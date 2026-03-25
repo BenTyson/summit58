@@ -65,7 +65,7 @@
     <!-- Peak Bagger badge if completed all 58 -->
     {#if stats.uniquePeaks === 58}
       <div class="flex justify-center mb-8">
-        <div class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-white font-bold shadow-lg">
+        <div class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-accent-light to-accent text-mountain-navy font-bold shadow-lg">
           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
           </svg>
@@ -81,7 +81,7 @@
         {#if achievements.length > 0}
           <section>
             <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-              <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
               Achievements
@@ -95,12 +95,12 @@
                   <div
                     class="
                       group relative flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl
-                      bg-gradient-to-br from-sunrise/10 via-sunrise-coral/5 to-sunrise/10
-                      border border-sunrise/20
+                      bg-gradient-to-br from-accent/10 via-accent-warm/5 to-accent/10
+                      border border-accent/20
                     "
                     title={achievement.definition.description}
                   >
-                    <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-sunrise to-sunrise-coral shadow-sm">
+                    <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-accent to-accent-warm shadow-sm">
                       <AchievementIcon icon={achievement.definition.icon} earned={true} class="text-white" />
                     </div>
                     <span class="font-medium text-slate-900 dark:text-white text-sm">{achievement.definition.title}</span>
@@ -115,7 +115,7 @@
         {#if recentSummits.length > 0}
           <section>
             <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-              <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               Recent Summits
@@ -178,7 +178,7 @@
         {#if sortedRanges.length > 0}
           <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 shadow-card">
             <h3 class="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-              <svg class="w-5 h-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               </svg>
               Peaks by Range
@@ -195,7 +195,7 @@
         {/if}
 
         <!-- Quick Stats -->
-        <div class="rounded-xl bg-gradient-to-br from-sunrise/10 to-sunrise-coral/10 border border-sunrise/20 p-6">
+        <div class="rounded-xl bg-gradient-to-br from-accent/10 to-accent-warm/10 border border-accent/20 p-6">
           <h3 class="font-semibold text-slate-900 dark:text-white mb-4">Quick Stats</h3>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">

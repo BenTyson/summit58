@@ -79,8 +79,8 @@
 
   // Trail status colors
   const trailStatusColors: Record<string, string> = {
-    clear: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-    muddy: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+    clear: 'bg-semantic-success/10 text-semantic-success-dark dark:bg-semantic-success/20 dark:text-semantic-success-light',
+    muddy: 'bg-semantic-warning/10 text-semantic-warning-dark dark:bg-semantic-warning/20 dark:text-semantic-warning-light',
     snowy: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
     icy: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
     mixed: 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
@@ -110,7 +110,7 @@
                     </svg>
                   </div>
                 {/if}
-                <a href="/users/{item.user.id}" class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-sunrise transition-colors">
+                <a href="/users/{item.user.id}" class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-accent transition-colors">
                   {item.user.display_name || 'Climber'}
                 </a>
               </div>
@@ -119,7 +119,7 @@
               <!-- Summit Activity -->
               <div class="flex items-start gap-4">
                 <!-- Icon -->
-                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-sunrise to-sunrise-coral flex items-center justify-center">
+                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-accent to-accent-warm flex items-center justify-center">
                   <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l7 9 7-9M5 21l7-9 7 9" />
                   </svg>
@@ -131,7 +131,7 @@
                     <span class="font-medium text-slate-900 dark:text-white">Summited</span>
                     <a
                       href="/peaks/{item.data.peak.slug}"
-                      class="font-semibold text-sunrise hover:text-sunrise-coral transition-colors"
+                      class="font-semibold text-accent hover:text-accent-warm transition-colors"
                     >
                       {item.data.peak.name}
                     </a>
@@ -167,8 +167,8 @@
             {:else if item.type === 'review' && isReview(item.data)}
               <!-- Review Activity -->
               <div class="flex items-start gap-4">
-                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-semantic-warning/10 dark:bg-semantic-warning/20 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-semantic-warning-dark dark:text-semantic-warning-light" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 </div>
@@ -178,7 +178,7 @@
                     <span class="font-medium text-slate-900 dark:text-white">Reviewed</span>
                     <a
                       href="/peaks/{item.data.peak.slug}#reviews"
-                      class="font-semibold text-sunrise hover:text-sunrise-coral transition-colors"
+                      class="font-semibold text-accent hover:text-accent-warm transition-colors"
                     >
                       {item.data.peak.name}
                     </a>
@@ -187,7 +187,7 @@
                   <div class="flex items-center gap-1 mb-2">
                     {#each Array(5) as _, i}
                       <svg
-                        class="w-4 h-4 {i < item.data.rating ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'}"
+                        class="w-4 h-4 {i < item.data.rating ? 'text-semantic-warning-light' : 'text-slate-300 dark:text-slate-600'}"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                       >
@@ -213,8 +213,8 @@
             {:else if item.type === 'trail_report' && isTrailReport(item.data)}
               <!-- Trail Report Activity -->
               <div class="flex items-start gap-4">
-                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                  <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-semantic-success/10 dark:bg-semantic-success/20 flex items-center justify-center">
+                  <svg class="w-5 h-5 text-semantic-success-dark dark:text-semantic-success-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
                 </div>
@@ -224,7 +224,7 @@
                     <span class="font-medium text-slate-900 dark:text-white">Trail report for</span>
                     <a
                       href="/peaks/{item.data.peak.slug}#conditions"
-                      class="font-semibold text-sunrise hover:text-sunrise-coral transition-colors"
+                      class="font-semibold text-accent hover:text-accent-warm transition-colors"
                     >
                       {item.data.peak.name}
                     </a>
@@ -239,7 +239,7 @@
 
                     {#if item.data.hazards?.length}
                       {#each item.data.hazards.slice(0, 2) as hazard}
-                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-semantic-danger/10 text-semantic-danger-dark dark:bg-semantic-danger/20 dark:text-semantic-danger-light">
                           {hazard.replace('_', ' ')}
                         </span>
                       {/each}
@@ -256,8 +256,8 @@
 
             {:else if item.type === 'achievement' && isAchievement(item.data)}
               <!-- Achievement Activity -->
-              <div class="flex items-center gap-4 bg-gradient-to-r from-sunrise/5 to-sunrise-coral/5 -m-4 p-4 rounded-xl">
-                <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-sunrise to-sunrise-coral flex items-center justify-center shadow-md">
+              <div class="flex items-center gap-4 bg-gradient-to-r from-accent/5 to-accent-warm/5 -m-4 p-4 rounded-xl">
+                <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-accent-warm flex items-center justify-center shadow-md">
                   <AchievementIcon icon={item.data.definition.icon} earned={true} class="w-6 h-6 text-white" />
                 </div>
 
@@ -265,7 +265,7 @@
                   <div class="flex items-center gap-2 mb-0.5">
                     <span class="font-medium text-slate-900 dark:text-white">Earned achievement</span>
                   </div>
-                  <p class="font-semibold text-sunrise">
+                  <p class="font-semibold text-accent">
                     {item.data.definition.title}
                   </p>
                   <p class="text-sm text-slate-500 dark:text-slate-400">
@@ -273,7 +273,7 @@
                   </p>
                 </div>
 
-                <svg class="w-8 h-8 text-sunrise/30 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-8 h-8 text-accent/30 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                 </svg>
               </div>
@@ -298,7 +298,7 @@
       </p>
       <a
         href="/peaks"
-        class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md hover:shadow-lg"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all shadow-md hover:shadow-lg"
       >
         Browse Peaks
         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

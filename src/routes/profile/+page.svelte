@@ -157,7 +157,7 @@
               onclick={() => { isPublic = !isPublic; }}
             >
               <span class="text-slate-600 dark:text-slate-300">Public Profile</span>
-              <div class="relative w-10 h-6 rounded-full transition-colors {isPublic ? 'bg-sunrise' : 'bg-slate-300 dark:bg-slate-600'}">
+              <div class="relative w-10 h-6 rounded-full transition-colors {isPublic ? 'bg-accent' : 'bg-slate-300 dark:bg-slate-600'}">
                 <div class="absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow transition-transform {isPublic ? 'translate-x-4' : 'translate-x-0'}"></div>
               </div>
             </button>
@@ -166,7 +166,7 @@
           {#if isPublic && profile?.id}
             <a
               href="/users/{profile.id}"
-              class="inline-flex items-center gap-2 text-sm text-sunrise hover:text-sunrise-coral transition-colors"
+              class="inline-flex items-center gap-2 text-sm text-accent hover:text-accent-warm transition-colors"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -180,8 +180,8 @@
 
       <!-- Journey Stats -->
       {#if stats.totalSummits > 0}
-        <div class="rounded-xl bg-gradient-to-br from-sunrise/5 to-sunrise-coral/5 border border-sunrise/20 p-6 mb-8">
-          <h3 class="text-sm font-semibold text-sunrise uppercase tracking-wider mb-4">Journey Stats</h3>
+        <div class="rounded-xl bg-gradient-to-br from-accent/5 to-accent-warm/5 border border-accent/20 p-6 mb-8">
+          <h3 class="text-sm font-semibold text-accent uppercase tracking-wider mb-4">Journey Stats</h3>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div>
               <div class="text-2xl font-bold text-slate-900 dark:text-white">
@@ -218,7 +218,7 @@
       <!-- The Grid -->
       <section class="mb-8">
         <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-          <svg class="h-6 w-6 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+          <svg class="h-6 w-6 text-accent" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
           </svg>
           The 58
@@ -289,7 +289,7 @@
         <!-- Class Progress -->
         <section>
           <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
             By Difficulty
@@ -317,7 +317,7 @@
         <!-- Range Progress -->
         <section>
           <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             </svg>
             By Range
@@ -332,7 +332,7 @@
                 </div>
                 <div class="h-3 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
                   <div
-                    class="bg-gradient-to-r from-sunrise to-sunrise-coral h-full rounded-full transition-all duration-500"
+                    class="bg-gradient-to-r from-accent to-accent-warm h-full rounded-full transition-all duration-500"
                     style="width: {pct}%"
                   ></div>
                 </div>
@@ -346,7 +346,7 @@
       {#if watchlist.length > 0}
         <section class="mt-8">
           <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
@@ -358,7 +358,7 @@
                 <div class="flex items-center gap-4 p-4">
                   <a
                     href="/peaks/{item.peak.slug}"
-                    class="flex-1 flex items-center gap-3 hover:text-sunrise transition-colors min-w-0"
+                    class="flex-1 flex items-center gap-3 hover:text-accent transition-colors min-w-0"
                   >
                     <div class="flex-1 min-w-0">
                       <div class="font-semibold text-slate-900 dark:text-white">{item.peak.name}</div>
@@ -388,7 +388,7 @@
                     <input type="hidden" name="peakId" value={item.peak_id} />
                     <button
                       type="submit"
-                      class="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      class="p-1.5 rounded-lg text-slate-400 hover:text-semantic-danger hover:bg-semantic-danger/5 dark:hover:bg-semantic-danger/15 transition-colors"
                       title="Remove from watchlist"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -407,19 +407,19 @@
       {#if advancedStats}
         <section class="mt-8">
           <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
             Advanced Stats
-            <span class="ml-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-sunrise to-sunrise-coral text-white text-xs font-medium">PRO</span>
+            <span class="ml-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-accent to-accent-warm text-white text-xs font-medium">PRO</span>
           </h2>
           <AdvancedStats stats={advancedStats} />
         </section>
       {:else if subscription?.plan !== 'pro'}
         <section class="mt-8">
           <div class="rounded-xl bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-800/50 border border-slate-200 dark:border-slate-700 p-6 shadow-card text-center">
-            <div class="mx-auto h-12 w-12 rounded-full bg-sunrise/10 flex items-center justify-center mb-3">
-              <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mx-auto h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center mb-3">
+              <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
@@ -429,7 +429,7 @@
             </p>
             <a
               href="/pricing"
-              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white text-sm font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-sm"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white text-sm font-medium hover:from-accent-warm hover:to-accent transition-all shadow-sm"
             >
               Upgrade to Pro
             </a>
@@ -441,7 +441,7 @@
       {#if stats.recentSummits.length > 0}
         <section class="mt-8">
           <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Recent Summits
@@ -491,8 +491,8 @@
         <section class="mt-8">
           <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-8 sm:p-12 shadow-card">
             <div class="max-w-lg mx-auto text-center mb-8">
-              <div class="mx-auto h-16 w-16 rounded-full bg-sunrise/10 flex items-center justify-center mb-4">
-                <svg class="h-8 w-8 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+              <div class="mx-auto h-16 w-16 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+                <svg class="h-8 w-8 text-accent" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
                 </svg>
               </div>
@@ -503,23 +503,23 @@
             </div>
 
             <div class="grid sm:grid-cols-3 gap-4 max-w-2xl mx-auto mb-8">
-              <a href="/peaks" class="group p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 hover:border-sunrise/40 transition-colors text-center">
-                <div class="mx-auto h-10 w-10 rounded-full bg-sunrise/10 flex items-center justify-center mb-3">
-                  <span class="text-sunrise font-bold">1</span>
+              <a href="/peaks" class="group p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 hover:border-accent/40 transition-colors text-center">
+                <div class="mx-auto h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center mb-3">
+                  <span class="text-accent font-bold">1</span>
                 </div>
-                <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-sunrise transition-colors">Find a peak</div>
+                <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-accent transition-colors">Find a peak</div>
                 <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Browse all 58 fourteeners</div>
               </a>
-              <a href="/learn/first-fourteener" class="group p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 hover:border-sunrise/40 transition-colors text-center">
-                <div class="mx-auto h-10 w-10 rounded-full bg-sunrise/10 flex items-center justify-center mb-3">
-                  <span class="text-sunrise font-bold">2</span>
+              <a href="/learn/first-fourteener" class="group p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 hover:border-accent/40 transition-colors text-center">
+                <div class="mx-auto h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center mb-3">
+                  <span class="text-accent font-bold">2</span>
                 </div>
-                <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-sunrise transition-colors">Prepare</div>
+                <div class="font-medium text-slate-900 dark:text-white text-sm group-hover:text-accent transition-colors">Prepare</div>
                 <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Read our first-timer guide</div>
               </a>
               <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 text-center">
-                <div class="mx-auto h-10 w-10 rounded-full bg-sunrise/10 flex items-center justify-center mb-3">
-                  <span class="text-sunrise font-bold">3</span>
+                <div class="mx-auto h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center mb-3">
+                  <span class="text-accent font-bold">3</span>
                 </div>
                 <div class="font-medium text-slate-900 dark:text-white text-sm">Log your summit</div>
                 <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Track progress + earn badges</div>
@@ -529,7 +529,7 @@
             <div class="text-center">
               <a
                 href="/peaks"
-                class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md hover:shadow-lg"
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all shadow-md hover:shadow-lg"
               >
                 Browse Peaks
                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

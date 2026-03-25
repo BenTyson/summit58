@@ -42,7 +42,7 @@
   <!-- Breadcrumb -->
   <nav class="mb-8 animate-fade-in-up">
     <ol class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-      <li><a href="/learn" class="hover:text-sunrise transition-colors">Learn</a></li>
+      <li><a href="/learn" class="hover:text-accent transition-colors">Learn</a></li>
       <li class="text-slate-400">/</li>
       <li class="text-slate-900 dark:text-white font-medium">Trailhead Parking</li>
     </ol>
@@ -60,7 +60,7 @@
       </p>
 
       <CalloutBox type="danger" title="The 4 AM Rule">
-        On summer weekends at popular peaks, plan to arrive at the trailhead before 4:00 AM. This isn't an exaggeration. By sunrise, most lots are full and overflow areas are filling.
+        On summer weekends at popular peaks, plan to arrive at the trailhead before 4:00 AM. This isn't an exaggeration. By accent, most lots are full and overflow areas are filling.
       </CalloutBox>
 
       <h3 class="font-semibold text-slate-900 dark:text-white mt-6 mb-3">The Busiest Trailheads</h3>
@@ -68,21 +68,21 @@
         These peaks see the highest visitor volumes and most severe parking issues:
       </p>
       <div class="grid gap-2">
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-          <span class="flex-shrink-0 w-28 text-xs font-bold text-red-600 dark:text-red-400">Quandary Peak</span>
-          <span class="text-sm text-red-900 dark:text-red-200">~20 spots. Full by 4:30 AM on summer weekends.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-danger/5 dark:bg-semantic-danger/15 border border-semantic-danger/20 dark:border-semantic-danger-dark">
+          <span class="flex-shrink-0 w-28 text-xs font-bold text-semantic-danger-dark dark:text-semantic-danger-light">Quandary Peak</span>
+          <span class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light">~20 spots. Full by 4:30 AM on summer weekends.</span>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-          <span class="flex-shrink-0 w-28 text-xs font-bold text-red-600 dark:text-red-400">Mt. Bierstadt</span>
-          <span class="text-sm text-red-900 dark:text-red-200">Limited parking. Shuttle system in place (see below).</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-danger/5 dark:bg-semantic-danger/15 border border-semantic-danger/20 dark:border-semantic-danger-dark">
+          <span class="flex-shrink-0 w-28 text-xs font-bold text-semantic-danger-dark dark:text-semantic-danger-light">Mt. Bierstadt</span>
+          <span class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light">Limited parking. Shuttle system in place (see below).</span>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
-          <span class="flex-shrink-0 w-28 text-xs font-bold text-orange-600 dark:text-orange-400">Grays & Torreys</span>
-          <span class="text-sm text-orange-900 dark:text-orange-200">~100 spots. Full by 5:00 AM on weekends.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+          <span class="flex-shrink-0 w-28 text-xs font-bold text-semantic-warning-dark dark:text-semantic-warning-light">Grays & Torreys</span>
+          <span class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light">~100 spots. Full by 5:00 AM on weekends.</span>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-          <span class="flex-shrink-0 w-28 text-xs font-bold text-amber-600 dark:text-amber-400">Maroon Bells</span>
-          <span class="text-sm text-amber-900 dark:text-amber-200">Requires timed-entry reservation. Shuttle mandatory.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+          <span class="flex-shrink-0 w-28 text-xs font-bold text-semantic-warning-dark dark:text-semantic-warning-light">Maroon Bells</span>
+          <span class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light">Requires timed-entry reservation. Shuttle mandatory.</span>
         </div>
       </div>
     </ContentSection>
@@ -93,16 +93,16 @@
       </p>
 
       <div class="space-y-4">
-        <div class="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
-          <h4 class="font-semibold text-emerald-800 dark:text-emerald-300 mb-2">Free Designated Lots</h4>
-          <p class="text-sm text-emerald-700 dark:text-emerald-400">
+        <div class="p-4 rounded-lg bg-semantic-success/5 dark:bg-semantic-success/15 border border-semantic-success/20 dark:border-semantic-success-dark">
+          <h4 class="font-semibold text-semantic-success-dark dark:text-semantic-success-light mb-2">Free Designated Lots</h4>
+          <p class="text-sm text-semantic-success-dark dark:text-semantic-success-light">
             Most 14er trailheads have free gravel or paved lots maintained by the Forest Service. Capacity ranges from a handful of spots to 100+. Examples: Grays/Torreys, Mt. Elbert, Mt. Sherman.
           </p>
         </div>
 
-        <div class="p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-          <h4 class="font-semibold text-amber-800 dark:text-amber-300 mb-2">Fee Stations</h4>
-          <p class="text-sm text-amber-700 dark:text-amber-400">
+        <div class="p-4 rounded-lg bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+          <h4 class="font-semibold text-semantic-warning-dark dark:text-semantic-warning-light mb-2">Fee Stations</h4>
+          <p class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light">
             Some trailheads charge daily fees ($10-15) or accept annual passes. Mt. Bierstadt requires a day-use fee. The America the Beautiful pass is accepted at most fee areas.
           </p>
         </div>
@@ -135,21 +135,21 @@
 
       <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Summer Weekends (Peak Season)</h3>
       <div class="grid gap-2 mb-6">
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
-          <span class="flex-shrink-0 w-20 text-xs font-bold text-emerald-600 dark:text-emerald-400">3-4 AM</span>
-          <span class="text-sm text-emerald-900 dark:text-emerald-200"><strong>Best bet.</strong> Spot in main lot guaranteed at all but Maroon Bells.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-success/5 dark:bg-semantic-success/15 border border-semantic-success/20 dark:border-semantic-success-dark">
+          <span class="flex-shrink-0 w-20 text-xs font-bold text-semantic-success-dark dark:text-semantic-success-light">3-4 AM</span>
+          <span class="text-sm text-semantic-success-dark dark:text-semantic-success-light"><strong>Best bet.</strong> Spot in main lot guaranteed at all but Maroon Bells.</span>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-          <span class="flex-shrink-0 w-20 text-xs font-bold text-green-600 dark:text-green-400">4-5 AM</span>
-          <span class="text-sm text-green-900 dark:text-green-200"><strong>Usually fine.</strong> May need overflow at busiest peaks.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-success/5 dark:bg-semantic-success/15 border border-semantic-success/20 dark:border-semantic-success-dark">
+          <span class="flex-shrink-0 w-20 text-xs font-bold text-semantic-success-dark dark:text-semantic-success-light">4-5 AM</span>
+          <span class="text-sm text-semantic-success-dark dark:text-semantic-success-light"><strong>Usually fine.</strong> May need overflow at busiest peaks.</span>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-          <span class="flex-shrink-0 w-20 text-xs font-bold text-amber-600 dark:text-amber-400">5-6 AM</span>
-          <span class="text-sm text-amber-900 dark:text-amber-200"><strong>Risky.</strong> Popular lots filling or full. Expect overflow.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+          <span class="flex-shrink-0 w-20 text-xs font-bold text-semantic-warning-dark dark:text-semantic-warning-light">5-6 AM</span>
+          <span class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light"><strong>Risky.</strong> Popular lots filling or full. Expect overflow.</span>
         </div>
-        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-          <span class="flex-shrink-0 w-20 text-xs font-bold text-red-600 dark:text-red-400">After 6 AM</span>
-          <span class="text-sm text-red-900 dark:text-red-200"><strong>Too late.</strong> Overflow full at popular peaks. Consider alternatives.</span>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-semantic-danger/5 dark:bg-semantic-danger/15 border border-semantic-danger/20 dark:border-semantic-danger-dark">
+          <span class="flex-shrink-0 w-20 text-xs font-bold text-semantic-danger-dark dark:text-semantic-danger-light">After 6 AM</span>
+          <span class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light"><strong>Too late.</strong> Overflow full at popular peaks. Consider alternatives.</span>
         </div>
       </div>
 
@@ -223,17 +223,17 @@
         To address extreme parking pressure, some trailheads now operate shuttle systems. This is the future of 14er access—expect more shuttles in coming years.
       </p>
 
-      <div class="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 mb-6">
-        <h4 class="font-semibold text-green-800 dark:text-green-300 mb-2 flex items-center gap-2">
+      <div class="p-4 rounded-lg bg-semantic-success/5 dark:bg-semantic-success/15 border border-semantic-success/20 dark:border-semantic-success-dark mb-6">
+        <h4 class="font-semibold text-semantic-success-dark dark:text-semantic-success-light mb-2 flex items-center gap-2">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
           </svg>
           Mt. Bierstadt Shuttle
         </h4>
-        <p class="text-sm text-green-700 dark:text-green-400 mb-2">
+        <p class="text-sm text-semantic-success-dark dark:text-semantic-success-light mb-2">
           Operates summer weekends and holidays. Pick up at Georgetown, drops at Guanella Pass trailhead. Reservations recommended.
         </p>
-        <ul class="list-disc list-inside text-sm text-green-700 dark:text-green-400 space-y-1">
+        <ul class="list-disc list-inside text-sm text-semantic-success-dark dark:text-semantic-success-light space-y-1">
           <li>First shuttle typically 4:30 AM</li>
           <li>Last return around 5:00 PM</li>
           <li>Fee: ~$15 round trip</li>
@@ -241,17 +241,17 @@
         </ul>
       </div>
 
-      <div class="p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-        <h4 class="font-semibold text-amber-800 dark:text-amber-300 mb-2 flex items-center gap-2">
+      <div class="p-4 rounded-lg bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+        <h4 class="font-semibold text-semantic-warning-dark dark:text-semantic-warning-light mb-2 flex items-center gap-2">
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
           </svg>
           Maroon Bells Shuttle (Required)
         </h4>
-        <p class="text-sm text-amber-700 dark:text-amber-400 mb-2">
+        <p class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light mb-2">
           Mandatory during peak season. No personal vehicles allowed except for campers with reservations.
         </p>
-        <ul class="list-disc list-inside text-sm text-amber-700 dark:text-amber-400 space-y-1">
+        <ul class="list-disc list-inside text-sm text-semantic-warning-dark dark:text-semantic-warning-light space-y-1">
           <li>Timed entry reservations required</li>
           <li>Shuttles from Aspen Highlands</li>
           <li>Books out weeks in advance</li>
@@ -303,16 +303,16 @@
       </p>
 
       <div class="grid gap-3">
-        <div class="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-          <h4 class="font-semibold text-green-800 dark:text-green-300 mb-1">Summer (June-August)</h4>
-          <p class="text-sm text-green-700 dark:text-green-400">
+        <div class="p-4 rounded-lg bg-semantic-success/5 dark:bg-semantic-success/15 border border-semantic-success/20 dark:border-semantic-success-dark">
+          <h4 class="font-semibold text-semantic-success-dark dark:text-semantic-success-light mb-1">Summer (June-August)</h4>
+          <p class="text-sm text-semantic-success-dark dark:text-semantic-success-light">
             Peak pressure. All strategies above apply. Weekdays significantly easier than weekends.
           </p>
         </div>
 
-        <div class="p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-          <h4 class="font-semibold text-amber-800 dark:text-amber-300 mb-1">Fall (September-October)</h4>
-          <p class="text-sm text-amber-700 dark:text-amber-400">
+        <div class="p-4 rounded-lg bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+          <h4 class="font-semibold text-semantic-warning-dark dark:text-semantic-warning-light mb-1">Fall (September-October)</h4>
+          <p class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light">
             Moderate pressure. Weekends still busy but 6 AM arrivals usually fine. Leaf peeping adds traffic near Aspen peaks.
           </p>
         </div>
@@ -324,9 +324,9 @@
           </p>
         </div>
 
-        <div class="p-4 rounded-lg bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800">
-          <h4 class="font-semibold text-rose-800 dark:text-rose-300 mb-1">Mud Season (April-May)</h4>
-          <p class="text-sm text-rose-700 dark:text-rose-400">
+        <div class="p-4 rounded-lg bg-semantic-danger/5 dark:bg-semantic-danger/15 border border-semantic-danger/20 dark:border-semantic-danger-dark">
+          <h4 class="font-semibold text-semantic-danger-dark dark:text-semantic-danger-light mb-1">Mud Season (April-May)</h4>
+          <p class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light">
             Roads impassable. Most trailheads unreachable. Not recommended for 14er attempts.
           </p>
         </div>
@@ -351,7 +351,7 @@
     <div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-4 justify-between">
       <a
         href="/learn"
-        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
       >
         <svg class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -360,7 +360,7 @@
       </a>
       <a
         href="/learn/gear"
-        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors sm:flex-row-reverse"
+        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors sm:flex-row-reverse"
       >
         Gear Guide
         <svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

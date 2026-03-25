@@ -30,14 +30,14 @@
     hover:-translate-y-1 hover:shadow-card-hover
     dark:border-slate-700 dark:bg-slate-800/90
     {classAccents[difficultyClass]}
-    {featured ? 'ring-2 ring-sunrise/30' : ''}
+    {featured ? 'ring-2 ring-accent/30' : ''}
     {className}
   "
 >
   <!-- Hover gradient overlay -->
   <div
     class="
-      absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-sunrise/5
+      absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-accent/5
       opacity-0 transition-opacity duration-300 group-hover:opacity-100
       pointer-events-none
     "
@@ -101,7 +101,7 @@
             text-lg font-bold text-slate-900
             transition-colors duration-200
             group-hover:text-mountain-blue
-            dark:text-white dark:group-hover:text-sunrise
+            dark:text-white dark:group-hover:text-accent
             sm:text-xl
           "
         >
@@ -110,7 +110,7 @@
 
         <!-- Elevation with visual emphasis -->
         <div class="mt-1.5 flex items-baseline gap-3">
-          <span class="font-display text-2xl font-medium text-mountain-blue dark:text-sunrise">
+          <span class="font-display text-2xl font-medium text-mountain-blue dark:text-accent">
             {peak.elevation.toLocaleString()}'
           </span>
         </div>
@@ -176,7 +176,7 @@
           flex h-10 w-10 items-center justify-center rounded-full
           bg-slate-100 text-slate-400
           transition-all duration-300
-          group-hover:bg-sunrise group-hover:text-white
+          group-hover:bg-accent group-hover:text-white
           group-hover:translate-x-1
           dark:bg-slate-700 dark:text-slate-400
         "

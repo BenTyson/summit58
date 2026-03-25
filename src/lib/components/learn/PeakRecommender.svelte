@@ -236,8 +236,8 @@
   {#if step === 'intro'}
     <!-- Intro screen -->
     <div class="p-8 text-center">
-      <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-sunrise/10 flex items-center justify-center">
-        <svg class="h-8 w-8 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+      <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-accent/10 flex items-center justify-center">
+        <svg class="h-8 w-8 text-accent" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
         </svg>
       </div>
@@ -249,7 +249,7 @@
       </p>
       <button
         onclick={startQuiz}
-        class="px-8 py-3 rounded-xl bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all"
+        class="px-8 py-3 rounded-xl bg-gradient-to-r from-accent to-accent-warm text-white font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all"
       >
         Start Quiz
       </button>
@@ -266,7 +266,7 @@
         </div>
         <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
           <div
-            class="bg-gradient-to-r from-sunrise to-sunrise-coral h-2 rounded-full transition-all duration-300"
+            class="bg-gradient-to-r from-accent to-accent-warm h-2 rounded-full transition-all duration-300"
             style="width: {progressPercent}%"
           ></div>
         </div>
@@ -284,8 +284,8 @@
             onclick={() => selectAnswer(option.value)}
             class="w-full text-left p-4 rounded-xl border-2 transition-all
               {answers[questions[currentQuestion].id] === option.value
-                ? 'border-sunrise bg-sunrise/5'
-                : 'border-slate-200 dark:border-slate-600 hover:border-sunrise/50 hover:bg-slate-50 dark:hover:bg-slate-700/50'}"
+                ? 'border-accent bg-accent/5'
+                : 'border-slate-200 dark:border-slate-600 hover:border-accent/50 hover:bg-slate-50 dark:hover:bg-slate-700/50'}"
           >
             <span class="text-slate-700 dark:text-slate-300">{option.label}</span>
           </button>
@@ -296,7 +296,7 @@
       <div class="mt-8 flex justify-between">
         <button
           onclick={goBack}
-          class="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+          class="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
         >
           <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -307,7 +307,7 @@
           {#each questions as _, i}
             <div
               class="w-2.5 h-2.5 rounded-full transition-colors
-                {i < currentQuestion ? 'bg-green-500' : i === currentQuestion ? 'bg-sunrise' : 'bg-slate-200 dark:bg-slate-600'}"
+                {i < currentQuestion ? 'bg-semantic-success' : i === currentQuestion ? 'bg-accent' : 'bg-slate-200 dark:bg-slate-600'}"
             ></div>
           {/each}
         </div>
@@ -318,8 +318,8 @@
     <!-- Results screen -->
     <div class="p-6">
       <div class="text-center mb-8">
-        <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-          <svg class="h-7 w-7 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-semantic-success/10 dark:bg-semantic-success/20 flex items-center justify-center">
+          <svg class="h-7 w-7 text-semantic-success-dark dark:text-semantic-success-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         </div>
@@ -338,7 +338,7 @@
           </p>
           <button
             onclick={resetQuiz}
-            class="px-6 py-2 rounded-lg bg-sunrise text-white font-medium hover:bg-sunrise-coral transition-colors"
+            class="px-6 py-2 rounded-lg bg-accent text-white font-medium hover:bg-accent-warm transition-colors"
           >
             Try Again
           </button>
@@ -348,12 +348,12 @@
           {#each recommendations() as { peak, reasons }, i}
             <a
               href="/peaks/{peak.slug}"
-              class="block rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 overflow-hidden hover:border-sunrise hover:shadow-card-hover transition-all group"
+              class="block rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 overflow-hidden hover:border-accent hover:shadow-card-hover transition-all group"
             >
               <div class="flex gap-4 p-4">
                 <!-- Rank badge -->
-                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-sunrise/10 flex items-center justify-center">
-                  <span class="text-sunrise font-bold">#{i + 1}</span>
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                  <span class="text-accent font-bold">#{i + 1}</span>
                 </div>
 
                 <!-- Peak image -->
@@ -371,7 +371,7 @@
                 <div class="flex-1 min-w-0">
                   <div class="flex items-start justify-between gap-2">
                     <div>
-                      <h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-sunrise transition-colors">
+                      <h4 class="font-semibold text-slate-900 dark:text-white group-hover:text-accent transition-colors">
                         {peak.name}
                       </h4>
                       <p class="text-sm text-slate-500 dark:text-slate-400">
@@ -401,7 +401,7 @@
                   <!-- Why this peak -->
                   {#if reasons.length > 0}
                     <div class="mt-2">
-                      <p class="text-xs text-green-600 dark:text-green-400">
+                      <p class="text-xs text-semantic-success-dark dark:text-semantic-success-light">
                         {reasons.slice(0, 2).join(' · ')}
                       </p>
                     </div>
@@ -410,7 +410,7 @@
 
                 <!-- Chevron -->
                 <svg
-                  class="flex-shrink-0 h-5 w-5 text-slate-400 group-hover:text-sunrise group-hover:translate-x-1 transition-all self-center"
+                  class="flex-shrink-0 h-5 w-5 text-slate-400 group-hover:text-accent group-hover:translate-x-1 transition-all self-center"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -425,13 +425,13 @@
         <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onclick={resetQuiz}
-            class="px-6 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400 hover:border-sunrise hover:text-sunrise transition-colors"
+            class="px-6 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400 hover:border-accent hover:text-accent transition-colors"
           >
             Take Quiz Again
           </button>
           <a
             href="/peaks"
-            class="px-6 py-2 rounded-lg bg-sunrise text-white font-medium hover:bg-sunrise-coral transition-colors text-center"
+            class="px-6 py-2 rounded-lg bg-accent text-white font-medium hover:bg-accent-warm transition-colors text-center"
           >
             Browse All Peaks
           </a>

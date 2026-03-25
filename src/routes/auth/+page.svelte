@@ -101,7 +101,7 @@
       "
       style="animation-delay: 100ms"
     >
-      <div class="h-1.5 bg-gradient-to-r from-sunrise to-sunrise-coral"></div>
+      <div class="h-1.5 bg-gradient-to-r from-accent to-accent-warm"></div>
 
       <div class="p-6 sm:p-8">
         {#if mode !== 'forgot'}
@@ -156,7 +156,7 @@
                 border border-slate-200 dark:border-slate-600
                 bg-white dark:bg-slate-700
                 text-slate-900 dark:text-white
-                focus:border-sunrise focus:outline-none focus:ring-2 focus:ring-sunrise/20
+                focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
                 transition-all duration-200
               "
               placeholder="you@example.com"
@@ -173,7 +173,7 @@
                   <button
                     type="button"
                     onclick={() => { mode = 'forgot'; error = null; message = null; }}
-                    class="text-xs text-sunrise hover:text-sunrise-coral transition-colors"
+                    class="text-xs text-accent hover:text-accent-warm transition-colors"
                   >
                     Forgot password?
                   </button>
@@ -190,7 +190,7 @@
                   border border-slate-200 dark:border-slate-600
                   bg-white dark:bg-slate-700
                   text-slate-900 dark:text-white
-                  focus:border-sunrise focus:outline-none focus:ring-2 focus:ring-sunrise/20
+                  focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
                   transition-all duration-200
                 "
                 placeholder="••••••••"
@@ -199,13 +199,13 @@
           {/if}
 
           {#if error}
-            <div class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+            <div class="p-3 rounded-lg bg-semantic-danger/5 dark:bg-semantic-danger/15 text-semantic-danger-dark dark:text-semantic-danger-light text-sm">
               {error}
             </div>
           {/if}
 
           {#if message}
-            <div class="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm">
+            <div class="p-3 rounded-lg bg-semantic-success/5 dark:bg-semantic-success/15 text-semantic-success-dark dark:text-semantic-success-light text-sm">
               {message}
             </div>
           {/if}
@@ -234,7 +234,7 @@
             Remember your password?
             <button
               onclick={() => { mode = 'login'; error = null; message = null; }}
-              class="font-medium text-sunrise hover:text-sunrise-coral transition-colors"
+              class="font-medium text-accent hover:text-accent-warm transition-colors"
             >
               Log in
             </button>
@@ -242,7 +242,7 @@
             Don't have an account?
             <button
               onclick={() => mode = 'signup'}
-              class="font-medium text-sunrise hover:text-sunrise-coral transition-colors"
+              class="font-medium text-accent hover:text-accent-warm transition-colors"
             >
               Sign up
             </button>
@@ -250,7 +250,7 @@
             Already have an account?
             <button
               onclick={() => mode = 'login'}
-              class="font-medium text-sunrise hover:text-sunrise-coral transition-colors"
+              class="font-medium text-accent hover:text-accent-warm transition-colors"
             >
               Log in
             </button>

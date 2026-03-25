@@ -82,8 +82,8 @@ Created: 2026-03-07
 - [x] Category badge overlay on gallery thumbnails
 - [x] Category shown in lightbox view
 
-### Phase 6c: User GPX Uploads [IN PROGRESS]
-- [ ] User GPX upload on routes
+### Phase 6c: User GPX Uploads [DONE]
+- [x] User GPX upload on routes
   - Upload GPX file, parse to GeoJSON (pipeline exists: `src/lib/server/gpx.ts`)
   - Community-sourced trail data with voting/quality scoring
   - Best trace selected for route display

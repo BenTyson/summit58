@@ -100,9 +100,9 @@
 <Container class="py-8 sm:py-12">
   <!-- Breadcrumb -->
   <nav class="mb-6 text-sm text-slate-500 dark:text-slate-400 animate-fade-in-up">
-    <a href="/peaks" class="hover:text-mountain-blue dark:hover:text-sunrise transition-colors">Peaks</a>
+    <a href="/peaks" class="hover:text-mountain-blue dark:hover:text-accent transition-colors">Peaks</a>
     <span class="mx-2">›</span>
-    <a href="/peaks/{peak.slug}" class="hover:text-mountain-blue dark:hover:text-sunrise transition-colors"
+    <a href="/peaks/{peak.slug}" class="hover:text-mountain-blue dark:hover:text-accent transition-colors"
       >{peak.name}</a
     >
     <span class="mx-2">›</span>
@@ -122,11 +122,11 @@
     <div
       class="
         h-1.5
-        {route.difficulty_class === 1 ? 'bg-gradient-to-r from-class-1 to-emerald-400' :
+        {route.difficulty_class === 1 ? 'bg-gradient-to-r from-class-1 to-semantic-success-light' :
          route.difficulty_class === 2 ? 'bg-gradient-to-r from-class-2 to-blue-400' :
-         route.difficulty_class === 3 ? 'bg-gradient-to-r from-class-3 to-amber-400' :
-         route.difficulty_class === 4 ? 'bg-gradient-to-r from-class-4 to-rose-400' :
-         'bg-gradient-to-r from-sunrise to-sunrise-coral'}
+         route.difficulty_class === 3 ? 'bg-gradient-to-r from-class-3 to-semantic-warning-light' :
+         route.difficulty_class === 4 ? 'bg-gradient-to-r from-class-4 to-semantic-danger-light' :
+         'bg-gradient-to-r from-accent to-accent-warm'}
       "
     ></div>
 
@@ -139,15 +139,15 @@
           <p class="mt-2 text-slate-600 dark:text-slate-400 flex items-center gap-2">
             <a
               href="/peaks/{peak.slug}"
-              class="hover:text-mountain-blue dark:hover:text-sunrise transition-colors font-medium"
+              class="hover:text-mountain-blue dark:hover:text-accent transition-colors font-medium"
             >
               {peak.name}
             </a>
             <span class="text-slate-300 dark:text-slate-600">·</span>
-            <span class="stat-display text-lg text-sunrise">{peak.elevation.toLocaleString()}'</span>
+            <span class="stat-display text-lg text-accent">{peak.elevation.toLocaleString()}'</span>
             <span class="text-slate-300 dark:text-slate-600">·</span>
             <span class="flex items-center gap-1">
-              <svg class="h-4 w-4 text-sunrise" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="h-4 w-4 text-accent" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
               </svg>
               Rank #{peak.rank}
@@ -288,7 +288,7 @@
       >
         <div class="p-5">
           <h3 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-            <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
@@ -323,7 +323,7 @@
                     onclick={copyCoordinates}
                     class="
                       p-1.5 rounded-lg
-                      text-slate-400 hover:text-sunrise hover:bg-sunrise/10
+                      text-slate-400 hover:text-accent hover:bg-accent/10
                       transition-all duration-200
                     "
                     title="Copy coordinates"
@@ -390,7 +390,7 @@
           style="animation-delay: 300ms"
         >
           <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2 mb-4">
-            <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
             </svg>
             Route Description
@@ -413,7 +413,7 @@
           style="animation-delay: 350ms"
         >
           <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2 mb-4">
-            <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
             Gear & Preparation
@@ -427,13 +427,13 @@
         <section
           class="
             animate-fade-in-up rounded-xl p-6 lg:col-span-2
-            border border-amber-200 dark:border-amber-700/50
-            bg-gradient-to-br from-amber-50 to-white dark:from-amber-900/20 dark:to-slate-800/50
+            border border-semantic-warning/20 dark:border-semantic-warning-dark/50
+            bg-gradient-to-br from-semantic-warning/5 to-white dark:from-semantic-warning/15 dark:to-slate-800/50
           "
           style="animation-delay: 400ms"
         >
           <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2 mb-4">
-            <svg class="h-6 w-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-6 w-6 text-semantic-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Additional Notes
@@ -451,8 +451,8 @@
       class="
         inline-flex items-center gap-2
         px-4 py-2 rounded-lg
-        text-sm font-medium text-mountain-blue dark:text-sunrise
-        hover:bg-mountain-blue/10 dark:hover:bg-sunrise/10
+        text-sm font-medium text-mountain-blue dark:text-accent
+        hover:bg-mountain-blue/10 dark:hover:bg-accent/10
         transition-colors
       "
     >

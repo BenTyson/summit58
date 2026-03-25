@@ -120,8 +120,8 @@
     >
       <!-- Error Message -->
       {#if error}
-        <div class="p-3 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800">
-          <p class="text-sm text-red-600 dark:text-red-400">{error}</p>
+        <div class="p-3 rounded-lg bg-semantic-danger/5 dark:bg-semantic-danger/20 border border-semantic-danger/20 dark:border-semantic-danger-dark">
+          <p class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light">{error}</p>
         </div>
       {/if}
 
@@ -137,7 +137,7 @@
           bind:value={title}
           required
           placeholder="e.g., Summer Sawatch Adventure"
-          class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-sunrise focus:border-transparent transition-shadow"
+          class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-accent focus:border-transparent transition-shadow"
         />
       </div>
 
@@ -154,7 +154,7 @@
             bind:value={startDate}
             required
             min={today}
-            class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-sunrise focus:border-transparent transition-shadow"
+            class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-accent focus:border-transparent transition-shadow"
           />
         </div>
         <div>
@@ -167,7 +167,7 @@
             name="endDate"
             bind:value={endDate}
             min={startDate || today}
-            class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-sunrise focus:border-transparent transition-shadow"
+            class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-accent focus:border-transparent transition-shadow"
           />
         </div>
       </div>
@@ -182,12 +182,12 @@
         {#if selectedPeaks.length > 0}
           <div class="flex flex-wrap gap-2 mb-2">
             {#each selectedPeaks as peak}
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sunrise/10 text-sunrise text-sm font-medium">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 text-accent text-sm font-medium">
                 {peak.name}
                 <button
                   type="button"
                   onclick={() => removePeak(peak.id)}
-                  class="hover:text-sunrise-coral transition-colors"
+                  class="hover:text-accent-warm transition-colors"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -205,7 +205,7 @@
             bind:value={searchQuery}
             onfocus={() => (showPeakDropdown = true)}
             placeholder="Search peaks to add..."
-            class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-sunrise focus:border-transparent transition-shadow"
+            class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-accent focus:border-transparent transition-shadow"
           />
 
           <!-- Dropdown -->
@@ -248,7 +248,7 @@
           bind:value={notes}
           rows="3"
           placeholder="Any notes about the trip..."
-          class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-sunrise focus:border-transparent transition-shadow resize-none"
+          class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-accent focus:border-transparent transition-shadow resize-none"
         ></textarea>
       </div>
 
@@ -258,7 +258,7 @@
         <button
           type="button"
           onclick={() => (isPublic = !isPublic)}
-          class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 {isPublic ? 'bg-sunrise' : 'bg-slate-300 dark:bg-slate-600'}"
+          class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 {isPublic ? 'bg-accent' : 'bg-slate-300 dark:bg-slate-600'}"
           role="switch"
           aria-checked={isPublic}
         >
@@ -283,7 +283,7 @@
         <button
           type="submit"
           disabled={loading || !title || !startDate || selectedPeakIds.length === 0}
-          class="px-6 py-2.5 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-sm hover:shadow disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-6 py-2.5 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all shadow-sm hover:shadow disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {#if loading}
             <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">

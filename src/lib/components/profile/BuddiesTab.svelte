@@ -32,14 +32,14 @@
       onclick={() => (activeTab = 'following')}
       class="text-center group"
     >
-      <div class="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-sunrise transition-colors">
+      <div class="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-accent transition-colors">
         {followStats.followingCount}
       </div>
-      <div class="text-sm text-slate-500 dark:text-slate-400 {activeTab === 'following' ? 'text-sunrise font-medium' : ''}">
+      <div class="text-sm text-slate-500 dark:text-slate-400 {activeTab === 'following' ? 'text-accent font-medium' : ''}">
         Following
       </div>
       {#if activeTab === 'following'}
-        <div class="mt-1 h-0.5 bg-sunrise rounded-full"></div>
+        <div class="mt-1 h-0.5 bg-accent rounded-full"></div>
       {/if}
     </button>
 
@@ -48,14 +48,14 @@
       onclick={() => (activeTab = 'followers')}
       class="text-center group"
     >
-      <div class="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-sunrise transition-colors">
+      <div class="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-accent transition-colors">
         {followStats.followersCount}
       </div>
-      <div class="text-sm text-slate-500 dark:text-slate-400 {activeTab === 'followers' ? 'text-sunrise font-medium' : ''}">
+      <div class="text-sm text-slate-500 dark:text-slate-400 {activeTab === 'followers' ? 'text-accent font-medium' : ''}">
         Followers
       </div>
       {#if activeTab === 'followers'}
-        <div class="mt-1 h-0.5 bg-sunrise rounded-full"></div>
+        <div class="mt-1 h-0.5 bg-accent rounded-full"></div>
       {/if}
     </button>
   </div>
@@ -113,7 +113,7 @@
   {#if isOwnProfile && suggestions.length > 0}
     <div>
       <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-        <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
         Climbers Like You

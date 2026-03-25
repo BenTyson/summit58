@@ -84,7 +84,7 @@
       <section>
         <h2 class="text-xl font-semibold text-slate-900 dark:text-white mb-3">10. Contact</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          Questions about these terms? Contact us at <a href="mailto:hello@saltgoat.co" class="text-sunrise hover:text-sunrise-coral transition-colors">hello@saltgoat.co</a>.
+          Questions about these terms? Contact us at <a href="mailto:hello@saltgoat.co" class="text-accent hover:text-accent-warm transition-colors">hello@saltgoat.co</a>.
         </p>
       </section>
     </div>

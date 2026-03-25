@@ -88,11 +88,11 @@
       <h3 class="font-semibold text-slate-900 dark:text-white">
         {variant === 'summer' ? 'Summer Day Hike' : 'Shoulder Season Additions'}
       </h3>
-      <span class="text-sm font-medium text-sunrise">{progress}% packed</span>
+      <span class="text-sm font-medium text-accent">{progress}% packed</span>
     </div>
     <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
       <div
-        class="bg-gradient-to-r from-sunrise to-sunrise-coral h-2 rounded-full transition-all duration-300"
+        class="bg-gradient-to-r from-accent to-accent-warm h-2 rounded-full transition-all duration-300"
         style="width: {progress}%"
       ></div>
     </div>
@@ -114,7 +114,7 @@
                 type="checkbox"
                 checked={checked.has(item.id)}
                 onchange={() => toggle(item.id)}
-                class="h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-sunrise focus:ring-sunrise"
+                class="h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-accent focus:ring-accent"
               />
               <span
                 class="text-slate-700 dark:text-slate-300 transition-all {checked.has(item.id)
@@ -135,7 +135,7 @@
     <div class="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
       <button
         onclick={() => (checked = new Set())}
-        class="text-sm text-slate-500 dark:text-slate-400 hover:text-sunrise transition-colors"
+        class="text-sm text-slate-500 dark:text-slate-400 hover:text-accent transition-colors"
       >
         Reset checklist
       </button>

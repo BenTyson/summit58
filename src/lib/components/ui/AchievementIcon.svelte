@@ -56,7 +56,7 @@
     <path d="M2 20L7 10l3 4 4-8 4 6 4-4 2 12H2z" />
   {:else if icon === 'shield-1'}
     <!-- Shield with 1 -->
-    <path d="M12 2L4 6v6c0 5.5 3.5 10 8 12 4.5-2 8-6.5 8-12V6l-8-4z" class={earned ? 'fill-emerald-500/30' : ''} />
+    <path d="M12 2L4 6v6c0 5.5 3.5 10 8 12 4.5-2 8-6.5 8-12V6l-8-4z" class={earned ? 'fill-semantic-success/30' : ''} />
     <path d="M12 2L4 6v6c0 5.5 3.5 10 8 12 4.5-2 8-6.5 8-12V6l-8-4z" />
     <text x="12" y="15" text-anchor="middle" font-size="8" font-weight="bold" class="fill-current" stroke="none">1</text>
   {:else if icon === 'shield-2'}
@@ -66,12 +66,12 @@
     <text x="12" y="15" text-anchor="middle" font-size="8" font-weight="bold" class="fill-current" stroke="none">2</text>
   {:else if icon === 'shield-3'}
     <!-- Shield with 3 -->
-    <path d="M12 2L4 6v6c0 5.5 3.5 10 8 12 4.5-2 8-6.5 8-12V6l-8-4z" class={earned ? 'fill-amber-500/30' : ''} />
+    <path d="M12 2L4 6v6c0 5.5 3.5 10 8 12 4.5-2 8-6.5 8-12V6l-8-4z" class={earned ? 'fill-semantic-warning/30' : ''} />
     <path d="M12 2L4 6v6c0 5.5 3.5 10 8 12 4.5-2 8-6.5 8-12V6l-8-4z" />
     <text x="12" y="15" text-anchor="middle" font-size="8" font-weight="bold" class="fill-current" stroke="none">3</text>
   {:else if icon === 'shield-4'}
     <!-- Shield with 4 -->
-    <path d="M12 2L4 6v6c0 5.5 3.5 10 8 12 4.5-2 8-6.5 8-12V6l-8-4z" class={earned ? 'fill-rose-500/30' : ''} />
+    <path d="M12 2L4 6v6c0 5.5 3.5 10 8 12 4.5-2 8-6.5 8-12V6l-8-4z" class={earned ? 'fill-semantic-danger/30' : ''} />
     <path d="M12 2L4 6v6c0 5.5 3.5 10 8 12 4.5-2 8-6.5 8-12V6l-8-4z" />
     <text x="12" y="15" text-anchor="middle" font-size="8" font-weight="bold" class="fill-current" stroke="none">4</text>
   {:else if icon === 'pencil'}

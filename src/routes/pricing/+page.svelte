@@ -87,9 +87,9 @@
       </div>
 
       <!-- Pro Tier -->
-      <div class="rounded-2xl border-2 border-sunrise bg-white dark:bg-slate-800 shadow-card-elevated p-8 relative">
+      <div class="rounded-2xl border-2 border-accent bg-white dark:bg-slate-800 shadow-card-elevated p-8 relative">
         <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span class="px-3 py-1 rounded-full bg-gradient-to-r from-sunrise to-sunrise-coral text-white text-xs font-bold uppercase tracking-wider">
+          <span class="px-3 py-1 rounded-full bg-gradient-to-r from-accent to-accent-warm text-white text-xs font-bold uppercase tracking-wider">
             Most Popular
           </span>
         </div>
@@ -108,7 +108,7 @@
         <ul class="space-y-3 mb-8">
           {#each proTierFeatures as feature}
             <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
-              <svg class="w-5 h-5 text-sunrise flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
               {feature}
@@ -119,7 +119,7 @@
         {#if !isLoggedIn}
           <a
             href="/auth"
-            class="block w-full text-center px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md hover:shadow-lg"
+            class="block w-full text-center px-6 py-3 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all shadow-md hover:shadow-lg"
           >
             Get Started
           </a>
@@ -127,20 +127,20 @@
           <form method="POST" action="/api/portal">
             <button
               type="submit"
-              class="block w-full text-center px-6 py-3 rounded-lg border border-sunrise text-sunrise font-medium hover:bg-sunrise/5 transition-colors"
+              class="block w-full text-center px-6 py-3 rounded-lg border border-accent text-accent font-medium hover:bg-accent/5 transition-colors"
             >
               Manage Subscription
             </button>
           </form>
         {:else if userIsPro}
-          <div class="block w-full text-center px-6 py-3 rounded-lg bg-sunrise/10 text-sunrise font-medium">
+          <div class="block w-full text-center px-6 py-3 rounded-lg bg-accent/10 text-accent font-medium">
             Current Plan
           </div>
         {:else}
           <form method="POST" action="/api/checkout">
             <button
               type="submit"
-              class="block w-full text-center px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md hover:shadow-lg"
+              class="block w-full text-center px-6 py-3 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all shadow-md hover:shadow-lg"
             >
               Upgrade to Pro
             </button>

@@ -39,7 +39,7 @@
   <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-3 mb-6">
     {#if icon && iconPaths[icon]}
       <svg
-        class="h-7 w-7 text-sunrise flex-shrink-0"
+        class="h-7 w-7 text-accent flex-shrink-0"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"

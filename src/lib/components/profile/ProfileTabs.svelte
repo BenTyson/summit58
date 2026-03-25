@@ -31,7 +31,7 @@
         class="
           relative whitespace-nowrap py-3 px-3 sm:px-4 text-sm font-medium transition-colors
           {activeTab === tab.id
-            ? 'text-sunrise border-b-2 border-sunrise'
+            ? 'text-accent border-b-2 border-accent'
             : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 border-b-2 border-transparent'}
         "
         aria-current={activeTab === tab.id ? 'page' : undefined}
@@ -42,7 +42,7 @@
             <span class="
               px-2 py-0.5 text-xs rounded-full
               {activeTab === tab.id
-                ? 'bg-sunrise/10 text-sunrise'
+                ? 'bg-accent/10 text-accent'
                 : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'}
             ">
               {tab.count}

@@ -42,7 +42,7 @@
   <!-- Breadcrumb -->
   <nav class="mb-8 animate-fade-in-up">
     <ol class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-      <li><a href="/learn" class="hover:text-sunrise transition-colors">Learn</a></li>
+      <li><a href="/learn" class="hover:text-accent transition-colors">Learn</a></li>
       <li class="text-slate-400">/</li>
       <li class="text-slate-900 dark:text-white font-medium">Difficulty Ratings</li>
     </ol>
@@ -238,30 +238,30 @@
         </p>
 
         <div class="grid gap-4 sm:grid-cols-2">
-          <div class="p-5 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-            <h4 class="font-semibold text-green-900 dark:text-green-200 mb-2">Low Exposure</h4>
-            <p class="text-sm text-green-800 dark:text-green-300">
+          <div class="p-5 rounded-xl bg-semantic-success/5 dark:bg-semantic-success/15 border border-semantic-success/20 dark:border-semantic-success-dark">
+            <h4 class="font-semibold text-semantic-success-dark dark:text-semantic-success-light mb-2">Low Exposure</h4>
+            <p class="text-sm text-semantic-success-dark dark:text-semantic-success-light">
               A fall means a short stumble or tumble. You might get scraped up but unlikely to be seriously hurt.
             </p>
           </div>
 
-          <div class="p-5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-            <h4 class="font-semibold text-amber-900 dark:text-amber-200 mb-2">Moderate Exposure</h4>
-            <p class="text-sm text-amber-800 dark:text-amber-300">
+          <div class="p-5 rounded-xl bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+            <h4 class="font-semibold text-semantic-warning-dark dark:text-semantic-warning-light mb-2">Moderate Exposure</h4>
+            <p class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light">
               A fall of 10-20 feet is possible. Injuries likely, but usually survivable with caution.
             </p>
           </div>
 
-          <div class="p-5 rounded-xl bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
-            <h4 class="font-semibold text-orange-900 dark:text-orange-200 mb-2">High Exposure</h4>
-            <p class="text-sm text-orange-800 dark:text-orange-300">
+          <div class="p-5 rounded-xl bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+            <h4 class="font-semibold text-semantic-warning-dark dark:text-semantic-warning-light mb-2">High Exposure</h4>
+            <p class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light">
               A fall of 50+ feet is possible. Serious injury or death likely. Full attention required at all times.
             </p>
           </div>
 
-          <div class="p-5 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-            <h4 class="font-semibold text-red-900 dark:text-red-200 mb-2">Severe Exposure</h4>
-            <p class="text-sm text-red-800 dark:text-red-300">
+          <div class="p-5 rounded-xl bg-semantic-danger/5 dark:bg-semantic-danger/15 border border-semantic-danger/20 dark:border-semantic-danger-dark">
+            <h4 class="font-semibold text-semantic-danger-dark dark:text-semantic-danger-light mb-2">Severe Exposure</h4>
+            <p class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light">
               A fall of 100+ feet is possible. Almost certainly fatal. Rope and protection strongly recommended.
             </p>
           </div>
@@ -351,7 +351,7 @@
       <div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-4 justify-between">
         <a
           href="/learn/parking"
-          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
         >
           <svg class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -360,7 +360,7 @@
         </a>
         <a
           href="/learn"
-          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors sm:flex-row-reverse"
+          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors sm:flex-row-reverse"
         >
           All Guides
           <svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

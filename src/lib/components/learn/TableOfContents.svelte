@@ -80,13 +80,13 @@
               w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm
               transition-all duration-200
               {activeId === item.id
-                ? 'bg-sunrise/10 text-sunrise font-medium'
+                ? 'bg-accent/10 text-accent font-medium'
                 : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-white'}
             "
           >
             {#if item.icon && iconPaths[item.icon]}
               <svg
-                class="h-4 w-4 flex-shrink-0 {activeId === item.id ? 'text-sunrise' : 'text-slate-400'}"
+                class="h-4 w-4 flex-shrink-0 {activeId === item.id ? 'text-accent' : 'text-slate-400'}"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

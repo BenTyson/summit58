@@ -37,7 +37,7 @@
   <!-- Breadcrumb -->
   <nav class="mb-8 animate-fade-in-up">
     <ol class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-      <li><a href="/blog" class="hover:text-sunrise transition-colors">Blog</a></li>
+      <li><a href="/blog" class="hover:text-accent transition-colors">Blog</a></li>
       <li class="text-slate-400">/</li>
       <li class="text-slate-900 dark:text-white font-medium">Welcome to SaltGoat</li>
     </ol>
@@ -94,7 +94,7 @@
       <section>
         <h2 class="text-2xl font-display font-bold text-slate-900 dark:text-white mb-4">New to 14ers?</h2>
         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-          We have a growing collection of <a href="/learn" class="text-sunrise hover:text-sunrise-coral transition-colors font-medium">guides</a> covering safety, gear, trip planning, and choosing your first peak. The mountains are incredible, but they demand respect. Start informed.
+          We have a growing collection of <a href="/learn" class="text-accent hover:text-accent-warm transition-colors font-medium">guides</a> covering safety, gear, trip planning, and choosing your first peak. The mountains are incredible, but they demand respect. Start informed.
         </p>
       </section>
 
@@ -108,14 +108,14 @@
 
       <!-- CTA -->
       <section class="relative rounded-2xl overflow-hidden bg-gradient-to-br from-mountain-blue via-mountain-blue-light to-mountain-mist p-8 sm:p-10">
-        <div class="absolute top-0 right-0 w-48 h-48 bg-sunrise/10 rounded-full blur-3xl"></div>
+        <div class="absolute top-0 right-0 w-48 h-48 bg-accent/10 rounded-full blur-3xl"></div>
         <div class="relative text-center">
           <h2 class="text-2xl font-display font-bold text-white mb-3">Start Tracking Your Summits</h2>
           <p class="text-white/80 mb-6">Create a free account and log your first 14er.</p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/auth"
-              class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-sunrise text-white font-semibold hover:bg-sunrise-coral transition-colors"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-semibold hover:bg-accent-warm transition-colors"
             >
               Create Account
             </a>
@@ -134,7 +134,7 @@
     <div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700 flex justify-between">
       <a
         href="/blog"
-        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
       >
         <svg class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -143,7 +143,7 @@
       </a>
       <a
         href="/blog/why-we-built-saltgoat"
-        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+        class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
       >
         Why We Built SaltGoat
         <svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

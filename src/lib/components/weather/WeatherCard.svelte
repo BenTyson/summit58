@@ -40,7 +40,7 @@
 {#if conditions.length > 0 && today}
   <section class="mt-10 animate-fade-in-up" style="animation-delay: 175ms">
     <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2 mb-4">
-      <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
       </svg>
       Summit Weather
@@ -53,9 +53,9 @@
           <!-- Temperature & Conditions -->
           <div class="flex items-center gap-4">
             <!-- Weather Icon -->
-            <div class="h-16 w-16 rounded-2xl bg-sunrise/10 flex items-center justify-center">
+            <div class="h-16 w-16 rounded-2xl bg-accent/10 flex items-center justify-center">
               {#if weatherCodeToIcon(today.weather_code) === 'sun'}
-                <svg class="h-10 w-10 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="h-10 w-10 text-accent" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
                 </svg>
               {:else if weatherCodeToIcon(today.weather_code) === 'cloud'}
@@ -63,7 +63,7 @@
                   <path fill-rule="evenodd" d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z" clip-rule="evenodd" />
                 </svg>
               {:else if weatherCodeToIcon(today.weather_code) === 'cloud-sun'}
-                <svg class="h-10 w-10 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="h-10 w-10 text-semantic-warning" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z" />
                   <path fill-rule="evenodd" d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z" clip-rule="evenodd" opacity="0.5" />
                 </svg>
@@ -77,9 +77,9 @@
                   <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83M12 8a4 4 0 100 8 4 4 0 000-8z" stroke="currentColor" stroke-width="1.5" fill="none" />
                 </svg>
               {:else if weatherCodeToIcon(today.weather_code) === 'cloud-lightning'}
-                <svg class="h-10 w-10 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="h-10 w-10 text-semantic-warning-light" fill="currentColor" viewBox="0 0 24 24">
                   <path fill-rule="evenodd" d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z" clip-rule="evenodd" />
-                  <path d="M13 12l-2 4h3l-2 4" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                  <path d="M13 12l-2 4h3l-2 4" stroke="#B09860" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
                 </svg>
               {:else}
                 <svg class="h-10 w-10 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
@@ -160,7 +160,7 @@
                 <span class="block text-xs font-medium text-slate-500 dark:text-slate-400">{formatShortDay(day.forecast_date)}</span>
                 <div class="my-1">
                   {#if weatherCodeToIcon(day.weather_code) === 'sun'}
-                    <svg class="h-6 w-6 mx-auto text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+                    <svg class="h-6 w-6 mx-auto text-accent" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z" />
                     </svg>
                   {:else if weatherCodeToIcon(day.weather_code) === 'snowflake'}

@@ -97,7 +97,7 @@
 {#if earnedAchievements.length > 0 || inProgressAchievements().length > 0}
   <section class="mb-10">
     <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-      <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
       </svg>
       Achievements
@@ -120,14 +120,14 @@
               <div
                 class="
                   group relative flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl
-                  bg-gradient-to-br from-sunrise/10 via-sunrise-coral/5 to-sunrise/10
-                  border border-sunrise/20
-                  hover:border-sunrise/40 hover:shadow-md hover:shadow-sunrise/10
+                  bg-gradient-to-br from-accent/10 via-accent-warm/5 to-accent/10
+                  border border-accent/20
+                  hover:border-accent/40 hover:shadow-md hover:shadow-accent/10
                   transition-all duration-200 cursor-default
                 "
                 title={achievement.definition.description}
               >
-                <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-sunrise to-sunrise-coral shadow-sm">
+                <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-br from-accent to-accent-warm shadow-sm">
                   <AchievementIcon icon={achievement.definition.icon} earned={true} class="text-white" />
                 </div>
                 <span class="font-medium text-slate-900 dark:text-white text-sm">{achievement.definition.title}</span>
@@ -175,7 +175,7 @@
                   </div>
                   <div class="h-1.5 rounded-full bg-slate-200 dark:bg-slate-600 overflow-hidden">
                     <div
-                      class="h-full rounded-full bg-gradient-to-r from-sunrise to-sunrise-coral transition-all duration-300"
+                      class="h-full rounded-full bg-gradient-to-r from-accent to-accent-warm transition-all duration-300"
                       style="width: {pct}%"
                     ></div>
                   </div>

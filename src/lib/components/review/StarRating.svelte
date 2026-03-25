@@ -62,7 +62,7 @@
           {sizes[size]}
           transition-transform duration-150
           {interactive ? 'cursor-pointer hover:scale-110' : ''}
-          {filled ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'}
+          {filled ? 'text-semantic-warning-light' : 'text-slate-300 dark:text-slate-600'}
         "
         aria-label="Rate {starNum} star{starNum > 1 ? 's' : ''}"
       >
@@ -74,7 +74,7 @@
       <span
         class="
           {sizes[size]}
-          {filled ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'}
+          {filled ? 'text-semantic-warning-light' : 'text-slate-300 dark:text-slate-600'}
         "
       >
         <svg fill="currentColor" viewBox="0 0 20 20">

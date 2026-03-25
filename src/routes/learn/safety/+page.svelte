@@ -41,7 +41,7 @@
   <!-- Breadcrumb -->
   <nav class="mb-8 animate-fade-in-up">
     <ol class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-      <li><a href="/learn" class="hover:text-sunrise transition-colors">Learn</a></li>
+      <li><a href="/learn" class="hover:text-accent transition-colors">Learn</a></li>
       <li class="text-slate-400">/</li>
       <li class="text-slate-900 dark:text-white font-medium">Safety</li>
     </ol>
@@ -85,8 +85,8 @@
         </ul>
 
         <h3 class="font-semibold text-slate-900 dark:text-white mt-8 mb-4 flex items-center gap-2">
-          <span class="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-            <svg class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+          <span class="w-6 h-6 rounded-full bg-semantic-warning/10 dark:bg-semantic-warning/20 flex items-center justify-center">
+            <svg class="w-3.5 h-3.5 text-semantic-warning-dark dark:text-semantic-warning-light" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
             </svg>
           </span>
@@ -111,30 +111,30 @@
         </CalloutBox>
 
         <div class="mt-8 grid gap-6 sm:grid-cols-2">
-          <div class="p-5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-            <h4 class="font-semibold text-amber-900 dark:text-amber-200 mb-3">Acute Mountain Sickness (AMS)</h4>
-            <p class="text-sm text-amber-800 dark:text-amber-300 mb-2">Common and usually manageable:</p>
-            <ul class="text-sm text-amber-700 dark:text-amber-300/80 space-y-1">
+          <div class="p-5 rounded-xl bg-semantic-warning/5 dark:bg-semantic-warning/15 border border-semantic-warning/20 dark:border-semantic-warning-dark">
+            <h4 class="font-semibold text-semantic-warning-dark dark:text-semantic-warning-light mb-3">Acute Mountain Sickness (AMS)</h4>
+            <p class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light mb-2">Common and usually manageable:</p>
+            <ul class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light/80 space-y-1">
               <li>• Headache (the classic sign)</li>
               <li>• Nausea, loss of appetite</li>
               <li>• Fatigue beyond normal tiredness</li>
               <li>• Dizziness, difficulty sleeping</li>
             </ul>
-            <p class="text-sm text-amber-800 dark:text-amber-300 mt-3 font-medium">
+            <p class="text-sm text-semantic-warning-dark dark:text-semantic-warning-light mt-3 font-medium">
               Response: Stop ascending. Descend if symptoms worsen.
             </p>
           </div>
 
-          <div class="p-5 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-            <h4 class="font-semibold text-red-900 dark:text-red-200 mb-3">HAPE & HACE</h4>
-            <p class="text-sm text-red-800 dark:text-red-300 mb-2">Life-threatening. Require immediate descent:</p>
-            <ul class="text-sm text-red-700 dark:text-red-300/80 space-y-1">
+          <div class="p-5 rounded-xl bg-semantic-danger/5 dark:bg-semantic-danger/15 border border-semantic-danger/20 dark:border-semantic-danger-dark">
+            <h4 class="font-semibold text-semantic-danger-dark dark:text-semantic-danger-light mb-3">HAPE & HACE</h4>
+            <p class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light mb-2">Life-threatening. Require immediate descent:</p>
+            <ul class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light/80 space-y-1">
               <li>• Breathlessness at rest</li>
               <li>• Persistent cough (possibly pink/frothy)</li>
               <li>• Severe headache, confusion</li>
               <li>• Loss of coordination</li>
             </ul>
-            <p class="text-sm text-red-800 dark:text-red-300 mt-3 font-medium">
+            <p class="text-sm text-semantic-danger-dark dark:text-semantic-danger-light mt-3 font-medium">
               Response: Descend immediately. These kill within hours.
             </p>
           </div>
@@ -186,7 +186,7 @@
         <div class="grid gap-6 sm:grid-cols-2 mb-6">
           <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
             <h4 class="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-              <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
               </svg>
               Tell Someone Your Plan
@@ -198,7 +198,7 @@
 
           <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
             <h4 class="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-              <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
               </svg>
               Cell Service Reality
@@ -246,7 +246,7 @@
       <div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-4 justify-between">
         <a
           href="/learn/first-fourteener"
-          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors"
+          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors"
         >
           <svg class="h-5 w-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -255,7 +255,7 @@
         </a>
         <a
           href="/learn/gear"
-          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-sunrise transition-colors sm:flex-row-reverse"
+          class="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-accent transition-colors sm:flex-row-reverse"
         >
           Gear & Preparation
           <svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

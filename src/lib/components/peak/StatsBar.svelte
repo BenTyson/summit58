@@ -15,10 +15,10 @@
   let { route, compact = false, class: className = '' }: Props = $props();
 
   const classGradients: Record<number, string> = {
-    1: 'from-class-1 to-green-700',
+    1: 'from-class-1 to-semantic-success-dark',
     2: 'from-class-2 to-blue-700',
-    3: 'from-class-3 to-yellow-600',
-    4: 'from-class-4 to-red-700'
+    3: 'from-class-3 to-semantic-warning-dark',
+    4: 'from-class-4 to-semantic-danger-dark'
   };
 
   const classGlows: Record<number, string> = {
@@ -48,7 +48,7 @@
     "
   >
     <svg
-      class="h-5 w-5 mb-2 text-slate-400 dark:text-slate-500 group-hover:text-sunrise transition-colors"
+      class="h-5 w-5 mb-2 text-slate-400 dark:text-slate-500 group-hover:text-accent transition-colors"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -77,7 +77,7 @@
     "
   >
     <svg
-      class="h-5 w-5 mb-2 text-slate-400 dark:text-slate-500 group-hover:text-sunrise transition-colors"
+      class="h-5 w-5 mb-2 text-slate-400 dark:text-slate-500 group-hover:text-accent transition-colors"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -134,7 +134,7 @@
     "
   >
     <svg
-      class="h-5 w-5 mb-2 text-slate-400 dark:text-slate-500 group-hover:text-sunrise transition-colors"
+      class="h-5 w-5 mb-2 text-slate-400 dark:text-slate-500 group-hover:text-accent transition-colors"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"

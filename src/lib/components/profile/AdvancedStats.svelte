@@ -21,9 +21,9 @@
   const maxConditionCount = $derived(stats.topConditions.length > 0 ? stats.topConditions[0].count : 1);
 
   const seasonColors: Record<string, string> = {
-    spring: 'bg-emerald-500',
-    summer: 'bg-amber-500',
-    fall: 'bg-orange-500',
+    spring: 'bg-semantic-success',
+    summer: 'bg-semantic-warning',
+    fall: 'bg-semantic-warning',
     winter: 'bg-sky-500'
   };
 
@@ -55,7 +55,7 @@
   <!-- Summit Pace -->
   {#if totalSummitsInPace > 0}
     <section>
-      <h3 class="text-sm font-semibold text-sunrise uppercase tracking-wider mb-4">Summit Pace (12 Months)</h3>
+      <h3 class="text-sm font-semibold text-accent uppercase tracking-wider mb-4">Summit Pace (12 Months)</h3>
       <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 shadow-card">
         <div class="flex items-end gap-1 h-32">
           {#each stats.pace as month}
@@ -65,7 +65,7 @@
                 <span class="text-xs font-medium text-slate-600 dark:text-slate-400">{month.count}</span>
               {/if}
               <div
-                class="w-full rounded-t transition-all duration-300 {month.count > 0 ? 'bg-gradient-to-t from-sunrise to-sunrise-coral' : 'bg-slate-200 dark:bg-slate-700'}"
+                class="w-full rounded-t transition-all duration-300 {month.count > 0 ? 'bg-gradient-to-t from-accent to-accent-warm' : 'bg-slate-200 dark:bg-slate-700'}"
                 style="height: {month.count > 0 ? height : 4}%"
               ></div>
             </div>
@@ -84,7 +84,7 @@
 
   <!-- Seasonal Activity -->
   <section>
-    <h3 class="text-sm font-semibold text-sunrise uppercase tracking-wider mb-4">Seasonal Activity</h3>
+    <h3 class="text-sm font-semibold text-accent uppercase tracking-wider mb-4">Seasonal Activity</h3>
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {#each Object.entries(stats.seasonal) as [season, count]}
         <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 shadow-card text-center">
@@ -102,7 +102,7 @@
   <!-- Personal Records -->
   {#if stats.records.mostPeaksInOneDay > 0}
     <section>
-      <h3 class="text-sm font-semibold text-sunrise uppercase tracking-wider mb-4">Personal Records</h3>
+      <h3 class="text-sm font-semibold text-accent uppercase tracking-wider mb-4">Personal Records</h3>
       <div class="grid sm:grid-cols-3 gap-3">
         {#if stats.records.earliestStartTime}
           <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 shadow-card">
@@ -130,7 +130,7 @@
   <!-- Route Preferences -->
   {#if stats.routePreferences.length > 0}
     <section>
-      <h3 class="text-sm font-semibold text-sunrise uppercase tracking-wider mb-4">Route Preferences</h3>
+      <h3 class="text-sm font-semibold text-accent uppercase tracking-wider mb-4">Route Preferences</h3>
       <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 shadow-card space-y-3">
         {#each stats.routePreferences as pref}
           {@const total = stats.routePreferences.reduce((s, p) => s + p.count, 0)}
@@ -155,7 +155,7 @@
   <!-- Top Conditions -->
   {#if stats.topConditions.length > 0}
     <section>
-      <h3 class="text-sm font-semibold text-sunrise uppercase tracking-wider mb-4">Conditions</h3>
+      <h3 class="text-sm font-semibold text-accent uppercase tracking-wider mb-4">Conditions</h3>
       <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 shadow-card space-y-3">
         {#each stats.topConditions as cond}
           {@const pct = (cond.count / maxConditionCount) * 100}
@@ -166,7 +166,7 @@
             </div>
             <div class="h-2.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
               <div
-                class="bg-gradient-to-r from-sunrise to-sunrise-coral h-full rounded-full transition-all duration-500"
+                class="bg-gradient-to-r from-accent to-accent-warm h-full rounded-full transition-all duration-500"
                 style="width: {pct}%"
               ></div>
             </div>

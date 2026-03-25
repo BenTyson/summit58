@@ -55,11 +55,11 @@
           "
         >
           <div class="text-sm text-slate-500 dark:text-slate-400 mb-2">{post.date}</div>
-          <h2 class="text-xl sm:text-2xl font-display font-bold text-slate-900 dark:text-white group-hover:text-sunrise transition-colors mb-3">
+          <h2 class="text-xl sm:text-2xl font-display font-bold text-slate-900 dark:text-white group-hover:text-accent transition-colors mb-3">
             {post.title}
           </h2>
           <p class="text-slate-600 dark:text-slate-400 leading-relaxed">{post.excerpt}</p>
-          <span class="inline-flex items-center gap-1 mt-4 text-sm font-medium text-sunrise group-hover:gap-2 transition-all">
+          <span class="inline-flex items-center gap-1 mt-4 text-sm font-medium text-accent group-hover:gap-2 transition-all">
             Read more
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />

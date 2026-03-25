@@ -13,13 +13,12 @@ export default {
           slate: '#1e3a5f',
           mist: '#3d5a80'
         },
-        sunrise: {
-          DEFAULT: '#ed8936',
-          light: '#f6ad55',
-          dark: '#dd6b20',
-          gold: '#fbbf24',
-          amber: '#f59e0b',
-          coral: '#fb7185'
+        accent: {
+          DEFAULT: '#C8A55C',
+          light: '#D4BC7E',
+          dark: '#A8873A',
+          warm: '#DAC48A',
+          muted: '#B09860'
         },
         alpine: {
           pine: '#1d4e3e',
@@ -29,16 +28,28 @@ export default {
           snow: '#f8fafc',
           ice: '#e0f2fe'
         },
-        summit: {
-          success: '#38a169',
-          warning: '#d69e2e',
-          danger: '#e53e3e'
+        semantic: {
+          success: {
+            DEFAULT: '#4A9E7E',
+            light: '#6AB89A',
+            dark: '#3A8168',
+          },
+          danger: {
+            DEFAULT: '#C75454',
+            light: '#D97777',
+            dark: '#A84444',
+          },
+          warning: {
+            DEFAULT: '#D4A843',
+            light: '#E0BE6E',
+            dark: '#B08D36',
+          }
         },
         class: {
-          1: '#38a169',
-          2: '#3182ce',
-          3: '#d69e2e',
-          4: '#e53e3e'
+          1: '#5A9E78',
+          2: '#4A7FB5',
+          3: '#C4943F',
+          4: '#B84C4C'
         }
       },
       fontFamily: {
@@ -55,11 +66,11 @@ export default {
         card: '0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',
         'card-hover': '0 4px 12px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.08)',
         'card-elevated': '0 8px 24px rgba(0, 0, 0, 0.12), 0 16px 48px rgba(0, 0, 0, 0.08)',
-        'glow-sunrise': '0 0 40px rgba(237, 137, 54, 0.3)',
-        'glow-class-1': '0 0 20px rgba(56, 161, 105, 0.3)',
-        'glow-class-2': '0 0 20px rgba(49, 130, 206, 0.3)',
-        'glow-class-3': '0 0 20px rgba(214, 158, 46, 0.3)',
-        'glow-class-4': '0 0 20px rgba(229, 62, 62, 0.3)'
+        'glow-accent': '0 0 40px rgba(200, 165, 92, 0.25)',
+        'glow-class-1': '0 0 20px rgba(90, 158, 120, 0.3)',
+        'glow-class-2': '0 0 20px rgba(74, 127, 181, 0.3)',
+        'glow-class-3': '0 0 20px rgba(196, 148, 63, 0.3)',
+        'glow-class-4': '0 0 20px rgba(184, 76, 76, 0.3)'
       },
       animation: {
         'fade-in': 'fade-in 0.5s ease-out forwards',

@@ -40,7 +40,7 @@
       <button
         type="button"
         onclick={() => openLightbox(i)}
-        class="group relative aspect-square rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-sunrise focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+        class="group relative aspect-square rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 dark:focus:ring-offset-slate-900"
       >
         <img
           src={photo.url}
@@ -106,7 +106,7 @@
     </p>
     <a
       href="/peaks"
-      class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md hover:shadow-lg"
+      class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all shadow-md hover:shadow-lg"
     >
       Browse Peaks
       <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

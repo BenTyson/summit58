@@ -169,7 +169,7 @@
           class="
             px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors
             {activeTab === 'new'
-              ? 'border-sunrise text-sunrise'
+              ? 'border-accent text-accent'
               : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}
           "
         >
@@ -180,7 +180,7 @@
           class="
             px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors
             {activeTab === 'history'
-              ? 'border-sunrise text-sunrise'
+              ? 'border-accent text-accent'
               : 'border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}
           "
         >
@@ -210,7 +210,7 @@
                 bg-white dark:bg-slate-700
                 px-4 py-2.5
                 text-slate-900 dark:text-white
-                focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                focus:border-accent focus:ring-2 focus:ring-accent/20
                 transition-colors
               "
             />
@@ -230,7 +230,7 @@
                   bg-white dark:bg-slate-700
                   px-4 py-2.5
                   text-slate-900 dark:text-white
-                  focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                  focus:border-accent focus:ring-2 focus:ring-accent/20
                   transition-colors
                 "
               >
@@ -255,7 +255,7 @@
                   class="
                     px-3 py-1.5 rounded-full text-sm border transition-all
                     {conditions === option
-                      ? 'border-sunrise bg-sunrise/10 text-sunrise font-medium'
+                      ? 'border-accent bg-accent/10 text-accent font-medium'
                       : 'border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-500'}
                   "
                 >
@@ -273,7 +273,7 @@
                 bg-white dark:bg-slate-700
                 px-4 py-2.5
                 text-slate-900 dark:text-white text-sm
-                focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                focus:border-accent focus:ring-2 focus:ring-accent/20
                 transition-colors
               "
             />
@@ -294,7 +294,7 @@
                 bg-white dark:bg-slate-700
                 px-4 py-2.5
                 text-slate-900 dark:text-white text-sm
-                focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                focus:border-accent focus:ring-2 focus:ring-accent/20
                 transition-colors resize-none
               "
             ></textarea>
@@ -332,7 +332,7 @@
                     bg-white dark:bg-slate-700
                     px-4 py-2.5
                     text-slate-900 dark:text-white
-                    focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                    focus:border-accent focus:ring-2 focus:ring-accent/20
                     transition-colors
                   "
                 />
@@ -350,7 +350,7 @@
                     bg-white dark:bg-slate-700
                     px-4 py-2.5
                     text-slate-900 dark:text-white
-                    focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                    focus:border-accent focus:ring-2 focus:ring-accent/20
                     transition-colors
                   "
                 />
@@ -370,7 +370,7 @@
                     bg-white dark:bg-slate-700
                     px-4 py-2.5
                     text-slate-900 dark:text-white
-                    focus:border-sunrise focus:ring-2 focus:ring-sunrise/20
+                    focus:border-accent focus:ring-2 focus:ring-accent/20
                     transition-colors
                   "
                 />
@@ -384,9 +384,9 @@
             disabled={isSubmitting}
             class="
               w-full rounded-lg py-3
-              bg-gradient-to-r from-sunrise to-sunrise-coral
+              bg-gradient-to-r from-accent to-accent-warm
               text-white font-semibold
-              hover:from-sunrise-coral hover:to-sunrise
+              hover:from-accent-warm hover:to-accent
               disabled:opacity-50 disabled:cursor-not-allowed
               transition-all duration-300
               shadow-md hover:shadow-lg
@@ -413,7 +413,7 @@
               <div class="flex items-start justify-between">
                 <div>
                   <div class="flex items-center gap-2">
-                    <svg class="h-4 w-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="h-4 w-4 text-semantic-success" fill="currentColor" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                     </svg>
                     <span class="font-medium text-slate-900 dark:text-white">
@@ -439,7 +439,7 @@
                 {#if onDelete}
                   <button
                     onclick={() => handleDelete(summit.id)}
-                    class="rounded-lg p-2 text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 transition-colors"
+                    class="rounded-lg p-2 text-slate-400 hover:bg-semantic-danger/5 dark:hover:bg-semantic-danger/15 hover:text-semantic-danger transition-colors"
                     aria-label="Delete summit"
                   >
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

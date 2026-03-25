@@ -152,7 +152,7 @@
       {/if}
       {#if getUploader(currentImage)?.display_name}
         <p class="text-white/60 text-sm mt-1">
-          Photo by <a href="/users/{getUploadedBy(currentImage)}" class="text-sunrise hover:text-sunrise-coral">{getUploader(currentImage)?.display_name}</a>
+          Photo by <a href="/users/{getUploadedBy(currentImage)}" class="text-accent hover:text-accent-warm">{getUploader(currentImage)?.display_name}</a>
         </p>
       {/if}
     </div>
@@ -164,7 +164,7 @@
           const id = getImageId(currentImage);
           if (id) onFlag(id, 'inappropriate');
         }}
-        class="mt-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 text-white/60 text-xs hover:bg-red-500/30 hover:text-white transition-colors"
+        class="mt-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 text-white/60 text-xs hover:bg-semantic-danger/30 hover:text-white transition-colors"
       >
         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />

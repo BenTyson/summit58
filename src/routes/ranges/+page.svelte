@@ -14,22 +14,22 @@
   // Gradient backgrounds for range cards (rotating through a palette)
   const gradients = [
     'from-mountain-blue/20 to-mountain-mist/20',
-    'from-sunrise/20 to-sunrise-coral/20',
-    'from-emerald-500/20 to-teal-500/20',
+    'from-accent/20 to-accent-warm/20',
+    'from-semantic-success/20 to-semantic-success-light/20',
     'from-violet-500/20 to-purple-500/20',
-    'from-amber-500/20 to-orange-500/20',
-    'from-rose-500/20 to-pink-500/20',
+    'from-semantic-warning/20 to-semantic-warning/20',
+    'from-semantic-danger/50/20 to-pink-500/20',
     'from-cyan-500/20 to-sky-500/20'
   ];
 
   // Icon colors matching gradients
   const iconColors = [
     'text-mountain-blue dark:text-mountain-mist',
-    'text-sunrise',
-    'text-emerald-500',
+    'text-accent',
+    'text-semantic-success',
     'text-violet-500',
-    'text-amber-500',
-    'text-rose-500',
+    'text-semantic-warning',
+    'text-semantic-danger/50',
     'text-cyan-500'
   ];
 </script>
@@ -60,19 +60,19 @@
       <!-- Quick stats -->
       <div class="flex flex-wrap gap-6 mt-8">
         <div class="flex items-center gap-2 text-white/90">
-          <svg class="h-5 w-5 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-accent" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
           </svg>
           <span class="font-semibold">7 Ranges</span>
         </div>
         <div class="flex items-center gap-2 text-white/90">
-          <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
           </svg>
           <span class="font-semibold">58 Peaks</span>
         </div>
         <div class="flex items-center gap-2 text-white/90">
-          <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
           </svg>
           <span class="font-semibold">14,000'+ Elevation</span>
@@ -121,7 +121,7 @@
           {#if range.userSummitedCount !== undefined}
             <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-black/10">
               <div
-                class="h-full bg-emerald-500 transition-all duration-500"
+                class="h-full bg-semantic-success transition-all duration-500"
                 style="width: {progressPct}%"
               ></div>
             </div>
@@ -131,11 +131,11 @@
         <!-- Content -->
         <div class="p-5">
           <div class="flex items-start justify-between gap-2 mb-2">
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-sunrise transition-colors">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-accent transition-colors">
               {range.name}
             </h2>
             {#if range.userSummitedCount !== undefined && range.userSummitedCount > 0}
-              <span class="flex-shrink-0 px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-semibold">
+              <span class="flex-shrink-0 px-2 py-0.5 rounded-full bg-semantic-success/10 dark:bg-semantic-success/20 text-semantic-success-dark dark:text-semantic-success-light text-xs font-semibold">
                 {range.userSummitedCount}/{range.peakCount}
               </span>
             {/if}
@@ -172,7 +172,7 @@
 
         <!-- Hover indicator -->
         <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-          <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </div>
@@ -206,7 +206,7 @@
               : 0}
             <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
               <td class="px-6 py-4">
-                <a href="/ranges/{range.slug}" class="font-semibold text-slate-900 dark:text-white hover:text-sunrise transition-colors">
+                <a href="/ranges/{range.slug}" class="font-semibold text-slate-900 dark:text-white hover:text-accent transition-colors">
                   {range.name}
                 </a>
               </td>
@@ -228,7 +228,7 @@
                   <div class="flex items-center gap-2">
                     <div class="w-20 h-2 rounded-full bg-slate-200 dark:bg-slate-600 overflow-hidden">
                       <div
-                        class="h-full rounded-full {progressPct === 100 ? 'bg-emerald-500' : 'bg-sunrise'} transition-all"
+                        class="h-full rounded-full {progressPct === 100 ? 'bg-semantic-success' : 'bg-accent'} transition-all"
                         style="width: {progressPct}%"
                       ></div>
                     </div>

@@ -312,11 +312,11 @@
     <div
       class="
         h-1.5
-        {standardRoute?.difficulty_class === 1 ? 'bg-gradient-to-r from-class-1 to-emerald-400' :
+        {standardRoute?.difficulty_class === 1 ? 'bg-gradient-to-r from-class-1 to-semantic-success-light' :
          standardRoute?.difficulty_class === 2 ? 'bg-gradient-to-r from-class-2 to-blue-400' :
-         standardRoute?.difficulty_class === 3 ? 'bg-gradient-to-r from-class-3 to-amber-400' :
-         standardRoute?.difficulty_class === 4 ? 'bg-gradient-to-r from-class-4 to-rose-400' :
-         'bg-gradient-to-r from-sunrise to-sunrise-coral'}
+         standardRoute?.difficulty_class === 3 ? 'bg-gradient-to-r from-class-3 to-semantic-warning-light' :
+         standardRoute?.difficulty_class === 4 ? 'bg-gradient-to-r from-class-4 to-semantic-danger-light' :
+         'bg-gradient-to-r from-accent to-accent-warm'}
       "
     ></div>
 
@@ -324,11 +324,11 @@
       <!-- Top row: Breadcrumb + Summit button -->
       <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
         <nav class="flex flex-wrap items-center gap-x-2 text-sm text-slate-500 dark:text-slate-400">
-          <a href="/peaks" class="hover:text-sunrise transition-colors">Peaks</a>
+          <a href="/peaks" class="hover:text-accent transition-colors">Peaks</a>
           <span>›</span>
           <a
             href="/ranges/{peak.range?.toLowerCase().replace(/\s+/g, '-')}"
-            class="hover:text-sunrise transition-colors"
+            class="hover:text-accent transition-colors"
           >
             {peak.range}
           </a>
@@ -350,7 +350,7 @@
               <button
                 type="submit"
                 disabled={watchlistSubmitting}
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {isWatched ? 'text-sunrise hover:bg-sunrise/10' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'}"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {isWatched ? 'text-accent hover:bg-accent/10' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'}"
                 title={isWatched ? 'Remove from watchlist' : 'Add to watchlist'}
               >
                 <svg class="w-4 h-4" fill={isWatched ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
@@ -378,7 +378,7 @@
       <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
         <div>
           {#if standardRoute}
-            <p class="text-xs uppercase tracking-widest text-sunrise font-semibold mb-2">
+            <p class="text-xs uppercase tracking-widest text-accent font-semibold mb-2">
               Standard Route
             </p>
             <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
@@ -391,14 +391,14 @@
             </span>
             <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
               <span class="flex items-center gap-1.5">
-                <svg class="h-4 w-4 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="h-4 w-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                 </svg>
                 <span class="font-semibold text-slate-700 dark:text-slate-200">{peak.elevation.toLocaleString()}'</span>
               </span>
               <span class="text-slate-300 dark:text-slate-600">·</span>
               <span class="flex items-center gap-1.5">
-                <svg class="h-4 w-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="h-4 w-4 text-semantic-warning" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
                 <span class="font-semibold text-slate-700 dark:text-slate-200">#{peak.rank}</span>
@@ -439,7 +439,7 @@
   {#if peak.description}
     <section class="mt-10 animate-fade-in-up" style="animation-delay: 150ms">
       <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2">
-        <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         Overview
@@ -468,7 +468,7 @@
     <section class="mt-10 animate-fade-in-up" style="animation-delay: 275ms">
       <div class="flex items-center justify-between mb-4">
         <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2">
-          <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
           Add Photo
@@ -478,7 +478,7 @@
             {photoLimit.remaining} of 5 uploads remaining
           </span>
         {:else if photoLimit?.isPro}
-          <span class="text-sm text-sunrise font-medium">Unlimited uploads</span>
+          <span class="text-sm text-accent font-medium">Unlimited uploads</span>
         {/if}
       </div>
       {#if photoLimit && !photoLimit.allowed}
@@ -486,7 +486,7 @@
           <p class="text-slate-600 dark:text-slate-400 mb-3">You've reached the free photo limit for this peak.</p>
           <a
             href="/pricing"
-            class="inline-block px-6 py-2.5 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all"
+            class="inline-block px-6 py-2.5 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all"
           >
             Upgrade to Pro for unlimited uploads
           </a>
@@ -500,7 +500,7 @@
   <!-- Location -->
   <section class="mt-10 animate-fade-in-up" style="animation-delay: 200ms">
     <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2">
-      <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
@@ -527,8 +527,8 @@
           </div>
         </div>
         <div class="flex items-center gap-3">
-          <div class="h-10 w-10 rounded-full bg-sunrise/10 dark:bg-sunrise/20 flex items-center justify-center">
-            <svg class="h-5 w-5 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="h-10 w-10 rounded-full bg-accent/10 dark:bg-accent/20 flex items-center justify-center">
+            <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
             </svg>
           </div>
@@ -546,7 +546,7 @@
   <!-- Routes -->
   <section class="mt-10 animate-fade-in-up" style="animation-delay: 250ms">
     <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2">
-      <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
       </svg>
       Routes
@@ -604,7 +604,7 @@
   <div class="bg-slate-50 dark:bg-slate-800/50 py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="heading-section text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-        <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
@@ -648,7 +648,7 @@
           href="https://www.google.com/maps/search/?api=1&query={peak.latitude},{peak.longitude}"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-sunrise hover:text-sunrise-coral transition-colors flex items-center gap-1"
+          class="text-accent hover:text-accent-warm transition-colors flex items-center gap-1"
         >
           Open in Google Maps
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -665,8 +665,8 @@
   <section class="mt-12 animate-fade-in-up">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="heading-section text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-        <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-sunrise/10">
-          <svg class="h-5 w-5 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+        <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10">
+          <svg class="h-5 w-5 text-accent" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
           </svg>
         </span>
@@ -694,8 +694,8 @@
 {#if showUpgradePrompt}
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full mx-4 p-8 text-center">
-      <div class="mx-auto h-16 w-16 rounded-full bg-sunrise/10 flex items-center justify-center mb-4">
-        <svg class="h-8 w-8 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="mx-auto h-16 w-16 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+        <svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       </div>
@@ -708,7 +708,7 @@
       <div class="flex flex-col gap-3">
         <a
           href="/pricing"
-          class="block w-full px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md"
+          class="block w-full px-6 py-3 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all shadow-md"
         >
           Upgrade to Pro -- $29.99/yr
         </a>
@@ -727,8 +727,8 @@
 {#if showPhotoUpgradePrompt}
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full mx-4 p-8 text-center">
-      <div class="mx-auto h-16 w-16 rounded-full bg-sunrise/10 flex items-center justify-center mb-4">
-        <svg class="h-8 w-8 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="mx-auto h-16 w-16 rounded-full bg-accent/10 flex items-center justify-center mb-4">
+        <svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       </div>
@@ -741,7 +741,7 @@
       <div class="flex flex-col gap-3">
         <a
           href="/pricing"
-          class="block w-full px-6 py-3 rounded-lg bg-gradient-to-r from-sunrise to-sunrise-coral text-white font-medium hover:from-sunrise-coral hover:to-sunrise transition-all shadow-md"
+          class="block w-full px-6 py-3 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all shadow-md"
         >
           Upgrade to Pro -- $29.99/yr
         </a>
@@ -761,8 +761,8 @@
   <div class="fixed bottom-20 right-4 z-50 animate-fade-in-up">
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-card-elevated border border-slate-200 dark:border-slate-700 p-4 max-w-sm">
       <div class="flex items-start gap-3">
-        <div class="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
-          <svg class="h-5 w-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="h-10 w-10 rounded-full bg-semantic-success/10 dark:bg-semantic-success/20 flex items-center justify-center flex-shrink-0">
+          <svg class="h-5 w-5 text-semantic-success-dark dark:text-semantic-success-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         </div>

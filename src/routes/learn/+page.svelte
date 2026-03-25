@@ -60,16 +60,16 @@
   <!-- Start Here Section -->
   <section id="start" class="scroll-mt-20 animate-fade-in-up">
     <div class="flex items-center gap-4 mb-8">
-      <div class="flex-1 h-px bg-gradient-to-r from-sunrise/50 to-transparent"></div>
+      <div class="flex-1 h-px bg-gradient-to-r from-accent/50 to-transparent"></div>
       <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-3">
-        <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-sunrise/10">
-          <svg class="h-5 w-5 text-sunrise" fill="currentColor" viewBox="0 0 24 24">
+        <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10">
+          <svg class="h-5 w-5 text-accent" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
           </svg>
         </span>
         Start Here
       </h2>
-      <div class="flex-1 h-px bg-gradient-to-l from-sunrise/50 to-transparent"></div>
+      <div class="flex-1 h-px bg-gradient-to-l from-accent/50 to-transparent"></div>
     </div>
 
     <p class="text-center text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto">
@@ -82,7 +82,7 @@
         title="Your First 14er"
         description="What to expect, when to go, and how to pick the right peak for your first summit."
         icon="mountain"
-        color="sunrise"
+        color="accent"
         number={1}
       />
       <TopicCard
@@ -147,8 +147,8 @@
       <details class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm hover:shadow-card transition-shadow">
         <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
           <span class="font-semibold text-slate-900 dark:text-white">What is a 14er?</span>
-          <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-sunrise/10 transition-colors">
-            <svg class="h-5 w-5 text-slate-400 group-open:text-sunrise transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-accent/10 transition-colors">
+            <svg class="h-5 w-5 text-slate-400 group-open:text-accent transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </div>
@@ -161,8 +161,8 @@
       <details class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm hover:shadow-card transition-shadow">
         <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
           <span class="font-semibold text-slate-900 dark:text-white">When is the best time to climb?</span>
-          <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-sunrise/10 transition-colors">
-            <svg class="h-5 w-5 text-slate-400 group-open:text-sunrise transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-accent/10 transition-colors">
+            <svg class="h-5 w-5 text-slate-400 group-open:text-accent transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </div>
@@ -175,8 +175,8 @@
       <details class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm hover:shadow-card transition-shadow">
         <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
           <span class="font-semibold text-slate-900 dark:text-white">How fit do I need to be?</span>
-          <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-sunrise/10 transition-colors">
-            <svg class="h-5 w-5 text-slate-400 group-open:text-sunrise transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-accent/10 transition-colors">
+            <svg class="h-5 w-5 text-slate-400 group-open:text-accent transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </div>
@@ -189,8 +189,8 @@
       <details class="group rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm hover:shadow-card transition-shadow">
         <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
           <span class="font-semibold text-slate-900 dark:text-white">What does "Class 1-4" mean?</span>
-          <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-sunrise/10 transition-colors">
-            <svg class="h-5 w-5 text-slate-400 group-open:text-sunrise transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex-shrink-0 ml-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-open:bg-accent/10 transition-colors">
+            <svg class="h-5 w-5 text-slate-400 group-open:text-accent transition-all group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </div>
@@ -256,7 +256,7 @@
   <section class="mt-20 animate-fade-in-up" style="animation-delay: 400ms">
     <div class="relative rounded-3xl overflow-hidden bg-gradient-to-br from-mountain-blue via-mountain-blue-light to-mountain-mist p-8 sm:p-12">
       <!-- Decorative elements -->
-      <div class="absolute top-0 right-0 w-64 h-64 bg-sunrise/10 rounded-full blur-3xl"></div>
+      <div class="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl"></div>
       <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
 
       <div class="relative text-center max-w-2xl mx-auto">
@@ -278,7 +278,7 @@
           </a>
           <a
             href="/learn/first-fourteener"
-            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-sunrise text-white font-semibold hover:bg-sunrise-coral transition-colors"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-accent text-white font-semibold hover:bg-accent-warm transition-colors"
           >
             Take the Quiz
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

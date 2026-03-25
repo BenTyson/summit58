@@ -76,10 +76,10 @@
 
   // Difficulty class colors
   const classColors: Record<number, string> = {
-    1: '#22c55e', // green
-    2: '#3b82f6', // blue
-    3: '#eab308', // yellow
-    4: '#ef4444', // red
+    1: '#5A9E78', // muted sage
+    2: '#4A7FB5', // muted blue
+    3: '#C4943F', // muted ochre
+    4: '#B84C4C', // muted brick
   };
 
   function switchMapType(type: MapType) {
@@ -439,13 +439,13 @@
   }
 
   .map-type-btn.active {
-    background: linear-gradient(135deg, #f97316, #fb923c);
+    background: linear-gradient(135deg, #C8A55C, #D4BC7E);
     color: white;
-    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 2px 8px rgba(200, 165, 92, 0.3);
   }
 
   :global(.dark) .map-type-btn.active {
-    background: linear-gradient(135deg, #f97316, #fb923c);
+    background: linear-gradient(135deg, #C8A55C, #D4BC7E);
     color: white;
   }
 
@@ -545,7 +545,7 @@
     border-radius: 6px;
     font-size: 11px;
     font-weight: 600;
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+    background: linear-gradient(135deg, #5A9E78, #3A8168);
     color: white;
   }
 
@@ -619,10 +619,10 @@
     font-size: 13px;
     font-weight: 600;
     text-decoration: none !important;
-    background: linear-gradient(135deg, #f97316, #fb923c);
+    background: linear-gradient(135deg, #C8A55C, #D4BC7E);
     color: #ffffff !important;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+    box-shadow: 0 2px 8px rgba(200, 165, 92, 0.3);
   }
 
   :global(.popup-button:visited),
@@ -634,7 +634,7 @@
   :global(.popup-button:hover) {
     color: #ffffff !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+    box-shadow: 0 4px 12px rgba(200, 165, 92, 0.4);
   }
 
   :global(.popup-button svg) {
@@ -660,7 +660,7 @@
   }
 
   :global(.dark .leaflet-control-attribution a) {
-    color: #f97316;
+    color: #C8A55C;
   }
 
   /* Zoom controls */

@@ -58,7 +58,7 @@
   <!-- Section Header -->
   <div class="flex items-center gap-3 mb-6">
     <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2">
-      <svg class="h-6 w-6 text-sunrise" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
       Photos
@@ -79,7 +79,7 @@
           class="
             flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors
             {selectedCategory === null
-              ? 'bg-sunrise text-white'
+              ? 'bg-accent text-white'
               : 'bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}
           "
         >
@@ -91,7 +91,7 @@
             class="
               flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors
               {selectedCategory === cat
-                ? 'bg-sunrise text-white'
+                ? 'bg-accent text-white'
                 : 'bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'}
             "
           >
@@ -110,9 +110,9 @@
             class="
               w-full aspect-square rounded-xl overflow-hidden
               bg-slate-100 dark:bg-slate-800
-              hover:ring-2 hover:ring-sunrise hover:ring-offset-2 dark:hover:ring-offset-slate-900
+              hover:ring-2 hover:ring-accent hover:ring-offset-2 dark:hover:ring-offset-slate-900
               transition-all duration-200
-              focus:outline-none focus:ring-2 focus:ring-sunrise focus:ring-offset-2
+              focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2
             "
           >
             <img
@@ -168,7 +168,7 @@
                 p-1.5 rounded-full bg-black/30
                 opacity-0 group-hover:opacity-100
                 transition-opacity duration-200
-                text-white hover:bg-red-500/80
+                text-white hover:bg-semantic-danger/80
               "
               title="Report photo"
             >
@@ -182,7 +182,7 @@
           {#if image.uploader?.display_name}
             <a
               href="/users/{image.uploaded_by}"
-              class="block mt-1 text-xs text-slate-500 dark:text-slate-400 hover:text-sunrise truncate"
+              class="block mt-1 text-xs text-slate-500 dark:text-slate-400 hover:text-accent truncate"
             >
               {image.uploader.display_name}
             </a>
@@ -242,7 +242,7 @@
         <button
           onclick={submitFlag}
           disabled={flagSubmitting}
-          class="flex-1 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 disabled:opacity-50"
+          class="flex-1 px-4 py-2 rounded-lg bg-semantic-danger-dark text-white text-sm font-medium hover:bg-semantic-danger-dark disabled:opacity-50"
         >
           {flagSubmitting ? 'Reporting...' : 'Report'}
         </button>
