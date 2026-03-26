@@ -1,6 +1,7 @@
 import type { LayoutServerLoad } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getSubscription, type Subscription } from '$lib/server/subscriptions';
+import { isAdmin } from '$lib/server/admin';
 
 export const load: LayoutServerLoad = async ({ cookies }) => {
   const supabase = createSupabaseServerClient(cookies);
@@ -29,6 +30,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
     session,
     profile,
     subscription,
-    peaks: peaks ?? []
+    peaks: peaks ?? [],
+    isAdmin: isAdmin(session?.user?.id)
   };
 };

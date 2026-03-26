@@ -96,6 +96,8 @@ export const actions: Actions = {
 | ContentSection | `components/learn/` | Themed content block for guides |
 | TableOfContents | `components/learn/` | Sidebar/inline TOC for guides |
 | CalloutBox | `components/learn/` | Warning/tip/info callout |
+| AdminTabs | `components/admin/` | Route-based tab nav for admin (uses `<a>` links, not `?tab=` params) |
+| StatCard | `components/admin/` | Reusable metric card (value, label, variant color, optional link) |
 
 ## Key Routes
 
@@ -121,7 +123,11 @@ export const actions: Actions = {
 | `/blog` | Blog hub |
 | `/blog/welcome` | Welcome to SaltGoat post |
 | `/blog/why-we-built-saltgoat` | Origin story post |
-| `/admin` | Moderation dashboard (admin-only) |
+| `/admin` | Admin dashboard — overview metrics (admin-only) |
+| `/admin/moderation` | Flagged photos, content flags, recent uploads, resolved history |
+| `/admin/users` | User list with search, sort, pagination, plan badges |
+| `/admin/content` | Browse all UGC by type (photos, reviews, reports, traces) |
+| `/admin/subscriptions` | Subscription metrics + breakdown table |
 | `/guidelines` | Community guidelines |
 | `/auth` | Login/signup |
 

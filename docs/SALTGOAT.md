@@ -77,6 +77,7 @@ src/
 ├── lib/
 │   ├── components/
 │   │   ├── ui/        → Container, Badge, AchievementIcon, Skeleton
+│   │   ├── admin/     → AdminTabs, StatCard
 │   │   ├── layout/    → Header, Footer, ThemeToggle
 │   │   ├── peak/      → PeakCard, PeakHero, StatsBar, QuickFacts
 │   │   ├── route/     → RouteCard
@@ -103,6 +104,7 @@ src/
 │   │   ├── images.ts         → Image gallery CRUD + optimization
 │   │   ├── imageOptimizer.ts → Sharp-based image processing
 │   │   ├── conditions.ts     → Weather fetch + queries
+│   │   ├── admin.ts          → Admin auth (isAdmin, assertAdmin) + all admin dashboard queries
 │   │   └── gpx.ts            → GPX to GeoJSON parsing
 │   ├── utils/
 │   │   └── geo.ts          → Geographic utilities (distance, elevation)
@@ -122,6 +124,14 @@ src/
 │   ├── learn/                    → Educational guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq)
 │   ├── blog/                     → Blog hub + posts (welcome, why-we-built-saltgoat)
 │   ├── users/[id]/+page.svelte   → Public user profile
+│   ├── admin/                    → Admin dashboard (nested routes)
+│   │   ├── +layout.server.ts    → Auth guard + shared badge counts
+│   │   ├── +layout.svelte       → Admin chrome (title, tabs, container)
+│   │   ├── +page.*              → Overview tab (default)
+│   │   ├── moderation/          → Flagged photos, flags, recent uploads, resolved history
+│   │   ├── users/               → User management (search, sort, pagination)
+│   │   ├── content/             → Content browser (photos, reviews, reports, traces)
+│   │   └── subscriptions/       → Subscription metrics + table
 │   └── profile/+page.svelte      → "My 58" dashboard + achievements
 
 static/brand/                     → Logo assets (SaltGoat_LogoGoat.png, SaltGoat_LogoGoat_White.png)
@@ -233,6 +243,18 @@ static/images/peaks/              → Custom peak hero images
 - Profile tabs fully implemented: Activity, Photos, Trips, Buddies
 - Follow system with follower/following lists and suggestions
 - Trip planning with create/edit/delete
+
+### Admin Dashboard
+- 5-tab nested-route dashboard at `/admin` (overview, moderation, users, content, subscriptions)
+- Auth centralized in `src/lib/server/admin.ts` — `isAdmin()`, `assertAdmin()`, all admin queries
+- Layout guard at `src/routes/admin/+layout.server.ts` — single auth check for all tabs
+- **Overview:** platform metrics (total users, active 7d, pro subs, pending moderation), content totals, recent signups, quick alerts
+- **Moderation:** flagged photos with approve/remove, pending content flags with dismiss/action, recent uploads for proactive review, resolved flags history
+- **Users:** searchable/sortable user table with pagination (25/page), plan badges, summit/photo counts, profile links
+- **Content:** browse all UGC by type filter (photos, reviews, trail reports, GPX traces), status filter for photos, pagination, admin delete/moderate actions
+- **Subscriptions:** pro/free/conversion metrics, status breakdown (active, trialing, canceled, past_due), full subscription table
+- Shared components: `AdminTabs` (route-based `<a>` nav, not `?tab=` params), `StatCard` (metric card with variant colors)
+- Admin check: hardcoded user ID for single admin, re-exported from `images.ts` for backward compat
 
 ### Content & SEO
 - Learn section: 6 guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq)
@@ -349,6 +371,7 @@ Dark mode: `.dark` class on html element. Header + Footer use dual logo images: 
 - 2026-03-14: Rebrand Cairn58 → SaltGoat (domain saltgoat.co), Plausible → Umami analytics
 - 2026-03-25: Color palette refactor (warm gold accent, desaturated semantics)
 - 2026-03-25: UI polish — dark mode logo, profile header redesign, gallery overlay fixes, range table fixes
+- 2026-03-26: Admin dashboard — 5-tab nested routes (overview, moderation, users, content, subscriptions), centralized admin auth in admin.ts
 
 ---
 

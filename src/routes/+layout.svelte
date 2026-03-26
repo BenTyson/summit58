@@ -7,8 +7,6 @@
   import ReloadPrompt from '$lib/components/pwa/ReloadPrompt.svelte';
   import type { LayoutData } from './$types';
 
-  const ADMIN_USER_ID = 'c983d602-d0e0-4da6-be9d-f91a456bfdb0';
-
   interface Props {
     children: import('svelte').Snippet;
     data: LayoutData;
@@ -16,7 +14,7 @@
 
   let { children, data }: Props = $props();
 
-  const isAdmin = $derived(data.session?.user?.id === ADMIN_USER_ID);
+  const isAdmin = $derived(data.isAdmin);
   const isHome = $derived($page.url.pathname === '/');
 </script>
 

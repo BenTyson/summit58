@@ -15,12 +15,13 @@ SvelteKit 5 (App Router) + Supabase (cloud) + Tailwind 3 + Railway
 ## Project Structure
 
 ```
-src/lib/components/   UI components (peak/, profile/, map/, search/, etc.)
-src/lib/server/       Server-side queries & mutations (peaks, summits, reviews, etc.)
+src/lib/components/   UI components (peak/, profile/, map/, search/, admin/, etc.)
+src/lib/server/       Server-side queries & mutations (peaks, summits, reviews, admin, etc.)
 src/lib/data/         Static data (ranges, achievements)
 src/lib/utils/        Utilities (geo.ts)
 src/lib/types/        Generated Supabase types
 src/routes/           Pages & API endpoints
+src/routes/admin/     Admin dashboard (nested routes: overview, moderation, users, content, subscriptions)
 static/images/peaks/  Peak hero images (58 optimized JPEGs, NOT in Supabase storage)
 supabase/migrations/  Database migrations (46+)
 scripts/              Utility scripts (image optimization, GPX import)
@@ -63,7 +64,11 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 | `/auth` | Login/signup |
 | `/learn/*` | Educational guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq) |
 | `/blog`, `/blog/*` | Blog hub + posts |
-| `/admin` | Moderation dashboard (admin-only) |
+| `/admin` | Admin dashboard — overview (default tab) |
+| `/admin/moderation` | Content moderation (flagged photos, flags, recent uploads) |
+| `/admin/users` | User management (search, sort, pagination) |
+| `/admin/content` | Content browser (photos, reviews, trail reports, traces) |
+| `/admin/subscriptions` | Subscription metrics + user subscription table |
 | `/guidelines` | Community guidelines |
 
 ## Known Issues
@@ -77,7 +82,9 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 - PWA glob warning is harmless (ignore it)
 - `semver` circular dependency warning in node_modules (harmless)
 - API endpoints: `/api/webhooks/weather`, `/api/checkout`, `/api/portal`, `/api/webhooks/stripe` (last 3 are stubs)
-- Admin check: hardcoded user ID in `src/lib/server/images.ts` (used for admin page gate + moderation)
+- Admin check: centralized in `src/lib/server/admin.ts` — `isAdmin()` + `assertAdmin()` (hardcoded user ID, re-exported from `images.ts` for backward compat)
+- Admin dashboard uses nested routes (not `?tab=` params) — each tab has its own `+page.server.ts` with scoped data loading and form actions
+- Admin layout at `src/routes/admin/+layout.server.ts` handles auth guard once for all tabs
 
 ## Deep Dive Docs
 

@@ -11,13 +11,10 @@ export type PeakImageWithUploader = PeakImage & {
   uploader: { id: string; display_name: string | null } | null;
 };
 
-const ADMIN_USER_ID = 'c983d602-d0e0-4da6-be9d-f91a456bfdb0';
+export { isAdmin } from './admin';
+
 const STORAGE_BUCKET = 'peak-images';
 const FREE_PHOTO_LIMIT = 5;
-
-export function isAdmin(userId: string | undefined): boolean {
-  return userId === ADMIN_USER_ID;
-}
 
 // Check if user can upload another photo for a peak
 export async function canUploadPhoto(

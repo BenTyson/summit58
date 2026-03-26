@@ -78,18 +78,14 @@
         href="/"
         class="group flex items-center gap-2.5 text-xl font-bold {transparent && !scrolled ? 'text-white' : 'text-mountain-blue dark:text-white'}"
       >
-        <img
-          src="/brand/SaltGoat_LogoGoat.png"
-          alt=""
-          class="h-9 w-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 {transparent && !scrolled ? 'hidden' : 'block dark:hidden'}"
-          aria-hidden="true"
-        />
-        <img
-          src="/brand/SaltGoat_LogoGoat_White.png"
-          alt=""
-          class="h-9 w-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 {transparent && !scrolled ? 'block' : 'hidden dark:block'}"
-          aria-hidden="true"
-        />
+        <span class="inline-flex items-center justify-center rounded-full transition-all duration-300 h-11 w-11 {transparent && !scrolled ? 'bg-white/90' : 'dark:bg-white'}">
+          <img
+            src="/brand/SaltGoat_LogoGoat.png"
+            alt=""
+            class="h-8 w-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+            aria-hidden="true"
+          />
+        </span>
         <span class="font-display text-2xl tracking-tight">SaltGoat</span>
       </a>
 

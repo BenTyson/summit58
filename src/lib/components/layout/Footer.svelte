@@ -26,18 +26,14 @@
       <!-- Logo and tagline -->
       <div class="flex flex-col items-center gap-3 sm:flex-row sm:items-center">
         <a href="/" class="group flex items-center gap-2">
-          <img
-            src="/brand/SaltGoat_LogoGoat.png"
-            alt=""
-            class="h-8 w-auto transition-transform duration-300 group-hover:scale-110 block dark:hidden"
-            aria-hidden="true"
-          />
-          <img
-            src="/brand/SaltGoat_LogoGoat_White.png"
-            alt=""
-            class="h-8 w-auto transition-transform duration-300 group-hover:scale-110 hidden dark:block"
-            aria-hidden="true"
-          />
+          <span class="inline-flex items-center justify-center rounded-full h-10 w-10 dark:bg-white">
+            <img
+              src="/brand/SaltGoat_LogoGoat.png"
+              alt=""
+              class="h-7 w-auto transition-transform duration-300 group-hover:scale-110"
+              aria-hidden="true"
+            />
+          </span>
           <span
             class="font-display text-xl font-semibold text-slate-700 dark:text-slate-200"
           >

@@ -1,10 +1,10 @@
 import type { PageServerLoad } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
-import { getAdminOverviewStats } from '$lib/server/admin';
+import { getSubscriptionMetrics } from '$lib/server/admin';
 
 export const load: PageServerLoad = async ({ cookies }) => {
   const supabase = createSupabaseServerClient(cookies);
-  const stats = await getAdminOverviewStats(supabase);
+  const metrics = await getSubscriptionMetrics(supabase);
 
-  return { stats };
+  return { metrics };
 };

@@ -106,10 +106,16 @@ Created: 2026-03-07
 - [ ] Email digests (weekly/monthly) -- needs email provider (Resend, SendGrid, etc.)
 - [ ] Sentry error monitoring
 - [ ] Rate limiting on form actions
-
 - [ ] Accessibility audit
-- [ ] Admin dashboard
 - [x] ~~Remaining hero images~~ (all 58 complete)
+- [x] Admin dashboard (5-tab nested-route dashboard: overview, moderation, users, content, subscriptions)
+  - Centralized admin auth in `src/lib/server/admin.ts` (`isAdmin`, `assertAdmin`, all admin queries)
+  - Layout auth guard at `src/routes/admin/+layout.server.ts` — runs once for all tabs
+  - Overview: platform metrics (users, active 7d, pro subs, pending moderation), content totals, recent signups, alerts
+  - Moderation: migrated + enhanced (flagged photos, content flags, recent uploads, resolved flags history)
+  - Users: searchable/sortable table with pagination, plan badges, summit/photo counts
+  - Content: browse all UGC by type filter (photos, reviews, trail reports, GPX traces) with admin actions
+  - Subscriptions: pro/free breakdown, conversion rate, past-due alerts, full subscription table
 
 ## Execution Order
 
