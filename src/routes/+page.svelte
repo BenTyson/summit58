@@ -301,40 +301,41 @@
         </a>
       </div>
 
-      <!-- Visual: Stylized Range Silhouettes -->
-      <div class="order-1 lg:order-2 relative">
-        <div class="aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-mountain-mist/30 via-mountain-blue/20 to-mountain-navy/30 dark:from-slate-800 dark:to-slate-700 relative shadow-2xl shadow-mountain-blue/10">
-          <!-- Layered mountain silhouettes -->
-          <svg class="absolute inset-0 w-full h-full" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
-            <!-- Sky gradient -->
-            <defs>
-              <linearGradient id="sky-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#1e3a5f" stop-opacity="0.1" />
-                <stop offset="100%" stop-color="#4A7FB5" stop-opacity="0.05" />
-              </linearGradient>
-            </defs>
-            <rect x="0" y="0" width="400" height="300" fill="url(#sky-gradient)" />
-
-            <!-- Back range - San Juans -->
-            <path d="M0,300 L0,180 L40,200 L80,140 L120,170 L160,110 L200,150 L240,90 L280,130 L320,100 L360,140 L400,120 L400,300 Z" class="fill-mountain-mist/50 dark:fill-slate-600/50" />
-            <!-- Mid range - Sawatch -->
-            <path d="M0,300 L0,200 L50,220 L100,160 L150,190 L200,130 L250,170 L300,120 L350,160 L400,140 L400,300 Z" class="fill-mountain-blue/60 dark:fill-slate-500/60" />
-            <!-- Front range - Elks -->
-            <path d="M0,300 L0,220 L60,250 L120,180 L180,220 L240,160 L300,200 L360,170 L400,190 L400,300 Z" class="fill-mountain-navy/70 dark:fill-slate-400/40" />
-            <!-- Accent peaks with snow caps -->
-            <path d="M180,160 L200,100 L220,160" class="fill-accent" />
-            <path d="M190,140 L200,110 L210,140" class="fill-white/80" />
-            <path d="M300,140 L320,90 L340,140" class="fill-accent/80" />
-            <path d="M308,125 L320,100 L332,125" class="fill-white/70" />
-          </svg>
-
-          <!-- Range labels floating -->
-          <div class="absolute top-4 left-4 sm:top-6 sm:left-6 px-3 py-1.5 rounded-full bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm shadow-lg">
-            <span class="text-xs font-bold text-mountain-blue dark:text-mountain-mist">7 Ranges</span>
-          </div>
-          <div class="absolute top-4 right-4 sm:top-6 sm:right-6 px-3 py-1.5 rounded-full bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm shadow-lg">
-            <span class="text-xs font-bold text-accent">58 Peaks</span>
-          </div>
+      <!-- Visual: Range Photo Grid -->
+      <div class="order-1 lg:order-2">
+        <div class="grid grid-cols-2 gap-3">
+          <a href="/ranges/elk-mountains" class="group relative aspect-square rounded-2xl overflow-hidden shadow-lg">
+            <img src="/images/peaks/Maroon_Peak.jpg" alt="Maroon Peak — Elk Mountains" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+            <div class="absolute bottom-3 left-3 right-3">
+              <p class="text-white font-semibold text-sm">Elk Mountains</p>
+              <p class="text-white/70 text-xs">6 peaks</p>
+            </div>
+          </a>
+          <a href="/ranges/san-juan-mountains" class="group relative aspect-square rounded-2xl overflow-hidden shadow-lg">
+            <img src="/images/peaks/Handies_Peak.jpg" alt="Handies Peak — San Juan Mountains" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+            <div class="absolute bottom-3 left-3 right-3">
+              <p class="text-white font-semibold text-sm">San Juans</p>
+              <p class="text-white/70 text-xs">13 peaks</p>
+            </div>
+          </a>
+          <a href="/ranges/sawatch-range" class="group relative aspect-square rounded-2xl overflow-hidden shadow-lg">
+            <img src="/images/peaks/Huron_Peak.jpg" alt="Huron Peak — Sawatch Range" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+            <div class="absolute bottom-3 left-3 right-3">
+              <p class="text-white font-semibold text-sm">Sawatch</p>
+              <p class="text-white/70 text-xs">15 peaks</p>
+            </div>
+          </a>
+          <a href="/ranges/sangre-de-cristo-range" class="group relative aspect-square rounded-2xl overflow-hidden shadow-lg">
+            <img src="/images/peaks/Crestone_Peak.jpg" alt="Crestone Peak — Sangre de Cristo Range" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+            <div class="absolute bottom-3 left-3 right-3">
+              <p class="text-white font-semibold text-sm">Sangre de Cristo</p>
+              <p class="text-white/70 text-xs">10 peaks</p>
+            </div>
+          </a>
         </div>
       </div>
     </div>
