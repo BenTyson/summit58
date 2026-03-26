@@ -78,8 +78,9 @@ Created: 2026-03-07
 - [x] Photo category/tag field on `peak_images` (e.g. `category TEXT`)
   - Categories: Summit, Trailhead, Trail, Hazards, Vistas, Wildlife, Parking & Road Access, Wildflowers, Winter Conditions, Camping
   - Category selector in ImageUploader (dropdown or chip picker)
-- [x] Gallery filtering on peak pages (filter chips above photo grid)
-- [x] Category badge overlay on gallery thumbnails
+- [x] Gallery filtering on peak pages (filter chips with counts, toggle on/off)
+- [x] Category + uploader shown below each thumbnail (category click filters)
+- [x] Hover overlay: caption + uploader (no overlap with below-image label)
 - [x] Category shown in lightbox view
 
 ### Phase 6c: User GPX Uploads [DONE]

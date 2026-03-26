@@ -26,14 +26,18 @@
       <!-- Logo and tagline -->
       <div class="flex flex-col items-center gap-3 sm:flex-row sm:items-center">
         <a href="/" class="group flex items-center gap-2">
-          <svg
-            class="h-7 w-7 text-accent transition-transform duration-300 group-hover:scale-110"
-            viewBox="0 0 24 24"
-            fill="currentColor"
+          <img
+            src="/brand/SaltGoat_LogoGoat.png"
+            alt=""
+            class="h-8 w-auto transition-transform duration-300 group-hover:scale-110 block dark:hidden"
             aria-hidden="true"
-          >
-            <path d="M12 2L2 22h20L12 2zm0 4l7 14H5l7-14z" />
-          </svg>
+          />
+          <img
+            src="/brand/SaltGoat_LogoGoat_White.png"
+            alt=""
+            class="h-8 w-auto transition-transform duration-300 group-hover:scale-110 hidden dark:block"
+            aria-hidden="true"
+          />
           <span
             class="font-display text-xl font-semibold text-slate-700 dark:text-slate-200"
           >

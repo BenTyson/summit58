@@ -85,7 +85,7 @@ src/
 │   │   ├── trail/     → TrailReportForm, TrailReportCard
 │   │   ├── parking/   → ParkingCard
 │   │   ├── profile/   → Achievements, ProfileHeader, ProfileTabs, ProfileStats, EditProfileModal
-│   │   ├── gallery/   → ImageGallery, ImageUploader
+│   │   ├── gallery/   → ImageGallery, ImageUploader, Lightbox
 │   │   ├── weather/   → WeatherCard
 │   │   ├── map/       → PeakMap, TrailMap, ElevationProfile, TrailMapSection
 │   │   └── search/    → SearchModal
@@ -124,6 +124,7 @@ src/
 │   ├── users/[id]/+page.svelte   → Public user profile
 │   └── profile/+page.svelte      → "My 58" dashboard + achievements
 
+static/brand/                     → Logo assets (SaltGoat_LogoGoat.png, SaltGoat_LogoGoat_White.png)
 static/images/peaks/              → Custom peak hero images
 ```
 
@@ -222,7 +223,7 @@ static/images/peaks/              → Custom peak hero images
 - Clickable usernames on leaderboard link to profiles
 
 ### Social Profile Infrastructure
-- Rich profile header with cover photo and avatar
+- Profile header: cover photo (full-bleed), large square avatar (rounded-2xl, 120/140px), info panel below (no overlap)
 - Tab-based layout: Overview, Activity, Photos, Trips, Buddies
 - Social links: Instagram, Strava, personal website
 - Profile fields: tagline, favorite peak, years hiking
@@ -280,14 +281,16 @@ export const actions: Actions = {
 
 | Element | Classes |
 |---------|---------|
-| Class 1-4 colors | `class-1` (green), `class-2` (blue), `class-3` (yellow), `class-4` (red) |
+| Primary accent | `accent` (warm gold #C8A55C), `accent-light`, `accent-dark`, `accent-warm`, `accent-muted` |
+| Semantic colors | `semantic-success` (sage), `semantic-danger` (brick), `semantic-warning` (ochre) — each with `-light`/`-dark` |
+| Class 1-4 colors | `class-1` (muted sage), `class-2` (muted blue), `class-3` (muted ochre), `class-4` (muted brick) |
 | Cards | `shadow-card`, `shadow-card-hover`, `shadow-card-elevated` |
-| Glows | `shadow-glow-class-1` through `shadow-glow-class-4` |
+| Glows | `shadow-glow-accent`, `shadow-glow-class-1` through `shadow-glow-class-4` |
 | Animations | `animate-fade-in-up`, `animate-float`, `animate-pulse-subtle` |
-| Gradients | `bg-gradient-to-r from-sunrise to-sunrise-coral` |
+| Gradients | `bg-gradient-to-r from-accent to-accent-warm` |
 | Fonts | Display: Instrument Serif, Body: Inter |
 
-Dark mode: `.dark` class on html element.
+Dark mode: `.dark` class on html element. Header + Footer use dual logo images: `SaltGoat_LogoGoat.png` (light) / `SaltGoat_LogoGoat_White.png` (dark) swapped via `dark:hidden` / `hidden dark:block`. Header also shows white logo when transparent (hero pages, not scrolled).
 
 ---
 
@@ -344,6 +347,8 @@ Dark mode: `.dark` class on html element.
 - 2026-03-12: Phase 6b (photo categories + gallery filters)
 - 2026-03-13: Phase 6c started (GPX trace infrastructure, post-login redirect for auth CTAs)
 - 2026-03-14: Rebrand Cairn58 → SaltGoat (domain saltgoat.co), Plausible → Umami analytics
+- 2026-03-25: Color palette refactor (warm gold accent, desaturated semantics)
+- 2026-03-25: UI polish — dark mode logo, profile header redesign, gallery overlay fixes, range table fixes
 
 ---
 

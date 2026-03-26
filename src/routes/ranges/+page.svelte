@@ -185,7 +185,7 @@
     <h2 class="heading-section text-slate-900 dark:text-white mb-6">
       Range Comparison
     </h2>
-    <div class="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden bg-white dark:bg-slate-800 shadow-card">
+    <div class="rounded-xl border border-slate-200 dark:border-slate-700 overflow-x-auto bg-white dark:bg-slate-800 shadow-card">
       <table class="w-full">
         <thead>
           <tr class="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">
@@ -217,10 +217,10 @@
                 <div class="text-slate-900 dark:text-white font-medium">{range.highestElevation.toLocaleString()}'</div>
                 <div class="text-xs text-slate-500 dark:text-slate-400">{range.highestPeak}</div>
               </td>
-              <td class="text-center px-4 py-4 text-slate-600 dark:text-slate-300">
+              <td class="text-center px-4 py-4 text-slate-600 dark:text-slate-300 whitespace-nowrap">
                 {range.classRange}
               </td>
-              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 max-w-xs truncate">
+              <td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
                 {range.character}
               </td>
               {#if isLoggedIn}

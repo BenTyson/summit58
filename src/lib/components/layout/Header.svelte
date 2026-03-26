@@ -81,7 +81,13 @@
         <img
           src="/brand/SaltGoat_LogoGoat.png"
           alt=""
-          class="h-9 w-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+          class="h-9 w-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 {transparent && !scrolled ? 'hidden' : 'block dark:hidden'}"
+          aria-hidden="true"
+        />
+        <img
+          src="/brand/SaltGoat_LogoGoat_White.png"
+          alt=""
+          class="h-9 w-auto transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 {transparent && !scrolled ? 'block' : 'hidden dark:block'}"
           aria-hidden="true"
         />
         <span class="font-display text-2xl tracking-tight">SaltGoat</span>

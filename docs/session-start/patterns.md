@@ -46,9 +46,11 @@ export const actions: Actions = {
 
 | Element | Classes |
 |---------|---------|
-| Difficulty colors | `class-1` (green), `class-2` (blue), `class-3` (yellow), `class-4` (red) |
+| Primary accent | `accent` (warm gold), with `-light`, `-dark`, `-warm`, `-muted` variants |
+| Semantic colors | `semantic-success` (sage), `semantic-danger` (brick), `semantic-warning` (ochre) — each with `-light`/`-dark` |
+| Difficulty colors | `class-1` (muted sage), `class-2` (muted blue), `class-3` (muted ochre), `class-4` (muted brick) |
 | Card shadows | `shadow-card`, `shadow-card-hover`, `shadow-card-elevated` |
-| Glows | `shadow-glow-class-1` through `shadow-glow-class-4` |
+| Glows | `shadow-glow-accent`, `shadow-glow-class-1` through `shadow-glow-class-4` |
 | Animations | `animate-fade-in-up`, `animate-float`, `animate-pulse-subtle` |
 
 ## Dark Mode
@@ -63,7 +65,7 @@ export const actions: Actions = {
 | PeakHero | `components/peak/` | Peak detail header |
 | SummitButton | `components/summit/` | Log summit CTA |
 | ReviewSection | `components/review/` | Reviews display + form |
-| ImageGallery | `components/gallery/` | Photo grid + lightbox |
+| ImageGallery | `components/gallery/` | Photo grid + lightbox + category filter chips with counts |
 | ImageUploader | `components/gallery/` | Photo upload (all users, private toggle) |
 | SearchModal | `components/search/` | Global search (⌘K) |
 | PeakMap | `components/map/` | Main map with peaks + trail overlay |
@@ -71,7 +73,7 @@ export const actions: Actions = {
 | ElevationProfile | `components/map/` | Canvas-based elevation chart |
 | TrailMapSection | `components/map/` | Combined map + elevation profile |
 | Achievements | `components/profile/` | Badge system with SVG icons |
-| ProfileHeader | `components/profile/` | Cover photo, avatar, social links |
+| ProfileHeader | `components/profile/` | Cover photo (full-bleed) + info panel below (no overlap), square avatar (rounded-2xl), social links |
 | ProfileTabs | `components/profile/` | Tab navigation for profile sections |
 | ProfileStats | `components/profile/` | Quick stats bar (peaks, progress) |
 | EditProfileModal | `components/profile/` | Edit profile with image uploads |

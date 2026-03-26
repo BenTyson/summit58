@@ -12,7 +12,7 @@
   let { stats }: Props = $props();
 </script>
 
-<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 px-4 sm:px-6 lg:px-8 py-4 bg-slate-50 dark:bg-slate-800/50 border-y border-slate-200 dark:border-slate-700">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 px-4 sm:px-6 lg:px-8 py-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
   {#each stats as stat}
     {#if stat.href}
       <a
