@@ -239,7 +239,6 @@
                     ? `${classColors[diffClass]} hover:scale-110 shadow-sm`
                     : 'bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600'}
                 "
-                title="{peak.name} ({peak.elevation.toLocaleString()}')"
               >
                 {#if isSummited}
                   <span class="absolute inset-0 flex items-center justify-center text-white text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
@@ -250,6 +249,11 @@
                     {peak.rank}
                   </span>
                 {/if}
+                <!-- Tooltip -->
+                <span class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 rounded-md bg-slate-900 dark:bg-slate-700 text-white text-[11px] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-md">
+                  {peak.name}
+                  <span class="text-slate-400 ml-0.5">{peak.elevation.toLocaleString()}'</span>
+                </span>
               </a>
             {/each}
           </div>

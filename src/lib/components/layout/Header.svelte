@@ -136,6 +136,21 @@
 
         <!-- Auth -->
         {#if session}
+          <a
+            href="/profile"
+            class="
+              relative px-2.5 py-2 font-medium text-sm
+              transition-colors duration-200
+              {transparent && !scrolled
+                ? 'text-accent-light hover:text-white'
+                : 'text-accent hover:text-accent-warm dark:text-accent-light dark:hover:text-white'}
+              after:absolute after:inset-x-1 after:bottom-0.5 after:h-0.5
+              after:bg-accent after:scale-x-0 after:transition-transform after:duration-300
+              hover:after:scale-x-100
+            "
+          >
+            My 58
+          </a>
           <div class="relative">
             <button
               onclick={() => userMenuOpen = !userMenuOpen}
