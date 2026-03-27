@@ -43,7 +43,13 @@ export const GET: RequestHandler = async ({ cookies }) => {
     { loc: '/learn/faq', priority: '0.6' },
     { loc: '/leaderboard', priority: '0.6' },
     { loc: '/pricing', priority: '0.5' },
-    { loc: '/blog', priority: '0.6' }
+    { loc: '/blog', priority: '0.6' },
+    { loc: '/blog/welcome', priority: '0.5' },
+    { loc: '/blog/why-we-built-saltgoat', priority: '0.5' },
+    { loc: '/guidelines', priority: '0.3' },
+    { loc: '/legal/terms', priority: '0.2' },
+    { loc: '/legal/privacy', priority: '0.2' },
+    { loc: '/auth', priority: '0.3' }
   ];
 
   // Add range URLs
