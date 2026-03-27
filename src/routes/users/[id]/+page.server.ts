@@ -1,8 +1,10 @@
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, Actions } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getUserAchievements } from '$lib/server/achievements';
 import { getSubscription, isPro } from '$lib/server/subscriptions';
-import { error } from '@sveltejs/kit';
+import { getReactionsForSummits, toggleReaction, type ReactionData } from '$lib/server/reactions';
+import { getCommentsForSummits, createComment, deleteComment, type CommentData } from '$lib/server/comments';
+import { error, redirect, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
   const supabase = createSupabaseServerClient(cookies);
@@ -99,6 +101,19 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     favoritePeak = data;
   }
 
+  // Load social data for recent summits
+  const summitIds = recentSummits.map((s: any) => s.id);
+  let summitReactions: Record<string, ReactionData> = {};
+  let summitComments: Record<string, CommentData> = {};
+  const currentUserId = session?.user?.id ?? null;
+
+  if (summitIds.length > 0) {
+    [summitReactions, summitComments] = await Promise.all([
+      getReactionsForSummits(supabase, summitIds, currentUserId),
+      getCommentsForSummits(supabase, summitIds)
+    ]);
+  }
+
   return {
     profile,
     favoritePeak,
@@ -112,6 +127,51 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     },
     recentSummits,
     achievements,
-    rangeStats: uniquePeakRanges
+    rangeStats: uniquePeakRanges,
+    summitReactions,
+    summitComments,
+    currentUserId
   };
+};
+
+export const actions: Actions = {
+  toggleReaction: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) throw redirect(303, '/auth');
+
+    const formData = await request.formData();
+    const summitId = formData.get('summitId') as string;
+    if (!summitId) return fail(400, { error: 'Summit ID is required' });
+
+    await toggleReaction(supabase, summitId, session.user.id);
+    return { success: true };
+  },
+
+  addComment: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) throw redirect(303, '/auth');
+
+    const formData = await request.formData();
+    const summitId = formData.get('summitId') as string;
+    const body = (formData.get('body') as string)?.trim();
+    if (!summitId || !body) return fail(400, { error: 'Summit ID and comment body are required' });
+
+    await createComment(supabase, summitId, session.user.id, body);
+    return { success: true };
+  },
+
+  deleteComment: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) throw redirect(303, '/auth');
+
+    const formData = await request.formData();
+    const commentId = formData.get('commentId') as string;
+    if (!commentId) return fail(400, { error: 'Comment ID is required' });
+
+    await deleteComment(supabase, commentId);
+    return { success: true };
+  }
 };

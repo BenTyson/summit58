@@ -40,7 +40,7 @@ scripts/              Utility scripts (image optimization, GPX import)
 ## Database (Quick Ref)
 
 Core: `peaks` (58), `routes` (66), `peak_conditions` (weather)
-User: `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`, `peak_watchlist`, `user_subscriptions`, `content_flags`
+User: `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`, `peak_watchlist`, `user_subscriptions`, `content_flags`, `summit_reactions`, `summit_comments`
 Storage buckets: `peak-images` (gallery, all authenticated users), `profile-images` (avatar/cover)
 RLS: public read on most tables, users CRUD own data
 
@@ -81,7 +81,8 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 
 - PWA glob warning is harmless (ignore it)
 - `semver` circular dependency warning in node_modules (harmless)
-- API endpoints: `/api/webhooks/weather`, `/api/checkout`, `/api/portal`, `/api/webhooks/stripe` (last 3 are stubs)
+- Social engagement: `summit_reactions` + `summit_comments` tables, server modules in `src/lib/server/reactions.ts` and `src/lib/server/comments.ts`, UI in `ActivityFeed.svelte` + public profile page
+- API endpoints: `/api/webhooks/weather`, `/api/checkout`, `/api/portal`, `/api/webhooks/stripe` (last 3 are stubs), `/api/export/summits` (Pro-only CSV download)
 - Admin check: centralized in `src/lib/server/admin.ts` — `isAdmin()` + `assertAdmin()` (hardcoded user ID, re-exported from `images.ts` for backward compat)
 - Admin dashboard uses nested routes (not `?tab=` params) — each tab has its own `+page.server.ts` with scoped data loading and form actions
 - Admin layout at `src/routes/admin/+layout.server.ts` handles auth guard once for all tabs

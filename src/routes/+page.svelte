@@ -193,7 +193,7 @@
           </svg>
         </a>
       </div>
-      <ActivityFeed activities={data.friendsActivity} showUser={true} />
+      <ActivityFeed activities={data.friendsActivity} showUser={true} reactions={data.summitReactions} comments={data.summitComments} currentUserId={data.currentUserId} />
     </Container>
   </section>
 {/if}

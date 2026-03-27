@@ -6,14 +6,45 @@
     TrailReportActivity,
     AchievementActivity
   } from '$lib/server/activity';
+  import type { ReactionData } from '$lib/server/reactions';
+  import type { CommentData } from '$lib/server/comments';
   import AchievementIcon from '$lib/components/ui/AchievementIcon.svelte';
+  import { enhance } from '$app/forms';
+  import { invalidateAll } from '$app/navigation';
 
   interface Props {
     activities: ActivityItem[];
     showUser?: boolean;
+    reactions?: Record<string, ReactionData>;
+    comments?: Record<string, CommentData>;
+    currentUserId?: string | null;
   }
 
-  let { activities, showUser = false }: Props = $props();
+  let {
+    activities,
+    showUser = false,
+    reactions = {},
+    comments = {},
+    currentUserId = null
+  }: Props = $props();
+
+  // Track which summit comment sections are expanded
+  let expandedComments = $state(new Set<string>());
+
+  function toggleComments(summitId: string) {
+    const next = new Set(expandedComments);
+    if (next.has(summitId)) {
+      next.delete(summitId);
+    } else {
+      next.add(summitId);
+    }
+    expandedComments = next;
+  }
+
+  // Extract the raw user_summits.id from the activity item id (format: "summit-{uuid}")
+  function getSummitId(item: ActivityItem): string {
+    return item.id.replace('summit-', '');
+  }
 
   // Group activities by date
   function groupByDate(items: ActivityItem[]): Map<string, ActivityItem[]> {
@@ -60,6 +91,22 @@
     });
   }
 
+  function formatCommentTime(dateStr: string): string {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+
+    if (diffMins < 1) return 'just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 7) return `${diffDays}d ago`;
+
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
   // Type guards
   function isSummit(data: ActivityItem['data']): data is SummitActivity {
     return 'date_summited' in data;
@@ -98,7 +145,11 @@
       <!-- Activity Cards -->
       <div class="space-y-3">
         {#each items as item}
-          <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 shadow-card hover:shadow-card-hover transition-shadow">
+          {@const summitId = item.type === 'summit' ? getSummitId(item) : null}
+          {@const reaction = summitId ? reactions[summitId] : null}
+          {@const commentData = summitId ? comments[summitId] : null}
+          <div class="rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-card hover:shadow-card-hover transition-shadow">
+            <div class="p-4">
             {#if showUser && item.user}
               <div class="flex items-center gap-2 mb-3 pb-3 border-b border-slate-100 dark:border-slate-700">
                 {#if item.user.avatar_url}
@@ -277,6 +328,190 @@
                   <path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                 </svg>
               </div>
+            {/if}
+            </div>
+
+            <!-- Social bar for summit items -->
+            {#if item.type === 'summit' && summitId}
+              <div class="px-4 pb-3 pt-1 border-t border-slate-100 dark:border-slate-700/50">
+                <div class="flex items-center justify-between">
+                  <!-- Congrats button + reactors -->
+                  <div class="flex items-center gap-2">
+                    {#if currentUserId}
+                      <form
+                        method="POST"
+                        action="?/toggleReaction"
+                        use:enhance={() => {
+                          return async ({ update }) => {
+                            await update();
+                          };
+                        }}
+                      >
+                        <input type="hidden" name="summitId" value={summitId} />
+                        <button
+                          type="submit"
+                          class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm transition-colors
+                            {reaction?.hasReacted
+                              ? 'bg-accent/10 text-accent dark:bg-accent/20 dark:text-accent-light font-medium'
+                              : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200'}"
+                          title={reaction?.hasReacted ? 'Remove congrats' : 'Send congrats'}
+                        >
+                          <!-- Hand-raised / congrats icon -->
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+                          </svg>
+                          Congrats
+                          {#if reaction && reaction.count > 0}
+                            <span class="text-xs font-medium">{reaction.count}</span>
+                          {/if}
+                        </button>
+                      </form>
+                    {:else if reaction && reaction.count > 0}
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-sm text-slate-500 dark:text-slate-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+                        </svg>
+                        {reaction.count}
+                      </span>
+                    {/if}
+
+                    <!-- Avatar stack of recent reactors -->
+                    {#if reaction && reaction.recentReactors.length > 0}
+                      <div class="flex -space-x-1.5">
+                        {#each reaction.recentReactors as reactor}
+                          {#if reactor.avatar_url}
+                            <img
+                              src={reactor.avatar_url}
+                              alt={reactor.display_name || ''}
+                              title={reactor.display_name || 'Climber'}
+                              class="w-5 h-5 rounded-full border border-white dark:border-slate-800 object-cover"
+                            />
+                          {:else}
+                            <div
+                              class="w-5 h-5 rounded-full border border-white dark:border-slate-800 bg-slate-200 dark:bg-slate-600 flex items-center justify-center"
+                              title={reactor.display_name || 'Climber'}
+                            >
+                              <svg class="w-2.5 h-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                              </svg>
+                            </div>
+                          {/if}
+                        {/each}
+                        {#if reaction.count > reaction.recentReactors.length}
+                          <div class="w-5 h-5 rounded-full border border-white dark:border-slate-800 bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                            <span class="text-[9px] font-medium text-slate-500 dark:text-slate-400">+{reaction.count - reaction.recentReactors.length}</span>
+                          </div>
+                        {/if}
+                      </div>
+                    {/if}
+                  </div>
+
+                  <!-- Comment toggle -->
+                  <button
+                    type="button"
+                    onclick={() => toggleComments(summitId)}
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm transition-colors
+                      {expandedComments.has(summitId)
+                        ? 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
+                        : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200'}"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    {#if commentData && commentData.count > 0}
+                      <span class="text-xs font-medium">{commentData.count}</span>
+                    {/if}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Expanded comments section -->
+              {#if expandedComments.has(summitId)}
+                <div class="px-4 pb-4 border-t border-slate-100 dark:border-slate-700/50">
+                  <!-- Existing comments -->
+                  {#if commentData && commentData.comments.length > 0}
+                    <div class="space-y-3 pt-3">
+                      {#each commentData.comments as comment}
+                        <div class="flex gap-2.5">
+                          {#if comment.user.avatar_url}
+                            <img src={comment.user.avatar_url} alt="" class="w-6 h-6 rounded-full object-cover flex-shrink-0 mt-0.5" />
+                          {:else}
+                            <div class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                              </svg>
+                            </div>
+                          {/if}
+                          <div class="flex-1 min-w-0">
+                            <div class="flex items-baseline gap-2">
+                              <a href="/users/{comment.user.id}" class="text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-accent transition-colors">
+                                {comment.user.display_name || 'Climber'}
+                              </a>
+                              <span class="text-xs text-slate-400 dark:text-slate-500">{formatCommentTime(comment.created_at)}</span>
+                              {#if currentUserId === comment.user_id}
+                                <form
+                                  method="POST"
+                                  action="?/deleteComment"
+                                  class="ml-auto"
+                                  use:enhance={() => {
+                                    return async ({ update }) => {
+                                      await update();
+                                    };
+                                  }}
+                                >
+                                  <input type="hidden" name="commentId" value={comment.id} />
+                                  <button
+                                    type="submit"
+                                    class="text-slate-400 hover:text-semantic-danger transition-colors"
+                                    title="Delete comment"
+                                  >
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                  </button>
+                                </form>
+                              {/if}
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 mt-0.5">{comment.body}</p>
+                          </div>
+                        </div>
+                      {/each}
+                    </div>
+                  {:else}
+                    <p class="text-sm text-slate-400 dark:text-slate-500 pt-3">No comments yet</p>
+                  {/if}
+
+                  <!-- Add comment form -->
+                  {#if currentUserId}
+                    <form
+                      method="POST"
+                      action="?/addComment"
+                      class="mt-3 flex gap-2"
+                      use:enhance={() => {
+                        return async ({ update }) => {
+                          await update();
+                        };
+                      }}
+                    >
+                      <input type="hidden" name="summitId" value={summitId} />
+                      <input
+                        type="text"
+                        name="body"
+                        placeholder="Write a comment..."
+                        maxlength="500"
+                        required
+                        class="flex-1 px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent"
+                      />
+                      <button
+                        type="submit"
+                        class="px-3 py-2 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-warm transition-colors flex-shrink-0"
+                      >
+                        Post
+                      </button>
+                    </form>
+                  {/if}
+                </div>
+              {/if}
             {/if}
           </div>
         {/each}

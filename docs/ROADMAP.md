@@ -4,8 +4,8 @@ Created: 2026-03-07
 
 ## Monetization: Freemium
 
-- **Free tier:** Browse peaks, log up to 5 summits, view leaderboard/profiles/reports
-- **SaltGoat Pro ($29.99/yr):** Unlimited summits, offline data, advanced stats, GPX export, custom lists, pro badge
+- **Free tier:** Browse peaks, log up to 5 summits, unlimited photo uploads, leaderboard/profiles/reports/reviews
+- **SaltGoat Pro ($29.99/yr):** Unlimited summits, advanced stats dashboard, export summit history (CSV), pro badge
 - **Additional:** Affiliate partnerships (REI, Backcountry), guide service listings, merch
 
 ## Phases
@@ -43,6 +43,9 @@ Created: 2026-03-07
 - [x] Pro badge on profiles and leaderboard
 - [x] Subscription data exposed in layout for all pages
 - [x] Manual actions documented in `docs/ben.md`
+- [x] Photo upload limit removed (was 5/peak free, now unlimited for all users)
+- [x] Pro CSV export endpoint (`GET /api/export/summits`)
+- [x] Pricing page accuracy pass: removed "coming soon" from stats, added export, removed "priority support"
 
 ### Phase 4: Growth Features [DONE]
 - [x] Share button component (native share / clipboard fallback)
@@ -66,7 +69,7 @@ Created: 2026-03-07
   - Image optimization pipeline (Sharp)
   - Photo attribution (uploader name/link in gallery + lightbox)
   - Flag-based moderation: auto-hides at 3 flags, admin reviews at `/admin`
-  - Upload limits: 5 public photos/peak free, unlimited Pro
+  - Unlimited uploads for all users (photo limit removed)
   - Private photos (visible only to uploader)
 - [x] Content moderation dashboard (`/admin`)
   - Review flagged photos, approve/remove
@@ -100,6 +103,18 @@ Created: 2026-03-07
 - [ ] Affiliate link tracking
 - [ ] Guide service featured listings
 - [ ] Partner page (`/partners`)
+
+### Phase 9: Social Engagement (1-2 sessions)
+- [x] Summit reactions/congrats (toggle on feed items, `summit_reactions` table)
+  - Congrats button on summit entries across all activity feeds (profile, homepage, public profiles)
+  - Avatar stack of recent reactors, reaction count
+  - Single reaction type per user per summit (unique constraint)
+- [x] Comments on summits (mini-conversations on summit logs, `summit_comments` table)
+  - Expandable comment section below summit entries in all feeds
+  - Text-only comments (max 500 chars), delete own
+  - Comment count badge on toggle button
+- [ ] Climbing partner finder (open trips, browse by date/peak/difficulty, request to join) -- Pro candidate once user base established
+- [ ] Group challenges (create/join challenges, progress tracking, leaderboard within challenge) -- Pro candidate once user base established
 
 ### Phase 8: Quality of Life (Ongoing)
 - [ ] Notifications system (follows, achievements, trail reports, watchlist alerts) -- needs push/email service

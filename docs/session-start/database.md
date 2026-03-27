@@ -63,6 +63,8 @@ The `routes.trail_geometry` JSONB column stores trail paths (data was removed du
 | `peak_watchlist` | Peak watch/bookmark | user_id, peak_id, created_at (unique user+peak) |
 | `user_subscriptions` | Pro subscriptions | user_id, plan, status, stripe_customer_id, current_period_end |
 | `content_flags` | Content moderation flags | content_type (photo/review/trail_report), content_id, reported_by, reason, status |
+| `summit_reactions` | Congrats on summits | summit_id (→ user_summits), user_id, created_at (unique user+summit) |
+| `summit_comments` | Comments on summits | summit_id (→ user_summits), user_id, body (max 500), created_at |
 
 ### Profile Fields
 
@@ -114,6 +116,8 @@ The `routes.trail_geometry` JSONB column stores trail paths (data was removed du
 | planned_trip_peaks | Via parent trip | Via parent trip |
 | peak_watchlist | Own only | Own only |
 | user_subscriptions | Own only | Own only |
+| summit_reactions | Public | Own insert/delete |
+| summit_comments | Public | Own insert/delete |
 
 ## Common Queries
 

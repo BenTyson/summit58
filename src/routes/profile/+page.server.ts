@@ -10,6 +10,8 @@ import { getUserPastTrips, getUserPlannedTrips, createPlannedTrip, deletePlanned
 import { getUserWatchlist, removeFromWatchlist } from '$lib/server/watchlist';
 import type { WatchlistItem } from '$lib/server/watchlist';
 import { getSubscription, isPro } from '$lib/server/subscriptions';
+import { getReactionsForSummits, toggleReaction, type ReactionData } from '$lib/server/reactions';
+import { getCommentsForSummits, createComment, deleteComment, type CommentData } from '$lib/server/comments';
 import { redirect, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ cookies, url }) => {
@@ -108,6 +110,8 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
   let plannedTrips: Awaited<ReturnType<typeof getUserPlannedTrips>> = [];
   let watchlist: WatchlistItem[] = [];
   let advancedStats: AdvancedStats | null = null;
+  let summitReactions: Record<string, ReactionData> = {};
+  let summitComments: Record<string, CommentData> = {};
 
   if (activeTab === 'overview') {
     const subscription = await getSubscription(supabase, session.user.id);
@@ -120,6 +124,16 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
     }
   } else if (activeTab === 'activity') {
     activityFeed = await getUserActivityFeed(supabase, session.user.id, 50);
+    // Load social data for summit items
+    const summitIds = activityFeed
+      .filter(a => a.type === 'summit')
+      .map(a => a.id.replace('summit-', ''));
+    if (summitIds.length > 0) {
+      [summitReactions, summitComments] = await Promise.all([
+        getReactionsForSummits(supabase, summitIds, session.user.id),
+        getCommentsForSummits(supabase, summitIds)
+      ]);
+    }
   } else if (activeTab === 'photos') {
     userPhotos = await getUserPhotos(supabase, session.user.id);
   } else if (activeTab === 'buddies') {
@@ -176,7 +190,10 @@ export const load: PageServerLoad = async ({ cookies, url }) => {
     pastTrips,
     plannedTrips,
     watchlist,
-    advancedStats
+    advancedStats,
+    summitReactions,
+    summitComments,
+    currentUserId: session.user.id
   };
 };
 
@@ -382,6 +399,46 @@ export const actions: Actions = {
       console.error('Error removing from watchlist:', error);
       return fail(500, { error: 'Failed to remove from watchlist' });
     }
+  },
+
+  toggleReaction: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) throw redirect(303, '/auth');
+
+    const formData = await request.formData();
+    const summitId = formData.get('summitId') as string;
+    if (!summitId) return fail(400, { error: 'Summit ID is required' });
+
+    await toggleReaction(supabase, summitId, session.user.id);
+    return { success: true };
+  },
+
+  addComment: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) throw redirect(303, '/auth');
+
+    const formData = await request.formData();
+    const summitId = formData.get('summitId') as string;
+    const body = (formData.get('body') as string)?.trim();
+    if (!summitId || !body) return fail(400, { error: 'Summit ID and comment body are required' });
+
+    await createComment(supabase, summitId, session.user.id, body);
+    return { success: true };
+  },
+
+  deleteComment: async ({ cookies, request }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) throw redirect(303, '/auth');
+
+    const formData = await request.formData();
+    const commentId = formData.get('commentId') as string;
+    if (!commentId) return fail(400, { error: 'Comment ID is required' });
+
+    await deleteComment(supabase, commentId);
+    return { success: true };
   },
 
   deleteTrip: async ({ cookies, request }) => {

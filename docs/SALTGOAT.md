@@ -58,6 +58,10 @@ supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/
 - **user_achievements** - Earned achievements (user_id, achievement_id, earned_at, notified)
 - **trail_reports** - Trail conditions (user_id, peak_id, hike_date, trail_status, snow_depth, hazards)
 
+### Social Tables
+- **summit_reactions** - Congrats on summit entries (summit_id → user_summits, user_id, unique per user/summit)
+- **summit_comments** - Comments on summit entries (summit_id → user_summits, user_id, body max 500 chars)
+
 ### RLS Policies
 - Peaks/routes: public read
 - Profiles: public read, users update own
@@ -65,6 +69,7 @@ supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/
 - Reviews: public read, users CRUD own (one review per peak)
 - Achievements: public read, users insert own
 - Trail reports: public read, users CRUD own
+- Summit reactions/comments: public read, users insert/delete own
 
 ---
 
@@ -85,7 +90,7 @@ src/
 │   │   ├── review/    → StarRating, ReviewCard, ReviewForm, ReviewSection
 │   │   ├── trail/     → TrailReportForm, TrailReportCard
 │   │   ├── parking/   → ParkingCard
-│   │   ├── profile/   → Achievements, ProfileHeader, ProfileTabs, ProfileStats, EditProfileModal
+│   │   ├── profile/   → Achievements, ProfileHeader, ProfileTabs, ProfileStats, EditProfileModal, ActivityFeed
 │   │   ├── gallery/   → ImageGallery, ImageUploader, Lightbox
 │   │   ├── weather/   → WeatherCard
 │   │   ├── map/       → PeakMap, TrailMap, ElevationProfile, TrailMapSection
@@ -105,6 +110,10 @@ src/
 │   │   ├── imageOptimizer.ts → Sharp-based image processing
 │   │   ├── conditions.ts     → Weather fetch + queries
 │   │   ├── admin.ts          → Admin auth (isAdmin, assertAdmin) + all admin dashboard queries
+│   │   ├── subscriptions.ts  → Subscription helpers (getSubscription, isPro, canLogSummit)
+│   │   ├── stripe.ts         → Stripe SDK stubs (checkout, portal, webhook verification)
+│   │   ├── reactions.ts      → Summit reactions (toggle, batch-fetch with avatar stack)
+│   │   ├── comments.ts       → Summit comments (create, delete, batch-fetch)
 │   │   └── gpx.ts            → GPX to GeoJSON parsing
 │   ├── utils/
 │   │   └── geo.ts          → Geographic utilities (distance, elevation)
@@ -132,6 +141,11 @@ src/
 │   │   ├── users/               → User management (search, sort, pagination)
 │   │   ├── content/             → Content browser (photos, reviews, reports, traces)
 │   │   └── subscriptions/       → Subscription metrics + table
+│   ├── api/
+│   │   ├── checkout/            → Stripe checkout session (stub)
+│   │   ├── portal/              → Stripe billing portal (stub)
+│   │   ├── export/summits/      → Pro-only CSV export of summit history
+│   │   └── webhooks/            → Weather + Stripe webhooks
 │   └── profile/+page.svelte      → "My 58" dashboard + achievements
 
 static/brand/                     → Logo assets (SaltGoat_LogoGoat.png, SaltGoat_LogoGoat_White.png)
@@ -244,6 +258,18 @@ static/images/peaks/              → Custom peak hero images
 - Follow system with follower/following lists and suggestions
 - Trip planning with create/edit/delete
 
+### Social Engagement
+- Summit reactions (congrats): single reaction type per user per summit, toggle button on all activity feeds
+  - Congrats button with count, avatar stack of recent reactors (up to 3), overflow indicator
+  - Available on profile activity tab, homepage friends feed, public profiles
+  - Server: `src/lib/server/reactions.ts` — `toggleReaction()`, `getReactionsForSummits()` (batch fetch)
+- Summit comments: lightweight text-only conversations on summit entries
+  - Expandable comment section with count badge, max 500 chars per comment
+  - Users can delete their own comments
+  - Server: `src/lib/server/comments.ts` — `createComment()`, `deleteComment()`, `getCommentsForSummits()` (batch fetch)
+- Both features are free for all authenticated users
+- Form actions (`toggleReaction`, `addComment`, `deleteComment`) on `/profile`, `/`, `/users/[id]`
+
 ### Admin Dashboard
 - 5-tab nested-route dashboard at `/admin` (overview, moderation, users, content, subscriptions)
 - Auth centralized in `src/lib/server/admin.ts` — `isAdmin()`, `assertAdmin()`, all admin queries
@@ -255,6 +281,16 @@ static/images/peaks/              → Custom peak hero images
 - **Subscriptions:** pro/free/conversion metrics, status breakdown (active, trialing, canceled, past_due), full subscription table
 - Shared components: `AdminTabs` (route-based `<a>` nav, not `?tab=` params), `StatCard` (metric card with variant colors)
 - Admin check: hardcoded user ID for single admin, re-exported from `images.ts` for backward compat
+
+### Monetization (Freemium)
+- **Free tier:** Browse all peaks, log up to 5 summits, unlimited photo uploads, reviews, trail reports, leaderboard, achievements, trip planning, activity feed, watchlist
+- **SaltGoat Pro ($29.99/yr):** Unlimited summit logging, advanced stats dashboard (pace trends, seasonal analysis, personal records, route preferences), export summit history (CSV), pro badge on profile & leaderboard
+- Summit limit enforced server-side in `canLogSummit()` (`src/lib/server/subscriptions.ts`), upgrade prompt modal on peak pages
+- Advanced stats gated in profile page server load — only fetched for pro users
+- CSV export at `GET /api/export/summits` — requires auth + pro subscription
+- Stripe integration stubbed (`src/lib/server/stripe.ts`) — checkout, portal, webhooks ready for real SDK
+- Photo uploads have NO limit for any user (limit was removed — UGC benefits the platform)
+- Pricing page at `/pricing` — feature comparison, FAQ, checkout/portal buttons
 
 ### Content & SEO
 - Learn section: 6 guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq)
@@ -372,6 +408,8 @@ Dark mode: `.dark` class on html element. Header + Footer use dual logo images: 
 - 2026-03-25: Color palette refactor (warm gold accent, desaturated semantics)
 - 2026-03-25: UI polish — dark mode logo, profile header redesign, gallery overlay fixes, range table fixes
 - 2026-03-26: Admin dashboard — 5-tab nested routes (overview, moderation, users, content, subscriptions), centralized admin auth in admin.ts
+- 2026-03-27: Monetization accuracy pass — removed photo upload limit for free users, fixed pricing page (removed "coming soon" + "priority support", added export), built Pro CSV export endpoint, added export button to profile
+- 2026-03-27: Phase 9 (social engagement) — summit reactions (congrats) + summit comments on all activity feeds
 
 ---
 

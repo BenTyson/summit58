@@ -51,6 +51,9 @@
   const plannedTrips = $derived(data.plannedTrips);
   const watchlist = $derived(data.watchlist);
   const advancedStats = $derived(data.advancedStats);
+  const summitReactions = $derived(data.summitReactions);
+  const summitComments = $derived(data.summitComments);
+  const currentUserId = $derived(data.currentUserId);
 
   const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
@@ -414,6 +417,18 @@
             <span class="ml-2 px-2 py-0.5 rounded-full bg-gradient-to-r from-accent to-accent-warm text-white text-xs font-medium">PRO</span>
           </h2>
           <AdvancedStats stats={advancedStats} />
+          <div class="mt-4 flex justify-end">
+            <a
+              href="/api/export/summits"
+              download
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Export Summit History
+            </a>
+          </div>
         </section>
       {:else if subscription?.plan !== 'pro'}
         <section class="mt-8">
@@ -543,7 +558,7 @@
 
     {:else if activeTab === 'activity'}
       <!-- Activity Tab -->
-      <ActivityFeed activities={activityFeed} />
+      <ActivityFeed activities={activityFeed} reactions={summitReactions} comments={summitComments} {currentUserId} />
 
     {:else if activeTab === 'photos'}
       <!-- Photos Tab -->
