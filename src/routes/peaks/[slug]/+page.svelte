@@ -43,13 +43,11 @@
   const conditions = $derived(data.conditions);
   const trailReports = $derived(data.trailReports);
   const summitLimit = $derived(data.summitLimit);
-  const photoLimit = $derived(data.photoLimit);
   const isWatched = $derived(data.isWatched);
   const relatedPeaks = $derived(data.relatedPeaks);
 
   let modalOpen = $state(false);
   let showUpgradePrompt = $state(false);
-  let showPhotoUpgradePrompt = $state(false);
   let showSharePrompt = $state(false);
   let watchlistSubmitting = $state(false);
 
@@ -201,11 +199,6 @@
     if (response.ok) {
       await invalidateAll();
     } else {
-      const result = await response.json();
-      if (result?.data?.photoLimitReached) {
-        showPhotoUpgradePrompt = true;
-        return;
-      }
       throw new Error('Upload failed');
     }
   }
@@ -473,27 +466,8 @@
           </svg>
           Add Photo
         </h2>
-        {#if photoLimit && !photoLimit.isPro}
-          <span class="text-sm text-slate-500 dark:text-slate-400">
-            {photoLimit.remaining} of 5 uploads remaining
-          </span>
-        {:else if photoLimit?.isPro}
-          <span class="text-sm text-accent font-medium">Unlimited uploads</span>
-        {/if}
       </div>
-      {#if photoLimit && !photoLimit.allowed}
-        <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-6 text-center">
-          <p class="text-slate-600 dark:text-slate-400 mb-3">You've reached the free photo limit for this peak.</p>
-          <a
-            href="/pricing"
-            class="inline-block px-6 py-2.5 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all"
-          >
-            Upgrade to Pro for unlimited uploads
-          </a>
-        </div>
-      {:else}
-        <ImageUploader peakId={peak.id} onUpload={handleImageUpload} />
-      {/if}
+      <ImageUploader peakId={peak.id} onUpload={handleImageUpload} />
     </section>
   {/if}
 
@@ -714,39 +688,6 @@
         </a>
         <button
           onclick={() => showUpgradePrompt = false}
-          class="px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
-        >
-          Maybe Later
-        </button>
-      </div>
-    </div>
-  </div>
-{/if}
-
-<!-- Photo Upload Limit Modal -->
-{#if showPhotoUpgradePrompt}
-  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full mx-4 p-8 text-center">
-      <div class="mx-auto h-16 w-16 rounded-full bg-accent/10 flex items-center justify-center mb-4">
-        <svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-      </div>
-      <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">
-        Photo Limit Reached
-      </h3>
-      <p class="text-slate-600 dark:text-slate-400 mb-6">
-        Free accounts can upload 5 public photos per peak. Upgrade to Pro for unlimited uploads.
-      </p>
-      <div class="flex flex-col gap-3">
-        <a
-          href="/pricing"
-          class="block w-full px-6 py-3 rounded-lg bg-gradient-to-r from-accent to-accent-warm text-white font-medium hover:from-accent-warm hover:to-accent transition-all shadow-md"
-        >
-          Upgrade to Pro -- $29.99/yr
-        </a>
-        <button
-          onclick={() => showPhotoUpgradePrompt = false}
           class="px-6 py-3 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
         >
           Maybe Later

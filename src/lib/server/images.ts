@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database, Tables, TablesInsert } from '$lib/types/database';
 import { optimizeImage } from './imageOptimizer';
-import { getSubscription, isPro } from './subscriptions';
+
 
 export type PeakImage = Tables<'peak_images'>;
 export type PeakImageInsert = TablesInsert<'peak_images'>;
@@ -14,40 +14,6 @@ export type PeakImageWithUploader = PeakImage & {
 export { isAdmin } from './admin';
 
 const STORAGE_BUCKET = 'peak-images';
-const FREE_PHOTO_LIMIT = 5;
-
-// Check if user can upload another photo for a peak
-export async function canUploadPhoto(
-  supabase: SupabaseClient<Database>,
-  userId: string,
-  peakId: string
-): Promise<{ allowed: boolean; remaining: number; isPro: boolean }> {
-  const subscription = await getSubscription(supabase, userId);
-  const userIsPro = isPro(subscription);
-
-  if (userIsPro) {
-    return { allowed: true, remaining: Infinity, isPro: true };
-  }
-
-  // Count user's public photos for this peak
-  const { count, error } = await supabase
-    .from('peak_images')
-    .select('id', { count: 'exact', head: true })
-    .eq('uploaded_by', userId)
-    .eq('peak_id', peakId)
-    .eq('is_private', false);
-
-  if (error) throw error;
-
-  const photoCount = count ?? 0;
-  const remaining = Math.max(0, FREE_PHOTO_LIMIT - photoCount);
-
-  return {
-    allowed: photoCount < FREE_PHOTO_LIMIT,
-    remaining,
-    isPro: false
-  };
-}
 
 // Get images for a peak (approved + public only, with uploader info)
 export async function getImagesForPeak(

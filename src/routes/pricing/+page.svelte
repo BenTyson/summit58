@@ -15,6 +15,7 @@
   const freeTierFeatures = [
     'Browse all 58 peaks',
     'Log up to 5 summits',
+    'Upload photos to any peak',
     'View leaderboard & profiles',
     'Trail reports & conditions',
     'Community reviews'
@@ -23,9 +24,9 @@
   const proTierFeatures = [
     'Everything in Free',
     'Unlimited summit logging',
-    'Pro badge on profile & leaderboard',
-    'Advanced stats (coming soon)',
-    'Priority support'
+    'Advanced stats dashboard',
+    'Export summit history',
+    'Pro badge on profile & leaderboard'
   ];
 </script>
 

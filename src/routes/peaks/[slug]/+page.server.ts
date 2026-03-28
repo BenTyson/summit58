@@ -16,7 +16,6 @@ import {
   uploadPeakImage,
   deletePeakImage,
   isAdmin,
-  canUploadPhoto,
   flagImage
 } from '$lib/server/images';
 import { getConditionsForPeak } from '$lib/server/conditions';
@@ -42,16 +41,14 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
   let userReview: Awaited<ReturnType<typeof getUserReviewForPeak>> = null;
 
   let summitLimit: { allowed: boolean; remaining: number; isPro: boolean } | null = null;
-  let photoLimit: { allowed: boolean; remaining: number; isPro: boolean } | null = null;
   let isWatched = false;
 
   if (session?.user) {
-    [userSummits, userReview, summitLimit, isWatched, photoLimit] = await Promise.all([
+    [userSummits, userReview, summitLimit, isWatched] = await Promise.all([
       getUserSummitsForPeak(supabase, session.user.id, peak.id),
       getUserReviewForPeak(supabase, session.user.id, peak.id),
       canLogSummit(supabase, session.user.id),
-      isOnWatchlist(supabase, session.user.id, peak.id),
-      canUploadPhoto(supabase, session.user.id, peak.id)
+      isOnWatchlist(supabase, session.user.id, peak.id)
     ]);
   }
 
@@ -79,7 +76,6 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     trailReports,
     relatedPeaks,
     summitLimit,
-    photoLimit,
     isWatched
   };
 };
@@ -278,14 +274,6 @@ export const actions: Actions = {
 
     if (!peakId || !file) {
       return fail(400, { message: 'Peak ID and file required' });
-    }
-
-    // Check photo limit (only for public photos)
-    if (!isPrivate) {
-      const photoCheck = await canUploadPhoto(supabase, session.user.id, peakId);
-      if (!photoCheck.allowed) {
-        return fail(403, { photoLimitReached: true });
-      }
     }
 
     try {
