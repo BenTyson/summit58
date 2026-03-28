@@ -180,11 +180,24 @@ Expo SDK 55 app at `/mobile/` with npm workspaces monorepo.
 - Sections: weather, routes, reviews, trail reports, photo gallery, related peaks, description
 - All components: RouteCard, ReviewCard, TrailReportCard, PeakCard (reused)
 
-### 2B: Native Maps -- NOT STARTED
-- Library decision needed: `react-native-maps` vs Mapbox GL Native
-- 58 peak markers, color-coded by difficulty class
-- Map type switching, bottom sheet on marker tap, current location
-- Can reuse `GET /api/v1/peaks` data (already has lat/lon)
+### 2B: Native Maps -- CODE COMPLETE (pending native build)
+
+**Decision:** `react-native-maps` with Apple Maps (zero config, no API keys). Mapbox deferred to Phase 4 for offline tiles.
+
+**Installed:** `react-native-maps`, `@gorhom/bottom-sheet` v5, `react-native-gesture-handler`, `expo-location`
+
+**Built:**
+- `mobile/app/(tabs)/map.tsx` — full-bleed MapView, 58 markers color-coded by difficulty class, standard/hybrid map type toggle, current location button with permission handling
+- `mobile/components/map/PeakBottomSheet.tsx` — bottom sheet on marker tap (peak name, elevation, range, ClassBadge, "View Details" navigates to peak detail)
+- `mobile/app/_layout.tsx` — added `GestureHandlerRootView` wrapper (required by bottom sheet)
+- `mobile/app/(tabs)/_layout.tsx` — `headerShown: false` for map tab
+- `mobile/app.json` — added `react-native-maps` and `expo-location` plugins
+
+**BLOCKER:** Native build requires Xcode 16+ (React Native 0.83 requirement). Current machine has Xcode 15.4 on macOS 14 Sonoma. macOS upgrade to 15 Sequoia needed, then install Xcode 16.2, then run:
+```bash
+cd mobile && npx expo prebuild --clean && npx expo run:ios
+```
+All JS/TS code is complete and type-checks. Only the native build + on-device testing remains.
 
 ### 2C: Weather Display -- COMPLETE
 
@@ -228,12 +241,13 @@ Expo SDK 55 app at `/mobile/` with npm workspaces monorepo.
 | `mobile/components/peaks/ReviewCard.tsx` | Review display (stars, author, date, body) |
 | `mobile/components/peaks/TrailReportCard.tsx` | Trail report (status badge, crowd, snow, notes) |
 | `mobile/components/weather/*.tsx` | WeatherSection, CurrentConditionsPill, ForecastCard |
+| `mobile/components/map/PeakBottomSheet.tsx` | Bottom sheet on marker tap (peak info + navigate to detail) |
 | `mobile/components/profile/*.tsx` | StatsBar, My58Grid, AchievementBadge, SummitHistoryItem |
 
 ### Phase 2 Review Gate
 - [x] All 58 peaks load and display correctly
 - [x] Peak detail shows all sections with real data from API
-- [ ] Map displays all 58 markers (2B not started)
+- [ ] Map displays all 58 markers (2B code complete, needs native build after Xcode 16 upgrade)
 - [x] Weather data displays and matches web
 - [x] Profile displays correct stats for a test user
 - [x] Pull-to-refresh works on all list screens

@@ -25,6 +25,9 @@
 | Styling | NativeWind v4 (Tailwind for RN) + programmatic tokens |
 | Auth | Supabase JS + expo-secure-store |
 | Icons | expo-symbols (SF Symbols) |
+| Maps | react-native-maps (Apple Maps, no API key) |
+| Location | expo-location (foreground permission) |
+| Bottom Sheet | @gorhom/bottom-sheet v5 (uses reanimated + gesture-handler) |
 | Shared | @saltgoat/shared monorepo package |
 
 ### Shared

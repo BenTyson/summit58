@@ -40,6 +40,7 @@ export default function TabLayout() {
         name="map"
         options={{
           title: 'Map',
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <SymbolView
               name={{ ios: 'map', android: 'map', web: 'map' }}

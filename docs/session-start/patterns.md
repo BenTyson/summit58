@@ -179,6 +179,28 @@ const load = useCallback(async () => {
 - `SafeAreaView` from `react-native-safe-area-context` (not the deprecated RN one)
 - Font families: `'InstrumentSerif'` (headings), `'Inter'`/`'Inter-Medium'`/`'Inter-SemiBold'`/`'Inter-Bold'` (body)
 - Shared types from `@saltgoat/shared/types/helpers`, response types from `@/lib/types/api`
+- Root layout wrapped in `GestureHandlerRootView` (required by `@gorhom/bottom-sheet`)
+
+## Mobile Components
+
+| Component | Location | Purpose |
+|-----------|----------|---------|
+| PeakCard | `mobile/components/peaks/` | Peak list card (thumbnail, name, elevation, class badge, checkmark) |
+| RouteCard | `mobile/components/peaks/` | Route info (class, distance, gain, time) |
+| ReviewCard | `mobile/components/peaks/` | Review display (stars, author, date, body) |
+| TrailReportCard | `mobile/components/peaks/` | Trail report (status, crowd, snow, notes) |
+| PeakBottomSheet | `mobile/components/map/` | Bottom sheet on map marker tap (peak info + View Details) |
+| WeatherSection | `mobile/components/weather/` | Pill + horizontal forecast FlatList |
+| CurrentConditionsPill | `mobile/components/weather/` | Today's temp/description/wind |
+| ForecastCard | `mobile/components/weather/` | Single day forecast |
+| StatsBar | `mobile/components/profile/` | Summit count, unique peaks, completion % |
+| My58Grid | `mobile/components/profile/` | 6-column grid of all 58 peaks |
+| AchievementBadge | `mobile/components/profile/` | Achievement badge display |
+| SummitHistoryItem | `mobile/components/profile/` | Summit history row |
+| ClassBadge | `mobile/components/ui/` | Difficulty class colored pill |
+| LoadingState | `mobile/components/ui/` | Centered spinner with message |
+| ErrorState | `mobile/components/ui/` | Error message with retry button |
+| StarRating | `mobile/components/ui/` | 5-star display using SymbolView |
 
 ---
 
