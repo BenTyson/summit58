@@ -1,43 +1,58 @@
-// TODO: Replace all stubs with real Stripe SDK calls once Ben has Stripe test keys.
-// npm install stripe, then import Stripe from 'stripe' and initialize with STRIPE_SECRET_KEY.
+import Stripe from 'stripe';
+import { env } from '$env/dynamic/private';
+
+function getStripe() {
+	const key = env.STRIPE_SECRET_KEY;
+	if (!key) throw new Error('STRIPE_SECRET_KEY is not set');
+	return new Stripe(key);
+}
 
 export async function createCheckoutSession(
-  _userId: string,
-  _email: string
+	userId: string,
+	email: string,
+	origin: string
 ): Promise<{ url: string }> {
-  // TODO: Replace with real Stripe SDK call
-  // const stripe = new Stripe(STRIPE_SECRET_KEY);
-  // const session = await stripe.checkout.sessions.create({
-  //   customer_email: email,
-  //   mode: 'subscription',
-  //   line_items: [{ price: PUBLIC_STRIPE_PRICE_ID, quantity: 1 }],
-  //   success_url: `${origin}/profile?upgraded=true`,
-  //   cancel_url: `${origin}/pricing`,
-  //   metadata: { user_id: userId }
-  // });
-  // return { url: session.url! };
-  return { url: '/pricing?stub=true' };
+	const stripe = getStripe();
+	const priceId = env.STRIPE_PRICE_ID;
+	if (!priceId) throw new Error('STRIPE_PRICE_ID is not set');
+
+	const session = await stripe.checkout.sessions.create({
+		customer_email: email,
+		mode: 'subscription',
+		line_items: [{ price: priceId, quantity: 1 }],
+		success_url: `${origin}/profile?upgraded=true`,
+		cancel_url: `${origin}/pricing`,
+		metadata: { user_id: userId }
+	});
+
+	return { url: session.url! };
 }
 
 export async function createPortalSession(
-  _customerId: string
+	customerId: string,
+	origin: string
 ): Promise<{ url: string }> {
-  // TODO: Replace with real Stripe SDK call
-  // const stripe = new Stripe(STRIPE_SECRET_KEY);
-  // const session = await stripe.billingPortal.sessions.create({
-  //   customer: customerId,
-  //   return_url: `${origin}/profile`
-  // });
-  // return { url: session.url };
-  return { url: '/pricing?stub=true' };
+	const stripe = getStripe();
+
+	const session = await stripe.billingPortal.sessions.create({
+		customer: customerId,
+		return_url: `${origin}/profile`
+	});
+
+	return { url: session.url };
 }
 
 export function verifyWebhookSignature(
-  _body: string,
-  _signature: string
-): null {
-  // TODO: Replace with real Stripe webhook signature verification
-  // const stripe = new Stripe(STRIPE_SECRET_KEY);
-  // return stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET);
-  return null;
+	body: string,
+	signature: string
+): Stripe.Event | null {
+	const secret = env.STRIPE_WEBHOOK_SECRET;
+	if (!secret) return null;
+
+	const stripe = getStripe();
+	try {
+		return stripe.webhooks.constructEvent(body, signature, secret) as Stripe.Event;
+	} catch {
+		return null;
+	}
 }

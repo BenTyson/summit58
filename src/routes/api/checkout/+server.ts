@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 import { createCheckoutSession } from '$lib/server/stripe';
 
-export const POST: RequestHandler = async ({ cookies }) => {
+export const POST: RequestHandler = async ({ cookies, url }) => {
   const supabase = createSupabaseServerClient(cookies);
   const { data: { session } } = await supabase.auth.getSession();
 
@@ -11,6 +11,6 @@ export const POST: RequestHandler = async ({ cookies }) => {
     throw redirect(303, '/auth');
   }
 
-  const { url } = await createCheckoutSession(session.user.id, session.user.email ?? '');
-  throw redirect(303, url);
+  const { url: checkoutUrl } = await createCheckoutSession(session.user.id, session.user.email ?? '', url.origin);
+  throw redirect(303, checkoutUrl);
 };

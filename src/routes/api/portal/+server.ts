@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getSubscription } from '$lib/server/subscriptions';
 import { createPortalSession } from '$lib/server/stripe';
 
-export const POST: RequestHandler = async ({ cookies }) => {
+export const POST: RequestHandler = async ({ cookies, url }) => {
   const supabase = createSupabaseServerClient(cookies);
   const { data: { session } } = await supabase.auth.getSession();
 
@@ -17,6 +17,6 @@ export const POST: RequestHandler = async ({ cookies }) => {
     throw error(400, 'No active subscription found');
   }
 
-  const { url } = await createPortalSession(subscription.stripe_customer_id);
-  throw redirect(303, url);
+  const { url: portalUrl } = await createPortalSession(subscription.stripe_customer_id, url.origin);
+  throw redirect(303, portalUrl);
 };
