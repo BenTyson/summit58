@@ -87,6 +87,18 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 - Admin dashboard uses nested routes (not `?tab=` params) — each tab has its own `+page.server.ts` with scoped data loading and form actions
 - Admin layout at `src/routes/admin/+layout.server.ts` handles auth guard once for all tabs
 
+## Dual-Platform Development
+
+SaltGoat is maintained as two systems: a **SvelteKit web app** and a **React Native (Expo) mobile app**, sharing a single Supabase backend. When building new features or fixing bugs:
+
+- **New features** must be implemented on both platforms (or explicitly scoped to one with justification)
+- **Bug fixes** affecting shared logic (API, database, subscriptions, achievements) must be verified on both platforms
+- **Database migrations** affect both systems -- always consider mobile compatibility
+- **API changes** (`/api/v1/`) must maintain backward compatibility with deployed mobile clients
+- Keep the shared types package in sync when regenerating Supabase types
+
+See [Mobile Roadmap](docs/mobile_roadmap.md) for the full mobile app plan and phase details.
+
 ## Deep Dive Docs
 
 - [Database Schema](docs/session-start/database.md)
@@ -94,3 +106,4 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 - [Stack & Infrastructure](docs/session-start/stack.md)
 - [Full Reference](docs/SALTGOAT.md)
 - [Launch Roadmap](docs/ROADMAP.md)
+- [Mobile Roadmap](docs/mobile_roadmap.md)
