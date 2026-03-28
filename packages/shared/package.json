@@ -1,0 +1,16 @@
+{
+  "name": "@saltgoat/shared",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./types/database": "./src/types/database.ts",
+    "./types/helpers": "./src/types/helpers.ts",
+    "./data/achievements": "./src/data/achievements.ts",
+    "./data/ranges": "./src/data/ranges.ts",
+    "./data/categories": "./src/data/categories.ts",
+    "./utils/geo": "./src/utils/geo.ts",
+    "./utils/weather": "./src/utils/weather.ts",
+    "./constants": "./src/constants.ts"
+  }
+}

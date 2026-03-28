@@ -80,7 +80,10 @@ export default defineConfig({
   server: {
     port: 4466,
     strictPort: true,
-    host: 'localhost'
+    host: 'localhost',
+    fs: {
+      allow: ['packages/shared']
+    }
   },
   preview: {
     port: 4466

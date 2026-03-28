@@ -2,12 +2,18 @@
   "name": "saltgoat",
   "version": "0.0.1",
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "mobile"
+  ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "build:mobile": "npm run build --workspace=mobile",
+    "build:all": "npm run build && npm run build:mobile",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

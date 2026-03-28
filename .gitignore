@@ -27,3 +27,8 @@ npm-debug.log*
 # Supabase
 supabase/.branches
 supabase/.temp
+
+# Mobile
+mobile/.env
+mobile/.env.*
+!mobile/.env.example
