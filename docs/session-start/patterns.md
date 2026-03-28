@@ -131,6 +131,55 @@ export const actions: Actions = {
 | `/guidelines` | Community guidelines |
 | `/auth` | Login/signup |
 
+## Mobile API Pattern
+
+API endpoints at `src/routes/api/v1/` are thin wrappers around server modules:
+
+```typescript
+// Public endpoint (auth optional)
+const { supabase: authClient } = createSupabaseApiClient(request);
+const client = authClient || createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+const peaks = await getAllPeaks(client);
+
+// Auth-required endpoint
+const { supabase, user, error } = await requireAuth(request);
+if (!supabase) return new Response(JSON.stringify({ error }), { status: 401, ... });
+```
+
+Static image paths (`/images/peaks/...`) must be resolved to absolute URLs in API responses:
+```typescript
+peak.hero_image_url = peak.hero_image_url ? `${url.origin}${peak.hero_image_url}` : null;
+```
+
+## Mobile Screen Pattern
+
+```typescript
+const [data, setData] = useState<ResponseType | null>(null);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
+
+const load = useCallback(async () => {
+  try {
+    setError(null);
+    const result = await apiFetch<ResponseType>('/api/v1/...');
+    setData(result);
+  } catch (e) {
+    setError(e instanceof Error ? e.message : 'Failed to load');
+  } finally { setLoading(false); }
+}, []);
+
+// Loading/error states use shared LoadingState/ErrorState components
+// FlatList with pull-to-refresh (onRefresh + refreshing)
+```
+
+## Mobile Component Conventions
+
+- `colors` from `@/lib/theme/colors` for programmatic styling
+- `SymbolView` from `expo-symbols` for icons (SF Symbols on iOS)
+- `SafeAreaView` from `react-native-safe-area-context` (not the deprecated RN one)
+- Font families: `'InstrumentSerif'` (headings), `'Inter'`/`'Inter-Medium'`/`'Inter-SemiBold'`/`'Inter-Bold'` (body)
+- Shared types from `@saltgoat/shared/types/helpers`, response types from `@/lib/types/api`
+
 ---
 
 See also: [Stack](./stack.md) | [Database](./database.md)

@@ -4,9 +4,12 @@ Colorado 14ers tracking app. Users log summits, write reviews, track progress ac
 
 ## Stack
 
-SvelteKit 5 (App Router) + Supabase (cloud) + Tailwind 3 + Railway
+**Web:** SvelteKit 5 + Supabase (cloud) + Tailwind 3 + Railway
+**Mobile:** Expo SDK 55 + React Native + NativeWind + Expo Router
+**Shared:** `@saltgoat/shared` monorepo package (types, data, utils)
 
-- **Dev:** `npm run dev` (localhost:4466)
+- **Dev (web):** `npm run dev` (localhost:4466)
+- **Dev (mobile):** `cd mobile && npx expo start` (iOS simulator)
 - **Build:** `npm run build`
 - **Deploy:** `railway up -d`
 - **DB Push:** `supabase db push`
@@ -15,16 +18,22 @@ SvelteKit 5 (App Router) + Supabase (cloud) + Tailwind 3 + Railway
 ## Project Structure
 
 ```
-src/lib/components/   UI components (peak/, profile/, map/, search/, admin/, etc.)
-src/lib/server/       Server-side queries & mutations (peaks, summits, reviews, admin, etc.)
-src/lib/data/         Static data (ranges, achievements)
-src/lib/utils/        Utilities (geo.ts)
-src/lib/types/        Generated Supabase types
-src/routes/           Pages & API endpoints
-src/routes/admin/     Admin dashboard (nested routes: overview, moderation, users, content, subscriptions)
-static/images/peaks/  Peak hero images (58 optimized JPEGs, NOT in Supabase storage)
-supabase/migrations/  Database migrations (46+)
-scripts/              Utility scripts (image optimization, GPX import)
+src/lib/components/     UI components (peak/, profile/, map/, search/, admin/, etc.)
+src/lib/server/         Server-side queries & mutations (peaks, summits, reviews, admin, etc.)
+src/lib/data/           Static data (ranges, achievements) — re-exports from @saltgoat/shared
+src/lib/utils/          Utilities (geo.ts) — re-exports from @saltgoat/shared
+src/lib/types/          Generated Supabase types — re-exports from @saltgoat/shared
+src/routes/             Pages & API endpoints
+src/routes/api/v1/      REST API for mobile (peaks, profile, conditions)
+src/routes/admin/       Admin dashboard (nested routes)
+static/images/peaks/    Peak hero images (58 optimized JPEGs, NOT in Supabase storage)
+supabase/migrations/    Database migrations (46+)
+scripts/                Utility scripts
+packages/shared/        @saltgoat/shared — types, data, utils shared between web + mobile
+mobile/                 Expo/React Native mobile app
+mobile/app/             Expo Router screens (tabs, stacks, modals)
+mobile/components/      React Native components (peaks/, profile/, weather/, ui/)
+mobile/lib/             Supabase client, API client, auth provider, theme
 ```
 
 ## Key Patterns
@@ -34,8 +43,10 @@ scripts/              Utility scripts (image optimization, GPX import)
 - **Custom SVG icons** (not Lucide) in `src/lib/components/ui/AchievementIcon.svelte`
 - **Dark mode:** `.dark` class on `<html>`, all components support both themes
 - **Design system:** `class-1`..`class-4` colors, `shadow-card` variants, Instrument Serif + Inter fonts
-- **Auth:** `createSupabaseServerClient(cookies)` for server-side, email + Google OAuth
+- **Auth (web):** `createSupabaseServerClient(cookies)` for SSR pages, email + Google OAuth
+- **Auth (API):** `createSupabaseApiClient(request)` extracts Bearer token, `requireAuth(request)` validates user — both in `src/lib/server/supabase.ts`
 - **Images:** Sharp for optimization on upload, peak images served from `/images/peaks/`
+- **API pattern:** endpoints at `/api/v1/` are thin wrappers around server modules. Public endpoints use anon client fallback; auth-required use `requireAuth`. CORS handled in `hooks.server.ts`
 
 ## Database (Quick Ref)
 
@@ -82,7 +93,9 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 - PWA glob warning is harmless (ignore it)
 - `semver` circular dependency warning in node_modules (harmless)
 - Social engagement: `summit_reactions` + `summit_comments` tables, server modules in `src/lib/server/reactions.ts` and `src/lib/server/comments.ts`, UI in `ActivityFeed.svelte` + public profile page
-- API endpoints: `/api/webhooks/weather`, `/api/checkout`, `/api/portal`, `/api/webhooks/stripe` (last 3 are stubs), `/api/export/summits` (Pro-only CSV download)
+- **Web API endpoints:** `/api/webhooks/weather`, `/api/checkout`, `/api/portal`, `/api/webhooks/stripe` (last 3 are stubs), `/api/export/summits` (Pro-only CSV download)
+- **Mobile API endpoints (v1):** `GET /api/v1/peaks` (all peaks + optional summitedPeakIds), `GET /api/v1/peaks/[slug]` (aggregated detail), `GET /api/v1/peaks/[slug]/conditions` (7-day weather), `GET /api/v1/profile` (auth-required, stats + summits + achievements + grid)
+- Static image paths (`/images/peaks/...`) are resolved to absolute URLs via `url.origin` in v1 API responses (mobile has no same-origin)
 - Admin check: centralized in `src/lib/server/admin.ts` — `isAdmin()` + `assertAdmin()` (hardcoded user ID, re-exported from `images.ts` for backward compat)
 - Admin dashboard uses nested routes (not `?tab=` params) — each tab has its own `+page.server.ts` with scoped data loading and form actions
 - Admin layout at `src/routes/admin/+layout.server.ts` handles auth guard once for all tabs

@@ -1,7 +1,30 @@
 import type { Handle } from '@sveltejs/kit';
 
+function isApiV1(pathname: string) {
+  return pathname.startsWith('/api/v1/');
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
+  // Handle CORS preflight for mobile API
+  if (isApiV1(event.url.pathname) && event.request.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Authorization, Content-Type',
+        'Access-Control-Max-Age': '86400'
+      }
+    });
+  }
+
   const response = await resolve(event);
+
+  // CORS headers for /api/v1/ responses
+  if (isApiV1(event.url.pathname)) {
+    response.headers.set('Access-Control-Allow-Origin', '*');
+    response.headers.set('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+  }
 
   // Security headers
   response.headers.set('X-Frame-Options', 'SAMEORIGIN');
