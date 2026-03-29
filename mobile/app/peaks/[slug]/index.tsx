@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, Image, FlatList, RefreshControl, Pressable } from 'react-native';
 import { useLocalSearchParams, Stack, router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { colors } from '@/lib/theme/colors';
 import { apiFetch } from '@/lib/api';
 import { LoadingState } from '@/components/ui/LoadingState';
@@ -12,6 +13,7 @@ import { ReviewCard } from '@/components/peaks/ReviewCard';
 import { TrailReportCard } from '@/components/peaks/TrailReportCard';
 import { PeakCard } from '@/components/peaks/PeakCard';
 import { WeatherSection } from '@/components/weather/WeatherSection';
+import { ImageGalleryViewer } from '@/components/gallery/ImageGalleryViewer';
 import { useSession } from '@/lib/auth/AuthProvider';
 import type { PeakDetailResponse } from '@/lib/types/api';
 
@@ -21,6 +23,8 @@ export default function PeakDetailScreen() {
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [galleryVisible, setGalleryVisible] = useState(false);
+	const [galleryIndex, setGalleryIndex] = useState(0);
 	const { user } = useSession();
 
 	const loadPeak = useCallback(async () => {
@@ -39,6 +43,13 @@ export default function PeakDetailScreen() {
 	useEffect(() => {
 		loadPeak();
 	}, [loadPeak]);
+
+	// Re-fetch when screen regains focus (e.g. returning from upload modal)
+	useFocusEffect(
+		useCallback(() => {
+			if (!loading) loadPeak();
+		}, [loadPeak, loading])
+	);
 
 	const handleRefresh = useCallback(() => {
 		setRefreshing(true);
@@ -284,29 +295,62 @@ export default function PeakDetailScreen() {
 					</Section>
 
 					{/* Photo Gallery */}
-					{images.length > 0 && (
-						<Section title={`Photos (${images.length})`}>
+					<Section title={images.length > 0 ? `Photos (${images.length})` : 'Photos'}>
+						{user && (
+							<Pressable
+								onPress={() => router.push({
+									pathname: '/(modals)/photo-upload',
+									params: { peakId: peak.id, peakName: peak.name, slug: peak.slug }
+								})}
+								style={{
+									alignItems: 'center',
+									justifyContent: 'center',
+									paddingVertical: 12,
+									borderRadius: 10,
+									borderWidth: 1,
+									borderColor: colors.accent.default,
+									borderStyle: 'dashed',
+									marginBottom: 12,
+								}}
+							>
+								<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: colors.accent.default }}>
+									Add a Photo
+								</Text>
+							</Pressable>
+						)}
+						{images.length > 0 ? (
 							<FlatList
 								horizontal
 								data={images}
 								keyExtractor={(item) => item.id}
-								renderItem={({ item }) => (
-									<Image
-										source={{ uri: item.url }}
-										style={{
-											width: 140,
-											height: 140,
-											borderRadius: 8
-										}}
-										resizeMode="cover"
-									/>
+								renderItem={({ item, index }) => (
+									<Pressable onPress={() => {
+										setGalleryIndex(index);
+										setGalleryVisible(true);
+									}}>
+										<Image
+											source={{ uri: item.url }}
+											style={{
+												width: 140,
+												height: 140,
+												borderRadius: 8,
+											}}
+											resizeMode="cover"
+										/>
+									</Pressable>
 								)}
 								contentContainerStyle={{ gap: 8 }}
 								showsHorizontalScrollIndicator={false}
 								scrollEnabled
 							/>
-						</Section>
-					)}
+						) : (
+							!user && (
+								<Text style={{ fontFamily: 'Inter', fontSize: 14, color: colors.light.textMuted, textAlign: 'center' }}>
+									No photos yet
+								</Text>
+							)
+						)}
+					</Section>
 
 					{/* Related Peaks */}
 					{relatedPeaks.length > 0 && (
@@ -346,6 +390,13 @@ export default function PeakDetailScreen() {
 					)}
 				</View>
 			</ScrollView>
+
+			<ImageGalleryViewer
+				images={images}
+				visible={galleryVisible}
+				initialIndex={galleryIndex}
+				onClose={() => setGalleryVisible(false)}
+			/>
 		</View>
 	);
 }

@@ -1,8 +1,8 @@
 # Current Status
 
 **Last Updated:** 2026-03-29
-**Current Phase:** Mobile 3D — Social Features (Not Started)
-**What's Next:** Activity feed, public user profiles, follow/unfollow, summit reactions + comments
+**Current Phase:** Mobile 4 — Offline-First (Not Started)
+**What's Next:** Local caching (peaks, routes, user data), sync outbox for mutations, offline map tiles, connectivity UI
 
 ## What's Built
 
@@ -34,6 +34,20 @@ All web features shipped. Outstanding: affiliate partnerships (Phase 7), notific
 - Peak detail CTAs: "Write a Review" (hidden if already reviewed), "Report Trail Conditions"
 - Reviews/trail reports sections always visible (empty states when no content)
 
+**Phase 3D — Social features**
+- Activity feed with Following/You tabs, public user profiles, follow/unfollow system
+- Summit reactions (congrats), comments bottom sheet, suggested climbers
+- API endpoints: `/api/v1/activity`, `/api/v1/users/[id]`, `/api/v1/follows`, `/api/v1/reactions`, `/api/v1/comments`
+
+**Phase 3E — Photo upload**
+- `POST /api/v1/peaks/[slug]/images` — multipart/form-data upload, server-side Sharp optimization
+- Upload modal: camera/library picker (expo-image-picker), image preview, caption, category chips (10 categories), private toggle
+- Client-side resize via `expo-image-manipulator` (1600x1200, JPEG 0.8), XHR-based upload with progress bar
+- Full-screen gallery viewer (react-native-image-viewing) — pinch-to-zoom, swipe between images, caption/category/uploader footer
+- Peak detail: "Add a Photo" CTA, tappable thumbnails, photos section always visible, useFocusEffect refresh
+
+Feature-complete beta milestone reached.
+
 ## Phase Summary
 
 | Phase | Status |
@@ -44,8 +58,8 @@ All web features shipped. Outstanding: affiliate partnerships (Phase 7), notific
 | Mobile 3A (Auth) | COMPLETE |
 | Mobile 3B (Summit logging) | COMPLETE |
 | Mobile 3C (Reviews + trail reports) | COMPLETE |
-| Mobile 3D (Social features) | NOT STARTED |
-| Mobile 3E (Photo upload) | NOT STARTED |
+| Mobile 3D (Social features) | COMPLETE |
+| Mobile 3E (Photo upload) | COMPLETE |
 | Mobile 4 (Offline-first) | NOT STARTED |
 | Mobile 5 (Payments) | NOT STARTED |
 | Mobile 6 (App Store) | NOT STARTED |

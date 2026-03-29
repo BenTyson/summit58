@@ -17,16 +17,9 @@
 | 3B | Summit logging | Quick Summit screen (GPS auto-detect, celebration overlay), summit CRUD API, PeaksProvider context, edit/delete from profile |
 | 3C | Reviews + trail reports | Review modal (star rating, title, body), trail report modal (chip selectors, conditional snow depth, multi-select hazards), API endpoints, peak detail CTAs |
 | 3D | Social features | Activity feed (Following/You tabs), public user profiles, follow/unfollow, summit reactions, comments bottom sheet, suggested climbers |
+| 3E | Photo upload | `POST /api/v1/peaks/[slug]/images`, upload modal (camera/library, categories, progress bar), full-screen gallery viewer (pinch-to-zoom, swipe) |
 
 **Supabase config still needed:** Add `saltgoat://auth/callback` to redirect URLs, configure Google OAuth iOS client ID, enable Apple provider.
-
-## Phase 3E: Photo Upload
-
-- `POST /api/v1/peaks/[slug]/images` — wraps image upload pipeline
-- `expo-image-picker` for camera/gallery, `expo-image-manipulator` for client-side resize (no Sharp on mobile)
-- Category selection, caption, private/public toggle
-- Upload progress indicator
-- Full-screen gallery with swipe + pinch-to-zoom
 
 ## Phase 4: Offline-First (4-6 sessions)
 
@@ -104,10 +97,10 @@ Mapbox SDK (first-class offline). User-initiated download per peak or range. Pro
 
 | Phase | Sessions | Milestone |
 |-------|----------|-----------|
-| 3C-3E | 3-4 | Feature-complete beta |
+| ~~3C-3E~~ | ~~3-4~~ | ~~Feature-complete beta~~ (done) |
 | 4 | 4-6 | Field-testable beta |
 | 5 | 2-3 | Monetization ready |
 | 6 | 2-3 | **Public launch** |
 | 7 | Ongoing | Enhancements |
 
-Phases 5 and 4 can run in parallel.
+Phases 3C-3E complete. Feature-complete beta reached. Phases 5 and 4 can run in parallel.

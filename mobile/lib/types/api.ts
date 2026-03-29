@@ -4,6 +4,7 @@ import type {
 	ReviewWithProfile,
 	TrailReportWithProfile,
 	TrailReport,
+	PeakImage,
 	PeakImageWithUrl,
 	PeakConditions,
 	UserSummit,
@@ -123,6 +124,11 @@ export interface TrailReportCreateRequest {
 export interface TrailReportCreateResponse {
 	trailReport: TrailReport;
 	newAchievements: string[];
+}
+
+export interface ImageUploadResponse {
+	image: PeakImage;
+	url: string;
 }
 
 // --- Phase 3D: Social Features ---

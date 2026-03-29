@@ -83,6 +83,7 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 - **Fonts:** `'InstrumentSerif'` (headings), `'Inter'`/`'Inter-Medium'`/`'Inter-SemiBold'`/`'Inter-Bold'`
 - **Icons:** `SymbolView` from `expo-symbols` (SF Symbols on iOS)
 - **Colors:** `colors` from `@/lib/theme/colors` for programmatic styling
+- **Image upload:** `pickImage`, `optimizeImage`, `uploadImageWithProgress` at `mobile/lib/imageUpload.ts` — XHR-based with progress callback, client-side resize via `expo-image-manipulator`
 - **Types:** shared from `@saltgoat/shared/types/helpers`, API responses from `@/lib/types/api`
 
 ## API Endpoints
@@ -104,6 +105,7 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | `/api/v1/summits/[id]` | DELETE | Required | Delete summit |
 | `/api/v1/peaks/[slug]/reviews` | POST | Required | Create review → returns `{ review, newAchievements }` |
 | `/api/v1/peaks/[slug]/trail-reports` | POST | Required | Create trail report → returns `{ trailReport, newAchievements }` |
+| `/api/v1/peaks/[slug]/images` | POST | Required | Upload peak image (multipart/form-data) → returns `{ image, url }` |
 | `/api/v1/activity` | GET | Required | Unified activity feed (?feed=following/you) with reactions + comments |
 | `/api/v1/users/[id]` | GET | Optional | Public user profile with stats, summits, achievements, follow data |
 | `/api/v1/follows` | GET | Required | Suggested users to follow |
@@ -112,8 +114,6 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | `/api/v1/reactions` | POST | Required | Toggle summit reaction (`{ summit_id }`) |
 | `/api/v1/comments` | POST | Required | Create comment (`{ summit_id, body }`) |
 | `/api/v1/comments` | DELETE | Required | Delete own comment (`{ comment_id }`) |
-
-**Still needed:** images POST
 
 **Pattern:** endpoints are thin wrappers around server modules. Public endpoints: anon client fallback. Auth-required: `requireAuth(request)`. CORS in `hooks.server.ts`. Static image paths resolved to absolute URLs via `url.origin`.
 
