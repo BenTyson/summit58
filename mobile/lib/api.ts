@@ -14,12 +14,22 @@ export class ApiError extends Error {
 interface ApiFetchOptions {
 	/** Set to false to skip auth header (public endpoints). Default: true */
 	auth?: boolean;
+	/** HTTP method. Default: GET */
+	method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+	/** JSON body for POST/PATCH requests */
+	body?: Record<string, unknown>;
+	/** FormData body for file uploads (Content-Type set automatically) */
+	formData?: FormData;
 }
 
 export async function apiFetch<T>(path: string, options?: ApiFetchOptions): Promise<T> {
-	const headers: Record<string, string> = {
-		'Content-Type': 'application/json'
-	};
+	const method = options?.method ?? 'GET';
+	const headers: Record<string, string> = {};
+
+	// Set Content-Type for JSON requests (not for FormData — runtime sets boundary)
+	if (!options?.formData) {
+		headers['Content-Type'] = 'application/json';
+	}
 
 	if (options?.auth !== false) {
 		const {
@@ -30,9 +40,16 @@ export async function apiFetch<T>(path: string, options?: ApiFetchOptions): Prom
 		}
 	}
 
+	let requestBody: string | FormData | undefined;
+	if (options?.formData) {
+		requestBody = options.formData;
+	} else if (options?.body) {
+		requestBody = JSON.stringify(options.body);
+	}
+
 	let response: Response;
 	try {
-		response = await fetch(`${API_BASE}${path}`, { headers });
+		response = await fetch(`${API_BASE}${path}`, { method, headers, body: requestBody });
 	} catch (e) {
 		throw new ApiError(0, 'Network error');
 	}
@@ -42,13 +59,22 @@ export async function apiFetch<T>(path: string, options?: ApiFetchOptions): Prom
 		const { data } = await supabase.auth.refreshSession();
 		if (data.session?.access_token) {
 			headers['Authorization'] = `Bearer ${data.session.access_token}`;
-			response = await fetch(`${API_BASE}${path}`, { headers });
+			try {
+				response = await fetch(`${API_BASE}${path}`, { method, headers, body: requestBody });
+			} catch (e) {
+				throw new ApiError(0, 'Network error');
+			}
 		}
 	}
 
 	if (!response.ok) {
 		const body = await response.text();
 		throw new ApiError(response.status, body);
+	}
+
+	// DELETE with 204 has no body
+	if (response.status === 204) {
+		return undefined as T;
 	}
 
 	return response.json();

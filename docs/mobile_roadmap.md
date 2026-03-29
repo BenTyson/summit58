@@ -180,11 +180,11 @@ Expo SDK 55 app at `/mobile/` with npm workspaces monorepo.
 - Sections: weather, routes, reviews, trail reports, photo gallery, related peaks, description
 - All components: RouteCard, ReviewCard, TrailReportCard, PeakCard (reused)
 
-### 2B: Native Maps -- CODE COMPLETE (pending native build)
+### 2B: Native Maps -- COMPLETE
 
 **Decision:** `react-native-maps` with Apple Maps (zero config, no API keys). Mapbox deferred to Phase 4 for offline tiles.
 
-**Installed:** `react-native-maps`, `@gorhom/bottom-sheet` v5, `react-native-gesture-handler`, `expo-location`
+**Installed:** `react-native-maps`, `@gorhom/bottom-sheet` v5, `react-native-gesture-handler` v2.30.1, `expo-location`
 
 **Built:**
 - `mobile/app/(tabs)/map.tsx` — full-bleed MapView, 58 markers color-coded by difficulty class, standard/hybrid map type toggle, current location button with permission handling
@@ -193,11 +193,7 @@ Expo SDK 55 app at `/mobile/` with npm workspaces monorepo.
 - `mobile/app/(tabs)/_layout.tsx` — `headerShown: false` for map tab
 - `mobile/app.json` — added `react-native-maps` and `expo-location` plugins
 
-**BLOCKER:** Native build requires Xcode 16+ (React Native 0.83 requirement). Current machine has Xcode 15.4 on macOS 14 Sonoma. macOS upgrade to 15 Sequoia needed, then install Xcode 16.2, then run:
-```bash
-cd mobile && npx expo prebuild --clean && npx expo run:ios
-```
-All JS/TS code is complete and type-checks. Only the native build + on-device testing remains.
+**Resolved:** Xcode 26.4 on macOS Tahoe. Required `react-native-gesture-handler` upgrade from ~2.24.0 to 2.30.1 (C++ API change in new SDK). Native build succeeds on iPhone 17 Pro simulator (iOS 26.4).
 
 ### 2C: Weather Display -- COMPLETE
 
@@ -247,7 +243,7 @@ All JS/TS code is complete and type-checks. Only the native build + on-device te
 ### Phase 2 Review Gate
 - [x] All 58 peaks load and display correctly
 - [x] Peak detail shows all sections with real data from API
-- [ ] Map displays all 58 markers (2B code complete, needs native build after Xcode 16 upgrade)
+- [x] Map displays all 58 markers (native build verified with Xcode 26.4)
 - [x] Weather data displays and matches web
 - [x] Profile displays correct stats for a test user
 - [x] Pull-to-refresh works on all list screens
@@ -258,13 +254,30 @@ All JS/TS code is complete and type-checks. Only the native build + on-device te
 
 ## Phase 3: Core Features -- Write Operations (3-4 sessions)
 
-### 3A: Authentication
-- Email/password login and signup
-- Google OAuth via Expo AuthSession
-- Apple Sign In (required for App Store)
-- Password reset
-- Persistent session via `expo-secure-store`
-- Deep link callback (`saltgoat://auth/callback`)
+### 3A: Authentication -- COMPLETE
+
+**AuthProvider** (`mobile/lib/auth/AuthProvider.tsx`):
+- Extended with full auth methods: `signInWithEmail`, `signUpWithEmail`, `signInWithGoogle`, `signInWithApple`, `signOut`, `resetPassword`
+- Error state management with `authError` + `clearError`
+- Google OAuth via `supabase.auth.signInWithOAuth` + `expo-web-browser` (not expo-auth-session)
+- Apple Sign In via `expo-apple-authentication` native sheet + `supabase.auth.signInWithIdToken`
+- Deep link callback via `Linking.createURL('/auth/callback')` + `saltgoat://` scheme
+
+**Screens:**
+- `mobile/app/(auth)/login.tsx` — email/password form, Google OAuth button, Apple Sign In (iOS), forgot password link
+- `mobile/app/(auth)/signup.tsx` — email/password with confirmation, OAuth buttons, email verification flow
+- `mobile/app/(auth)/reset-password.tsx` — email input, sends reset link, confirmation state
+
+**Infrastructure:**
+- `mobile/lib/api.ts` — extended `apiFetch` with POST/PATCH/DELETE support + FormData for file uploads
+- `src/hooks.server.ts` — CORS updated with PATCH, DELETE methods for write endpoints
+- Sign-out button added to profile tab with confirmation alert
+- Installed: `expo-apple-authentication`, `expo-image-picker`, `expo-image-manipulator`
+
+**Supabase dashboard config still needed:**
+- Add `saltgoat://auth/callback` to Auth > Redirect URLs
+- Configure Google OAuth with iOS bundle ID (`com.saltgoat.app`)
+- Enable Apple provider in Auth > Providers
 
 ### 3B: Summit Logging (Most Important Mobile Feature)
 

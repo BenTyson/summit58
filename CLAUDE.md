@@ -5,7 +5,7 @@ Colorado 14ers tracking app. Users log summits, write reviews, track progress ac
 ## Stack
 
 **Web:** SvelteKit 5 + Supabase (cloud) + Tailwind 3 + Railway
-**Mobile:** Expo SDK 55 + React Native + NativeWind + Expo Router
+**Mobile:** Expo SDK 55 + React Native + NativeWind + Expo Router + expo-web-browser (OAuth) + expo-apple-authentication
 **Shared:** `@saltgoat/shared` monorepo package (types, data, utils)
 
 - **Dev (web):** `npm run dev` (localhost:4466)
@@ -45,8 +45,10 @@ mobile/lib/             Supabase client, API client, auth provider, theme
 - **Design system:** `class-1`..`class-4` colors, `shadow-card` variants, Instrument Serif + Inter fonts
 - **Auth (web):** `createSupabaseServerClient(cookies)` for SSR pages, email + Google OAuth
 - **Auth (API):** `createSupabaseApiClient(request)` extracts Bearer token, `requireAuth(request)` validates user — both in `src/lib/server/supabase.ts`
-- **Images:** Sharp for optimization on upload, peak images served from `/images/peaks/`
-- **API pattern:** endpoints at `/api/v1/` are thin wrappers around server modules. Public endpoints use anon client fallback; auth-required use `requireAuth`. CORS handled in `hooks.server.ts`
+- **Auth (mobile):** `AuthProvider` at `mobile/lib/auth/AuthProvider.tsx` with `useSession()` hook — exposes `signInWithEmail`, `signUpWithEmail`, `signInWithGoogle` (expo-web-browser), `signInWithApple` (expo-apple-authentication), `signOut`, `resetPassword`. Tokens stored via `expo-secure-store`. Deep link scheme: `saltgoat://auth/callback`
+- **Images:** Sharp for optimization on upload (web), `expo-image-manipulator` for mobile. Peak images served from `/images/peaks/`
+- **API pattern:** endpoints at `/api/v1/` are thin wrappers around server modules. Public endpoints use anon client fallback; auth-required use `requireAuth`. CORS in `hooks.server.ts` allows GET, POST, PATCH, DELETE, OPTIONS
+- **Mobile API client:** `apiFetch<T>(path, options?)` at `mobile/lib/api.ts` — auto Bearer token, 401 refresh retry, supports GET/POST/PATCH/DELETE + FormData for file uploads
 
 ## Database (Quick Ref)
 
@@ -94,7 +96,7 @@ See [docs/session-start/database.md](docs/session-start/database.md) for full sc
 - `semver` circular dependency warning in node_modules (harmless)
 - Social engagement: `summit_reactions` + `summit_comments` tables, server modules in `src/lib/server/reactions.ts` and `src/lib/server/comments.ts`, UI in `ActivityFeed.svelte` + public profile page
 - **Web API endpoints:** `/api/webhooks/weather`, `/api/checkout`, `/api/portal`, `/api/webhooks/stripe` (last 3 are stubs), `/api/export/summits` (Pro-only CSV download)
-- **Mobile API endpoints (v1):** `GET /api/v1/peaks` (all peaks + optional summitedPeakIds), `GET /api/v1/peaks/[slug]` (aggregated detail), `GET /api/v1/peaks/[slug]/conditions` (7-day weather), `GET /api/v1/profile` (auth-required, stats + summits + achievements + grid)
+- **Mobile API endpoints (v1):** `GET /api/v1/peaks` (all peaks + optional summitedPeakIds), `GET /api/v1/peaks/[slug]` (aggregated detail), `GET /api/v1/peaks/[slug]/conditions` (7-day weather), `GET /api/v1/profile` (auth-required, stats + summits + achievements + grid). Write endpoints (Phase 3B+) still needed: summits POST/PATCH/DELETE, reviews POST, trail-reports POST, images POST, follows POST/DELETE, activity GET
 - Static image paths (`/images/peaks/...`) are resolved to absolute URLs via `url.origin` in v1 API responses (mobile has no same-origin)
 - Admin check: centralized in `src/lib/server/admin.ts` — `isAdmin()` + `assertAdmin()` (hardcoded user ID, re-exported from `images.ts` for backward compat)
 - Admin dashboard uses nested routes (not `?tab=` params) — each tab has its own `+page.server.ts` with scoped data loading and form actions

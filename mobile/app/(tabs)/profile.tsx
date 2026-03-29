@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
 import { useSession } from '@/lib/auth/AuthProvider';
+import { Alert } from 'react-native';
 import { apiFetch } from '@/lib/api';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
@@ -14,7 +15,7 @@ import { SummitHistoryItem } from '@/components/profile/SummitHistoryItem';
 import type { ProfileResponse } from '@/lib/types/api';
 
 export default function ProfileScreen() {
-	const { user, loading: authLoading } = useSession();
+	const { user, loading: authLoading, signOut } = useSession();
 	const [data, setData] = useState<ProfileResponse | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
@@ -210,6 +211,28 @@ export default function ProfileScreen() {
 						{profile.location}
 					</Text>
 				)}
+
+				{/* Sign out */}
+				<Pressable
+					onPress={() => {
+						Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+							{ text: 'Cancel', style: 'cancel' },
+							{ text: 'Sign Out', style: 'destructive', onPress: signOut },
+						]);
+					}}
+					style={{
+						alignSelf: 'flex-start',
+						marginTop: 12,
+						paddingHorizontal: 14,
+						paddingVertical: 7,
+						borderRadius: 6,
+						borderWidth: 1,
+						borderColor: colors.light.border,
+					}}>
+					<Text style={{ fontFamily: 'Inter-Medium', fontSize: 13, color: colors.light.textMuted }}>
+						Sign Out
+					</Text>
+				</Pressable>
 			</View>
 
 			<View style={{ padding: 20, gap: 24 }}>

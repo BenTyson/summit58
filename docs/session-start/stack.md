@@ -20,15 +20,19 @@
 ### Mobile
 | Layer | Tech |
 |-------|------|
-| Framework | React Native + Expo SDK 55 |
-| Router | Expo Router (file-based) |
-| Styling | NativeWind v4 (Tailwind for RN) + programmatic tokens |
-| Auth | Supabase JS + expo-secure-store |
+| Framework | React Native 0.83 + Expo SDK 55 |
+| Router | Expo Router (file-based, typed routes) |
+| Styling | NativeWind v4 (Tailwind for RN) + programmatic tokens (`mobile/lib/theme/colors.ts`) |
+| Auth | Supabase JS + expo-secure-store (token persistence) |
+| OAuth | expo-web-browser (Google), expo-apple-authentication (Apple Sign In) |
+| API Client | `mobile/lib/api.ts` — `apiFetch<T>()` with auto Bearer token, 401 refresh, POST/PATCH/DELETE/FormData |
 | Icons | expo-symbols (SF Symbols) |
 | Maps | react-native-maps (Apple Maps, no API key) |
 | Location | expo-location (foreground permission) |
-| Bottom Sheet | @gorhom/bottom-sheet v5 (uses reanimated + gesture-handler) |
+| Camera/Photos | expo-image-picker + expo-image-manipulator (client-side resize) |
+| Bottom Sheet | @gorhom/bottom-sheet v5 (uses reanimated + gesture-handler 2.30.1) |
 | Shared | @saltgoat/shared monorepo package |
+| Build | Xcode 26.4, iOS Simulator SDK 26.4 |
 
 ### Shared
 | Package | Exports |

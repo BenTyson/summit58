@@ -141,15 +141,49 @@ const { supabase: authClient } = createSupabaseApiClient(request);
 const client = authClient || createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 const peaks = await getAllPeaks(client);
 
-// Auth-required endpoint
+// Auth-required endpoint (GET)
 const { supabase, user, error } = await requireAuth(request);
 if (!supabase) return new Response(JSON.stringify({ error }), { status: 401, ... });
+
+// Auth-required endpoint (POST) — pattern for write endpoints
+export const POST: RequestHandler = async ({ request }) => {
+  const { supabase, user, error } = await requireAuth(request);
+  if (!supabase || !user) return json({ error }, { status: 401 });
+  const body = await request.json();
+  // Call server module: createSummit(supabase, { user_id: user.id, ...body })
+  // Trigger achievements: checkAndAwardAchievements(supabase, user.id, 'summit')
+  return json({ data, newAchievements }, { status: 201 });
+};
 ```
 
 Static image paths (`/images/peaks/...`) must be resolved to absolute URLs in API responses:
 ```typescript
 peak.hero_image_url = peak.hero_image_url ? `${url.origin}${peak.hero_image_url}` : null;
 ```
+
+## Mobile Auth Pattern
+
+`AuthProvider` at `mobile/lib/auth/AuthProvider.tsx` provides `useSession()`:
+
+```typescript
+const { user, loading, authError, signInWithEmail, signOut, clearError } = useSession();
+
+// Auth gate for write-action screens (mirrors profile.tsx pattern)
+if (!user) return <SignInPrompt />;
+
+// API calls with auth (auto-includes Bearer token)
+const result = await apiFetch<CreateSummitResponse>('/api/v1/summits', {
+  method: 'POST',
+  body: { peak_id, date_summited, conditions },
+});
+
+// File upload with FormData
+const formData = new FormData();
+formData.append('file', { uri, type: 'image/jpeg', name: 'photo.jpg' });
+const result = await apiFetch('/api/v1/peaks/slug/images', { method: 'POST', formData });
+```
+
+OAuth flows: Google uses `expo-web-browser` + `supabase.auth.signInWithOAuth`, Apple uses native `expo-apple-authentication` + `supabase.auth.signInWithIdToken`. Deep link callback: `saltgoat://auth/callback`.
 
 ## Mobile Screen Pattern
 
