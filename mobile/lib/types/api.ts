@@ -3,6 +3,7 @@ import type {
 	PeakWithRoutes,
 	ReviewWithProfile,
 	TrailReportWithProfile,
+	TrailReport,
 	PeakImageWithUrl,
 	PeakConditions,
 	UserSummit,
@@ -96,4 +97,30 @@ export interface CanLogSummitResponse {
 	allowed: boolean;
 	remaining: number;
 	isPro: boolean;
+}
+
+export interface ReviewCreateRequest {
+	rating: number;
+	title?: string | null;
+	body?: string | null;
+}
+
+export interface ReviewCreateResponse {
+	review: UserReview;
+	newAchievements: string[];
+}
+
+export interface TrailReportCreateRequest {
+	hike_date: string;
+	trail_status: string;
+	snow_depth_inches?: number | null;
+	crowd_level: string;
+	road_status: string;
+	hazards?: string[];
+	notes?: string | null;
+}
+
+export interface TrailReportCreateResponse {
+	trailReport: TrailReport;
+	newAchievements: string[];
 }

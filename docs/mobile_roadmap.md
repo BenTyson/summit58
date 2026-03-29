@@ -15,16 +15,9 @@
 | 2 | Read-only features | Explore (search/filter), peak detail, native map (58 markers), weather, profile/stats |
 | 3A | Authentication | Email/password, Google OAuth (expo-web-browser), Apple Sign In (native), sign-out, reset password |
 | 3B | Summit logging | Quick Summit screen (GPS auto-detect, celebration overlay), summit CRUD API, PeaksProvider context, edit/delete from profile |
+| 3C | Reviews + trail reports | Review modal (star rating, title, body), trail report modal (chip selectors, conditional snow depth, multi-select hazards), API endpoints, peak detail CTAs |
 
 **Supabase config still needed:** Add `saltgoat://auth/callback` to redirect URLs, configure Google OAuth iOS client ID, enable Apple provider.
-
-## Phase 3C: Reviews and Trail Reports
-
-- `POST /api/v1/peaks/[slug]/reviews` — wraps `createReview` from `reviews.ts`
-- `POST /api/v1/peaks/[slug]/trail-reports` — wraps `createTrailReport` from `trailReports.ts`
-- Review form: star rating, title, body. One review per user per peak.
-- Trail report form: trail_status, snow_depth, crowd_level, hazards
-- Both accessible from peak detail screen
 
 ## Phase 3D: Social Features
 

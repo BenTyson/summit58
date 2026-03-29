@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, Image, FlatList, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, Image, FlatList, RefreshControl, Pressable } from 'react-native';
 import { useLocalSearchParams, Stack, router } from 'expo-router';
 import { colors } from '@/lib/theme/colors';
 import { apiFetch } from '@/lib/api';
@@ -12,6 +12,7 @@ import { ReviewCard } from '@/components/peaks/ReviewCard';
 import { TrailReportCard } from '@/components/peaks/TrailReportCard';
 import { PeakCard } from '@/components/peaks/PeakCard';
 import { WeatherSection } from '@/components/weather/WeatherSection';
+import { useSession } from '@/lib/auth/AuthProvider';
 import type { PeakDetailResponse } from '@/lib/types/api';
 
 export default function PeakDetailScreen() {
@@ -20,6 +21,7 @@ export default function PeakDetailScreen() {
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const { user } = useSession();
 
 	const loadPeak = useCallback(async () => {
 		try {
@@ -180,8 +182,8 @@ export default function PeakDetailScreen() {
 					)}
 
 					{/* Reviews */}
-					{totalReviews > 0 && (
-						<Section title="Reviews">
+					<Section title="Reviews">
+						{totalReviews > 0 && (
 							<View
 								style={{
 									flexDirection: 'row',
@@ -207,24 +209,79 @@ export default function PeakDetailScreen() {
 									({totalReviews} review{totalReviews !== 1 ? 's' : ''})
 								</Text>
 							</View>
+						)}
+						{user && !data.userData?.userReview && (
+							<Pressable
+								onPress={() => router.push({
+									pathname: '/(modals)/review',
+									params: { peakId: peak.id, peakName: peak.name, slug: peak.slug }
+								})}
+								style={{
+									alignItems: 'center',
+									justifyContent: 'center',
+									paddingVertical: 12,
+									borderRadius: 10,
+									borderWidth: 1,
+									borderColor: colors.accent.default,
+									borderStyle: 'dashed',
+									marginBottom: 12,
+								}}
+							>
+								<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: colors.accent.default }}>
+									Write a Review
+								</Text>
+							</Pressable>
+						)}
+						{totalReviews > 0 && (
 							<View style={{ gap: 10 }}>
 								{reviews.map((review) => (
 									<ReviewCard key={review.id} review={review} />
 								))}
 							</View>
-						</Section>
-					)}
+						)}
+						{totalReviews === 0 && !user && (
+							<Text style={{ fontFamily: 'Inter', fontSize: 14, color: colors.light.textMuted, textAlign: 'center' }}>
+								No reviews yet
+							</Text>
+						)}
+					</Section>
 
 					{/* Trail Reports */}
-					{trailReports.length > 0 && (
-						<Section title="Recent Trail Reports">
+					<Section title="Recent Trail Reports">
+						{user && (
+							<Pressable
+								onPress={() => router.push({
+									pathname: '/(modals)/trail-report',
+									params: { peakId: peak.id, peakName: peak.name, slug: peak.slug }
+								})}
+								style={{
+									alignItems: 'center',
+									justifyContent: 'center',
+									paddingVertical: 12,
+									borderRadius: 10,
+									borderWidth: 1,
+									borderColor: colors.accent.default,
+									borderStyle: 'dashed',
+									marginBottom: 12,
+								}}
+							>
+								<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: colors.accent.default }}>
+									Report Trail Conditions
+								</Text>
+							</Pressable>
+						)}
+						{trailReports.length > 0 ? (
 							<View style={{ gap: 10 }}>
 								{trailReports.map((report) => (
 									<TrailReportCard key={report.id} report={report} />
 								))}
 							</View>
-						</Section>
-					)}
+						) : (
+							<Text style={{ fontFamily: 'Inter', fontSize: 14, color: colors.light.textMuted, textAlign: 'center' }}>
+								No recent trail reports
+							</Text>
+						)}
+					</Section>
 
 					{/* Photo Gallery */}
 					{images.length > 0 && (

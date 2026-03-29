@@ -102,8 +102,10 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | `/api/v1/summits` | POST | Required | Create summit → returns `{ summit, newAchievements }` |
 | `/api/v1/summits/[id]` | PATCH | Required | Update summit fields |
 | `/api/v1/summits/[id]` | DELETE | Required | Delete summit |
+| `/api/v1/peaks/[slug]/reviews` | POST | Required | Create review → returns `{ review, newAchievements }` |
+| `/api/v1/peaks/[slug]/trail-reports` | POST | Required | Create trail report → returns `{ trailReport, newAchievements }` |
 
-**Still needed:** reviews POST, trail-reports POST, images POST, follows POST/DELETE, activity GET, users/[id] GET
+**Still needed:** images POST, follows POST/DELETE, activity GET, users/[id] GET
 
 **Pattern:** endpoints are thin wrappers around server modules. Public endpoints: anon client fallback. Auth-required: `requireAuth(request)`. CORS in `hooks.server.ts`. Static image paths resolved to absolute URLs via `url.origin`.
 
