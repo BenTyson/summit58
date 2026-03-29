@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, Image, FlatList, RefreshControl, Pressable } from 'react-native';
+import { View, Text, ScrollView, Image, FlatList, RefreshControl, Pressable, Alert } from 'react-native';
 import { router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
 import { useSession } from '@/lib/auth/AuthProvider';
-import { Alert } from 'react-native';
+import { usePeaks } from '@/lib/peaks/PeaksProvider';
 import { apiFetch } from '@/lib/api';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
@@ -16,6 +17,7 @@ import type { ProfileResponse } from '@/lib/types/api';
 
 export default function ProfileScreen() {
 	const { user, loading: authLoading, signOut } = useSession();
+	const { refresh: refreshPeaks } = usePeaks();
 	const [data, setData] = useState<ProfileResponse | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
@@ -41,6 +43,15 @@ export default function ProfileScreen() {
 			loadProfile();
 		}
 	}, [user, loadProfile]);
+
+	// Reload on tab focus (covers returning from edit modal)
+	useFocusEffect(
+		useCallback(() => {
+			if (user && data) {
+				loadProfile();
+			}
+		}, [user, data, loadProfile])
+	);
 
 	const handleRefresh = useCallback(() => {
 		setRefreshing(true);
@@ -288,6 +299,29 @@ export default function ProfileScreen() {
 									key={summit.id}
 									summit={summit}
 									onPress={() => router.push(`/peaks/${summit.peak.slug}`)}
+									onEdit={() => router.push(`/(modals)/summit-log?summitId=${summit.id}`)}
+									onDelete={() => {
+										Alert.alert(
+											'Delete Summit',
+											`Remove your ${summit.peak.name} summit on ${new Date(summit.date_summited).toLocaleDateString()}?`,
+											[
+												{ text: 'Cancel', style: 'cancel' },
+												{
+													text: 'Delete',
+													style: 'destructive',
+													onPress: async () => {
+														try {
+															await apiFetch(`/api/v1/summits/${summit.id}`, { method: 'DELETE' });
+															loadProfile();
+															refreshPeaks();
+														} catch {
+															Alert.alert('Error', 'Failed to delete summit');
+														}
+													},
+												},
+											]
+										);
+									}}
 								/>
 							))}
 						</View>

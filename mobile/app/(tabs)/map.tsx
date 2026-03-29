@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import MapView, { Marker, type Region } from 'react-native-maps';
 import { router } from 'expo-router';
@@ -8,11 +8,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type BottomSheet from '@gorhom/bottom-sheet';
 import { colors } from '@/lib/theme/colors';
 import { shadows } from '@/lib/theme/shadows';
-import { apiFetch } from '@/lib/api';
+import { usePeaks } from '@/lib/peaks/PeaksProvider';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { PeakBottomSheet } from '@/components/map/PeakBottomSheet';
-import type { PeaksListResponse } from '@/lib/types/api';
 import type { PeakWithStandardRoute } from '@saltgoat/shared/types/helpers';
 
 const COLORADO_14ERS_REGION: Region = {
@@ -32,28 +31,10 @@ export default function MapScreen() {
 	const mapRef = useRef<MapView>(null);
 	const bottomSheetRef = useRef<BottomSheet>(null);
 
-	const [peaks, setPeaks] = useState<PeakWithStandardRoute[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+	const { peaks, loading, error, refresh } = usePeaks();
 	const [selectedPeak, setSelectedPeak] = useState<PeakWithStandardRoute | null>(null);
 	const [mapType, setMapType] = useState<'standard' | 'hybrid'>('standard');
 	const [showsUserLocation, setShowsUserLocation] = useState(false);
-
-	const loadPeaks = useCallback(async () => {
-		try {
-			setError(null);
-			const data = await apiFetch<PeaksListResponse>('/api/v1/peaks', { auth: false });
-			setPeaks(data.peaks);
-		} catch (e) {
-			setError(e instanceof Error ? e.message : 'Failed to load peaks');
-		} finally {
-			setLoading(false);
-		}
-	}, []);
-
-	useEffect(() => {
-		loadPeaks();
-	}, [loadPeaks]);
 
 	const handleMarkerPress = useCallback(
 		(peak: PeakWithStandardRoute) => {
@@ -108,7 +89,7 @@ export default function MapScreen() {
 	if (error && peaks.length === 0) {
 		return (
 			<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
-				<ErrorState message={error} onRetry={loadPeaks} />
+				<ErrorState message={error} onRetry={refresh} />
 			</View>
 		);
 	}

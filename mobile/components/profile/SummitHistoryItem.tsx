@@ -7,9 +7,11 @@ import type { UserSummitWithPeak } from '@saltgoat/shared/types/helpers';
 interface SummitHistoryItemProps {
 	summit: UserSummitWithPeak;
 	onPress?: () => void;
+	onEdit?: () => void;
+	onDelete?: () => void;
 }
 
-export function SummitHistoryItem({ summit, onPress }: SummitHistoryItemProps) {
+export function SummitHistoryItem({ summit, onPress, onEdit, onDelete }: SummitHistoryItemProps) {
 	const date = new Date(summit.date_summited).toLocaleDateString('en-US', {
 		month: 'short',
 		day: 'numeric',
@@ -19,6 +21,7 @@ export function SummitHistoryItem({ summit, onPress }: SummitHistoryItemProps) {
 	return (
 		<Pressable
 			onPress={onPress}
+			onLongPress={onDelete}
 			style={({ pressed }) => ({
 				flexDirection: 'row',
 				alignItems: 'center',
@@ -85,6 +88,17 @@ export function SummitHistoryItem({ summit, onPress }: SummitHistoryItemProps) {
 					)}
 				</View>
 			</View>
+
+			{/* Edit button */}
+			{onEdit && (
+				<Pressable onPress={onEdit} hitSlop={8} style={{ padding: 6, marginRight: 4 }}>
+					<SymbolView
+						name={{ ios: 'pencil', android: 'edit', web: 'edit' }}
+						tintColor={colors.light.textMuted}
+						size={16}
+					/>
+				</Pressable>
+			)}
 
 			{/* Class badge */}
 			{summit.route && <ClassBadge difficulty={summit.route.difficulty_class} />}

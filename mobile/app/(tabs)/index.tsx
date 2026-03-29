@@ -1,15 +1,13 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { View, Text, TextInput, FlatList, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
-import { apiFetch } from '@/lib/api';
+import { usePeaks } from '@/lib/peaks/PeaksProvider';
 import { PeakCard } from '@/components/peaks/PeakCard';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
-import type { PeaksListResponse } from '@/lib/types/api';
-import type { PeakWithStandardRoute } from '@saltgoat/shared/types/helpers';
 
 const RANGES = [
 	'Sawatch Range',
@@ -24,32 +22,11 @@ const RANGES = [
 const CLASSES = [1, 2, 3, 4] as const;
 
 export default function ExploreScreen() {
-	const [peaks, setPeaks] = useState<PeakWithStandardRoute[]>([]);
-	const [summitedIds, setSummitedIds] = useState<Set<string>>(new Set());
-	const [loading, setLoading] = useState(true);
+	const { peaks, summitedPeakIds: summitedIds, loading, error, refresh } = usePeaks();
 	const [refreshing, setRefreshing] = useState(false);
-	const [error, setError] = useState<string | null>(null);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedRange, setSelectedRange] = useState<string | null>(null);
 	const [selectedClass, setSelectedClass] = useState<number | null>(null);
-
-	const loadPeaks = useCallback(async () => {
-		try {
-			setError(null);
-			const data = await apiFetch<PeaksListResponse>('/api/v1/peaks');
-			setPeaks(data.peaks);
-			setSummitedIds(new Set(data.summitedPeakIds));
-		} catch (e) {
-			setError(e instanceof Error ? e.message : 'Failed to load peaks');
-		} finally {
-			setLoading(false);
-			setRefreshing(false);
-		}
-	}, []);
-
-	useEffect(() => {
-		loadPeaks();
-	}, [loadPeaks]);
 
 	const filteredPeaks = useMemo(() => {
 		let result = peaks;
@@ -68,10 +45,11 @@ export default function ExploreScreen() {
 		return result;
 	}, [peaks, searchQuery, selectedRange, selectedClass]);
 
-	const handleRefresh = useCallback(() => {
+	const handleRefresh = useCallback(async () => {
 		setRefreshing(true);
-		loadPeaks();
-	}, [loadPeaks]);
+		await refresh();
+		setRefreshing(false);
+	}, [refresh]);
 
 	if (loading) {
 		return (
@@ -84,7 +62,7 @@ export default function ExploreScreen() {
 	if (error && peaks.length === 0) {
 		return (
 			<SafeAreaView style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
-				<ErrorState message={error} onRetry={loadPeaks} />
+				<ErrorState message={error} onRetry={refresh} />
 			</SafeAreaView>
 		);
 	}

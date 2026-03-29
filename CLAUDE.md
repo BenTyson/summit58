@@ -1,124 +1,180 @@
-# SaltGoat - Agent Guide
+# SaltGoat
 
 Colorado 14ers tracking app. Users log summits, write reviews, track progress across all 58 peaks.
 
 ## Stack
 
-**Web:** SvelteKit 5 + Supabase (cloud) + Tailwind 3 + Railway
-**Mobile:** Expo SDK 55 + React Native + NativeWind + Expo Router + expo-web-browser (OAuth) + expo-apple-authentication
-**Shared:** `@saltgoat/shared` monorepo package (types, data, utils)
+| Platform | Tech |
+|----------|------|
+| **Web** | SvelteKit 5, Supabase (cloud), Tailwind 3, Railway |
+| **Mobile** | Expo SDK 55, React Native, NativeWind, Expo Router |
+| **Shared** | `@saltgoat/shared` monorepo package (types, data, utils) |
 
-- **Dev (web):** `npm run dev` (localhost:4466)
-- **Dev (mobile):** `cd mobile && npx expo start` (iOS simulator)
-- **Build:** `npm run build`
-- **Deploy:** `railway up -d`
-- **DB Push:** `supabase db push`
-- **Gen Types:** `supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/database.ts`
+```bash
+npm run dev                    # Web dev (localhost:4466)
+cd mobile && npx expo start    # Mobile dev (iOS simulator)
+npm run build                  # Web build
+railway up -d                  # Deploy
+supabase db push               # Push migrations
+supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/database.ts
+```
+
+**Project IDs:** Railway `00b2ac99-4a09-4959-992f-169c7f981b96` | Supabase `seywnbufuewbiwoouwkk`
 
 ## Project Structure
 
 ```
-src/lib/components/     UI components (peak/, profile/, map/, search/, admin/, etc.)
-src/lib/server/         Server-side queries & mutations (peaks, summits, reviews, admin, etc.)
-src/lib/data/           Static data (ranges, achievements) — re-exports from @saltgoat/shared
-src/lib/utils/          Utilities (geo.ts) — re-exports from @saltgoat/shared
+src/lib/server/         Server-side queries & mutations (all accept SupabaseClient<Database>)
+src/lib/components/     Svelte UI (peak/, profile/, map/, search/, admin/, gallery/, etc.)
+src/lib/data/           Static data — re-exports from @saltgoat/shared
+src/lib/utils/          Utilities — re-exports from @saltgoat/shared
 src/lib/types/          Generated Supabase types — re-exports from @saltgoat/shared
 src/routes/             Pages & API endpoints
-src/routes/api/v1/      REST API for mobile (peaks, profile, conditions)
-src/routes/admin/       Admin dashboard (nested routes)
-static/images/peaks/    Peak hero images (58 optimized JPEGs, NOT in Supabase storage)
+src/routes/api/v1/      REST API for mobile
+src/routes/admin/       Admin dashboard (nested routes, layout auth guard)
+static/images/peaks/    58 peak hero images (optimized JPEGs, NOT in Supabase storage)
 supabase/migrations/    Database migrations (46+)
-scripts/                Utility scripts
 packages/shared/        @saltgoat/shared — types, data, utils shared between web + mobile
-mobile/                 Expo/React Native mobile app
 mobile/app/             Expo Router screens (tabs, stacks, modals)
-mobile/components/      React Native components (peaks/, profile/, weather/, ui/)
-mobile/lib/             Supabase client, API client, auth provider, theme
+mobile/components/      React Native components (peaks/, profile/, weather/, summit/, map/, ui/)
+mobile/lib/             Supabase client, API client, auth provider, peaks context, theme
 ```
 
-## Key Patterns
+## Server Modules
 
-- **Svelte 5 runes** throughout: `$props()`, `$state()`, `$derived()`
+| Module | Purpose |
+|--------|---------|
+| `supabase.ts` | SSR client, API client (Bearer token), `requireAuth(request)` |
+| `peaks.ts` | Peak queries |
+| `summits.ts` | Summit CRUD + stats (`createSummit`, `getUserSummitStats`, `getAdvancedStats`) |
+| `reviews.ts` | Review CRUD |
+| `trailReports.ts` | Trail report CRUD |
+| `achievements.ts` | Check + award achievements (`checkAndAwardAchievements(supabase, userId, trigger)`) |
+| `subscriptions.ts` | `getSubscription`, `isPro`, `canLogSummit` (free tier: 5 summits) |
+| `images.ts` | Image gallery CRUD + moderation |
+| `conditions.ts` | Weather fetch + queries |
+| `leaderboard.ts` | Leaderboard aggregation |
+| `reactions.ts` | Summit reactions (toggle, batch-fetch with avatar stack) |
+| `comments.ts` | Summit comments (create, delete, batch-fetch) |
+| `follows.ts` | Follow system + suggestions |
+| `trips.ts` | Planned trips CRUD |
+| `watchlist.ts` | Peak watchlist CRUD |
+| `activity.ts` | Unified activity feed |
+| `admin.ts` | `isAdmin()`, `assertAdmin()`, all admin dashboard queries |
+| `stripe.ts` | Stripe integration (stubbed) |
+
+All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as first param — portable between web form actions and API endpoints.
+
+## Web Patterns
+
+- **Svelte 5 runes:** `$props()`, `$state()`, `$derived()` throughout
 - **Server loads** in `+page.server.ts`, mutations via **form actions**
-- **Custom SVG icons** (not Lucide) in `src/lib/components/ui/AchievementIcon.svelte`
+- **Auth:** `createSupabaseServerClient(cookies)` for SSR, email + Google OAuth
 - **Dark mode:** `.dark` class on `<html>`, all components support both themes
 - **Design system:** `class-1`..`class-4` colors, `shadow-card` variants, Instrument Serif + Inter fonts
-- **Auth (web):** `createSupabaseServerClient(cookies)` for SSR pages, email + Google OAuth
-- **Auth (API):** `createSupabaseApiClient(request)` extracts Bearer token, `requireAuth(request)` validates user — both in `src/lib/server/supabase.ts`
-- **Auth (mobile):** `AuthProvider` at `mobile/lib/auth/AuthProvider.tsx` with `useSession()` hook — exposes `signInWithEmail`, `signUpWithEmail`, `signInWithGoogle` (expo-web-browser), `signInWithApple` (expo-apple-authentication), `signOut`, `resetPassword`. Tokens stored via `expo-secure-store`. Deep link scheme: `saltgoat://auth/callback`
-- **Images:** Sharp for optimization on upload (web), `expo-image-manipulator` for mobile. Peak images served from `/images/peaks/`
-- **API pattern:** endpoints at `/api/v1/` are thin wrappers around server modules. Public endpoints use anon client fallback; auth-required use `requireAuth`. CORS in `hooks.server.ts` allows GET, POST, PATCH, DELETE, OPTIONS
-- **Mobile API client:** `apiFetch<T>(path, options?)` at `mobile/lib/api.ts` — auto Bearer token, 401 refresh retry, supports GET/POST/PATCH/DELETE + FormData for file uploads
+- **Custom SVG icons** (not Lucide) in `src/lib/components/ui/AchievementIcon.svelte`
+- **Admin:** nested routes (not `?tab=`), layout auth guard at `src/routes/admin/+layout.server.ts`
 
-## Database (Quick Ref)
+## Mobile Patterns
 
-Core: `peaks` (58), `routes` (66), `peak_conditions` (weather)
-User: `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`, `peak_watchlist`, `user_subscriptions`, `content_flags`, `summit_reactions`, `summit_comments`
-Storage buckets: `peak-images` (gallery, all authenticated users), `profile-images` (avatar/cover)
-RLS: public read on most tables, users CRUD own data
+- **Auth:** `AuthProvider` → `useSession()` hook at `mobile/lib/auth/AuthProvider.tsx`. Methods: `signInWithEmail`, `signUpWithEmail`, `signInWithGoogle` (expo-web-browser), `signInWithApple` (expo-apple-authentication), `signOut`, `resetPassword`. Tokens: `expo-secure-store`. Deep link: `saltgoat://auth/callback`
+- **API client:** `apiFetch<T>(path, options?)` at `mobile/lib/api.ts` — auto Bearer token, 401 refresh retry, GET/POST/PATCH/DELETE + FormData
+- **Peaks context:** `PeaksProvider` → `usePeaks()` at `mobile/lib/peaks/PeaksProvider.tsx` — shared peak data + summitedPeakIds across all tabs, `refresh()` after mutations
+- **Fonts:** `'InstrumentSerif'` (headings), `'Inter'`/`'Inter-Medium'`/`'Inter-SemiBold'`/`'Inter-Bold'`
+- **Icons:** `SymbolView` from `expo-symbols` (SF Symbols on iOS)
+- **Colors:** `colors` from `@/lib/theme/colors` for programmatic styling
+- **Types:** shared from `@saltgoat/shared/types/helpers`, API responses from `@/lib/types/api`
 
-See [docs/session-start/database.md](docs/session-start/database.md) for full schema.
+## API Endpoints
+
+### Web-Only
+`/api/webhooks/weather` (cron), `/api/checkout` (stub), `/api/portal` (stub), `/api/webhooks/stripe` (stub), `/api/export/summits` (Pro CSV)
+
+### Mobile REST API (v1)
+
+| Endpoint | Method | Auth | Purpose |
+|----------|--------|------|---------|
+| `/api/v1/peaks` | GET | Optional | All 58 peaks + summitedPeakIds if authenticated |
+| `/api/v1/peaks/[slug]` | GET | Optional | Aggregated detail: peak + reviews + images + conditions + trail reports |
+| `/api/v1/peaks/[slug]/conditions` | GET | No | 7-day weather forecast |
+| `/api/v1/profile` | GET | Required | Stats + summits + achievements + grid |
+| `/api/v1/summits` | GET | Required | Can-log pre-flight check (allowed, remaining, isPro) |
+| `/api/v1/summits` | POST | Required | Create summit → returns `{ summit, newAchievements }` |
+| `/api/v1/summits/[id]` | PATCH | Required | Update summit fields |
+| `/api/v1/summits/[id]` | DELETE | Required | Delete summit |
+
+**Still needed:** reviews POST, trail-reports POST, images POST, follows POST/DELETE, activity GET, users/[id] GET
+
+**Pattern:** endpoints are thin wrappers around server modules. Public endpoints: anon client fallback. Auth-required: `requireAuth(request)`. CORS in `hooks.server.ts`. Static image paths resolved to absolute URLs via `url.origin`.
+
+## Database
+
+### Tables
+
+**Core (public read):** `peaks` (58), `routes` (66), `peak_conditions` (7-day weather)
+**User (RLS: own CRUD):** `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`, `peak_watchlist`, `user_subscriptions`, `content_flags`, `summit_reactions`, `summit_comments`
+**Storage:** `peak-images` (gallery, authenticated write), `profile-images` (avatar/cover, own write)
+
+### Key Fields
+
+| Table | Fields |
+|-------|--------|
+| `peaks` | slug, name, elevation, rank, range, latitude, longitude, hero_image_url, thumbnail_url |
+| `routes` | peak_id, name, distance_miles, elevation_gain_ft, difficulty_class, parking_*, trail_geometry (JSONB, currently empty) |
+| `user_summits` | user_id, peak_id, route_id?, date_summited, conditions?, notes?, start_time?, summit_time?, party_size? |
+| `user_reviews` | user_id, peak_id, rating (1-5), title, body (one per user per peak) |
+| `profiles` | display_name, username, avatar_url, cover_image_url, bio, tagline, location, is_public |
+| `user_subscriptions` | plan (free/pro), status (active/canceled/past_due/trialing), stripe_customer_id |
+| `peak_images` | peak_id, storage_path, caption, category, status, is_private, flag_count |
+
+### RLS Summary
+
+| Access | Tables |
+|--------|--------|
+| Public read, own CRUD | summits, reviews, trail_reports, achievements |
+| Public read, own insert/delete | summit_reactions, summit_comments, user_follows |
+| Own read + write only | user_subscriptions, peak_watchlist |
+| Public read + admin write | peaks, routes |
+| Approved+public or own read | peak_images |
 
 ## Key Routes
 
 | Route | Purpose |
 |-------|---------|
-| `/` | Homepage |
-| `/peaks` | Browse all 58 peaks |
-| `/peaks/[slug]` | Peak detail (reviews, weather, trail reports) |
+| `/peaks/[slug]` | Peak detail (reviews, weather, trail reports, gallery) |
 | `/peaks/[slug]/[route]` | Route detail (trail map, elevation, parking) |
-| `/ranges`, `/ranges/[slug]` | Mountain ranges |
-| `/map` | Interactive map |
-| `/leaderboard` | Rankings + activity |
 | `/profile` | User dashboard (tabs: activity, photos, trips, buddies) |
-| `/users/[id]` | Public profiles |
+| `/admin` | Admin dashboard (overview, moderation, users, content, subscriptions) |
 | `/pricing` | Free vs Pro comparison |
-| `/trips/[id]` | Public trip detail |
-| `/auth` | Login/signup |
-| `/learn/*` | Educational guides (first-fourteener, safety, gear, parking, difficulty-ratings, faq) |
-| `/blog`, `/blog/*` | Blog hub + posts |
-| `/admin` | Admin dashboard — overview (default tab) |
-| `/admin/moderation` | Content moderation (flagged photos, flags, recent uploads) |
-| `/admin/users` | User management (search, sort, pagination) |
-| `/admin/content` | Content browser (photos, reviews, trail reports, traces) |
-| `/admin/subscriptions` | Subscription metrics + user subscription table |
-| `/guidelines` | Community guidelines |
+| `/learn/*` | Educational guides (6 pages) |
+| `/blog/*` | Blog hub + posts |
+
+Other routes: `/`, `/peaks`, `/ranges`, `/ranges/[slug]`, `/map`, `/leaderboard`, `/users/[id]`, `/trips/[id]`, `/auth`, `/guidelines`
+
+## Dual-Platform Rules
+
+- **New features** must ship on both platforms (or explicitly scoped to one)
+- **Bug fixes** affecting shared logic (API, database, subscriptions, achievements) must be verified on both
+- **Database migrations** affect both systems — consider mobile compatibility
+- **API changes** (`/api/v1/`) must maintain backward compatibility with deployed mobile clients
+- Keep `@saltgoat/shared` types in sync when regenerating Supabase types
 
 ## Known Issues
 
-- GPX trail data was REMOVED (bad data, only 7-25 points per route) -- no trails on map
-- No rate limiting, no error monitoring (Sentry)
-- Umami analytics configured (self-hosted on Railway)
+- GPX trail data removed (bad quality) — `routes.trail_geometry` is empty
+- No rate limiting on API endpoints
+- No error monitoring (Sentry)
+- Stripe integration is stubbed — see `docs/ben.md` for setup steps
+- PWA glob warning and `semver` circular dependency warning are harmless (ignore)
 
-## Build Notes
+## Remaining Web Roadmap
 
-- PWA glob warning is harmless (ignore it)
-- `semver` circular dependency warning in node_modules (harmless)
-- Social engagement: `summit_reactions` + `summit_comments` tables, server modules in `src/lib/server/reactions.ts` and `src/lib/server/comments.ts`, UI in `ActivityFeed.svelte` + public profile page
-- **Web API endpoints:** `/api/webhooks/weather`, `/api/checkout`, `/api/portal`, `/api/webhooks/stripe` (last 3 are stubs), `/api/export/summits` (Pro-only CSV download)
-- **Mobile API endpoints (v1):** `GET /api/v1/peaks` (all peaks + optional summitedPeakIds), `GET /api/v1/peaks/[slug]` (aggregated detail), `GET /api/v1/peaks/[slug]/conditions` (7-day weather), `GET /api/v1/profile` (auth-required, stats + summits + achievements + grid). Write endpoints (Phase 3B+) still needed: summits POST/PATCH/DELETE, reviews POST, trail-reports POST, images POST, follows POST/DELETE, activity GET
-- Static image paths (`/images/peaks/...`) are resolved to absolute URLs via `url.origin` in v1 API responses (mobile has no same-origin)
-- Admin check: centralized in `src/lib/server/admin.ts` — `isAdmin()` + `assertAdmin()` (hardcoded user ID, re-exported from `images.ts` for backward compat)
-- Admin dashboard uses nested routes (not `?tab=` params) — each tab has its own `+page.server.ts` with scoped data loading and form actions
-- Admin layout at `src/routes/admin/+layout.server.ts` handles auth guard once for all tabs
+All web phases (1-13) complete. Outstanding:
+- Phase 7: Affiliate partnerships (gear recs, guide listings) — not started
+- Phase 8 fragments: notifications system, email digests, rate limiting, accessibility audit
 
-## Dual-Platform Development
+## Reference Docs
 
-SaltGoat is maintained as two systems: a **SvelteKit web app** and a **React Native (Expo) mobile app**, sharing a single Supabase backend. When building new features or fixing bugs:
-
-- **New features** must be implemented on both platforms (or explicitly scoped to one with justification)
-- **Bug fixes** affecting shared logic (API, database, subscriptions, achievements) must be verified on both platforms
-- **Database migrations** affect both systems -- always consider mobile compatibility
-- **API changes** (`/api/v1/`) must maintain backward compatibility with deployed mobile clients
-- Keep the shared types package in sync when regenerating Supabase types
-
-See [Mobile Roadmap](docs/mobile_roadmap.md) for the full mobile app plan and phase details.
-
-## Deep Dive Docs
-
-- [Database Schema](docs/session-start/database.md)
-- [Code Patterns](docs/session-start/patterns.md)
-- [Stack & Infrastructure](docs/session-start/stack.md)
-- [Full Reference](docs/SALTGOAT.md)
-- [Launch Roadmap](docs/ROADMAP.md)
-- [Mobile Roadmap](docs/mobile_roadmap.md)
+- [Mobile Roadmap](docs/mobile_roadmap.md) — mobile development plan, phases, architecture decisions
+- [Manual Setup](docs/ben.md) — Stripe, GSC, Supabase ops tasks
+- [GPX Import](docs/gpx-import-guide.md) — CalTopo workflow for trail data
