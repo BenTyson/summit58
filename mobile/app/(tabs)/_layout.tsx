@@ -80,7 +80,7 @@ export default function TabLayout() {
           title: 'Activity',
           tabBarIcon: ({ color, size }) => (
             <SymbolView
-              name={{ ios: 'chart.bar', android: 'bar_chart', web: 'bar_chart' }}
+              name={{ ios: 'person.2', android: 'group', web: 'group' }}
               tintColor={color}
               size={size}
             />

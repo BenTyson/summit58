@@ -16,15 +16,9 @@
 | 3A | Authentication | Email/password, Google OAuth (expo-web-browser), Apple Sign In (native), sign-out, reset password |
 | 3B | Summit logging | Quick Summit screen (GPS auto-detect, celebration overlay), summit CRUD API, PeaksProvider context, edit/delete from profile |
 | 3C | Reviews + trail reports | Review modal (star rating, title, body), trail report modal (chip selectors, conditional snow depth, multi-select hazards), API endpoints, peak detail CTAs |
+| 3D | Social features | Activity feed (Following/You tabs), public user profiles, follow/unfollow, summit reactions, comments bottom sheet, suggested climbers |
 
 **Supabase config still needed:** Add `saltgoat://auth/callback` to redirect URLs, configure Google OAuth iOS client ID, enable Apple provider.
-
-## Phase 3D: Social Features
-
-- `GET /api/v1/activity` — unified activity feed
-- `GET /api/v1/users/[id]` — public user profile
-- `POST/DELETE /api/v1/follows` — follow/unfollow
-- Activity tab (currently placeholder), summit reactions, summit comments (bottom sheet), follow/unfollow, public user profiles
 
 ## Phase 3E: Photo Upload
 

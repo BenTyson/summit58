@@ -124,3 +124,121 @@ export interface TrailReportCreateResponse {
 	trailReport: TrailReport;
 	newAchievements: string[];
 }
+
+// --- Phase 3D: Social Features ---
+
+// Activity feed types
+export type ActivityType = 'summit' | 'review' | 'trail_report' | 'achievement';
+
+export interface ActivityUser {
+	id: string;
+	display_name: string | null;
+	avatar_url: string | null;
+}
+
+export interface SummitActivityData {
+	peak: {
+		id: string;
+		name: string;
+		slug: string;
+		elevation: number;
+		thumbnail_url: string | null;
+	};
+	route: { id: string; name: string; difficulty_class: number } | null;
+	date_summited: string;
+	conditions: string | null;
+	notes: string | null;
+}
+
+export interface ReviewActivityData {
+	peak: { id: string; name: string; slug: string };
+	rating: number;
+	title: string | null;
+	body: string | null;
+	created_at: string;
+}
+
+export interface TrailReportActivityData {
+	peak: { id: string; name: string; slug: string };
+	hike_date: string;
+	trail_status: string | null;
+	hazards: string[] | null;
+	notes: string | null;
+}
+
+export interface AchievementActivityData {
+	achievement_id: string;
+	earned_at: string;
+	definition: { id: string; title: string; description: string; icon: string; category: string };
+}
+
+export interface ActivityItem {
+	id: string;
+	type: ActivityType;
+	date: string;
+	data: SummitActivityData | ReviewActivityData | TrailReportActivityData | AchievementActivityData;
+	user?: ActivityUser;
+}
+
+// Reactions
+export interface ReactionData {
+	count: number;
+	hasReacted: boolean;
+	recentReactors: ActivityUser[];
+}
+
+// Comments
+export interface SummitComment {
+	id: string;
+	user_id: string;
+	summit_id: string;
+	body: string;
+	created_at: string;
+	user: ActivityUser;
+}
+
+export interface CommentData {
+	count: number;
+	comments: SummitComment[];
+}
+
+// Activity feed response
+export interface ActivityFeedResponse {
+	items: ActivityItem[];
+	reactions: Record<string, ReactionData>;
+	comments: Record<string, CommentData>;
+}
+
+// Follows
+export interface UserWithFollowStatus {
+	id: string;
+	display_name: string | null;
+	username: string | null;
+	avatar_url: string | null;
+	bio: string | null;
+	is_following: boolean;
+	summitCount: number;
+	peakOverlap?: number;
+}
+
+export interface SuggestedUsersResponse {
+	suggestions: UserWithFollowStatus[];
+}
+
+// Public user profile
+export interface PublicProfileResponse {
+	profile: Profile;
+	isOwnProfile: boolean;
+	stats: {
+		totalSummits: number;
+		uniquePeaks: number;
+		progress: number;
+		totalElevation: number;
+	};
+	recentSummits: UserSummitWithPeak[];
+	achievements: UserAchievementWithDef[];
+	followStats: { followingCount: number; followersCount: number };
+	isFollowing: boolean | null;
+	reactions: Record<string, ReactionData>;
+	comments: Record<string, CommentData>;
+}

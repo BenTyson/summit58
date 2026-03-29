@@ -104,8 +104,16 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | `/api/v1/summits/[id]` | DELETE | Required | Delete summit |
 | `/api/v1/peaks/[slug]/reviews` | POST | Required | Create review → returns `{ review, newAchievements }` |
 | `/api/v1/peaks/[slug]/trail-reports` | POST | Required | Create trail report → returns `{ trailReport, newAchievements }` |
+| `/api/v1/activity` | GET | Required | Unified activity feed (?feed=following/you) with reactions + comments |
+| `/api/v1/users/[id]` | GET | Optional | Public user profile with stats, summits, achievements, follow data |
+| `/api/v1/follows` | GET | Required | Suggested users to follow |
+| `/api/v1/follows` | POST | Required | Follow a user (`{ following_id }`) |
+| `/api/v1/follows` | DELETE | Required | Unfollow a user (`{ following_id }`) |
+| `/api/v1/reactions` | POST | Required | Toggle summit reaction (`{ summit_id }`) |
+| `/api/v1/comments` | POST | Required | Create comment (`{ summit_id, body }`) |
+| `/api/v1/comments` | DELETE | Required | Delete own comment (`{ comment_id }`) |
 
-**Still needed:** images POST, follows POST/DELETE, activity GET, users/[id] GET
+**Still needed:** images POST
 
 **Pattern:** endpoints are thin wrappers around server modules. Public endpoints: anon client fallback. Auth-required: `requireAuth(request)`. CORS in `hooks.server.ts`. Static image paths resolved to absolute URLs via `url.origin`.
 

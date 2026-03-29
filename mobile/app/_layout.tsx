@@ -89,6 +89,10 @@ function RootLayoutNav() {
                 options={{ headerShown: false, presentation: 'modal' }}
               />
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="users/[id]"
+                options={{ title: 'Profile' }}
+              />
               <Stack.Screen name="+not-found" />
             </Stack>
           </ThemeProvider>
