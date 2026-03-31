@@ -4,6 +4,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import { supabase } from '../supabase';
+import { clearUserDataOnSignOut } from '../offline/authSync';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -162,6 +163,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = useCallback(async () => {
     setAuthError(null);
+    await clearUserDataOnSignOut();
     await supabase.auth.signOut();
   }, []);
 

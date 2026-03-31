@@ -8,6 +8,7 @@ export default function ModalLayout() {
       <Stack.Screen name="trail-report" options={{ title: 'Trail Report' }} />
       <Stack.Screen name="review" options={{ title: 'Write Review' }} />
       <Stack.Screen name="settings" options={{ title: 'Settings' }} />
+      <Stack.Screen name="storage" options={{ title: 'Offline Storage' }} />
     </Stack>
   );
 }

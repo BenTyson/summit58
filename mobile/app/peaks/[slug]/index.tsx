@@ -1,11 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, Image, FlatList, RefreshControl, Pressable } from 'react-native';
+import { View, Text, ScrollView, FlatList, RefreshControl, Pressable } from 'react-native';
 import { useLocalSearchParams, Stack, router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { colors } from '@/lib/theme/colors';
-import { apiFetch } from '@/lib/api';
+import { cachedApiFetch } from '@/lib/offline/cache';
+import { useOffline } from '@/lib/offline/OfflineProvider';
+import { CACHE_TIERS } from '@/lib/offline/types';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { CachedImage } from '@/components/ui/CachedImage';
+import { OfflineBanner } from '@/components/ui/OfflineBanner';
+import { StaleDataIndicator } from '@/components/ui/StaleDataIndicator';
 import { ClassBadge } from '@/components/ui/ClassBadge';
 import { StarRating } from '@/components/ui/StarRating';
 import { RouteCard } from '@/components/peaks/RouteCard';
@@ -25,20 +30,33 @@ export default function PeakDetailScreen() {
 	const [error, setError] = useState<string | null>(null);
 	const [galleryVisible, setGalleryVisible] = useState(false);
 	const [galleryIndex, setGalleryIndex] = useState(0);
+	const [cachedAt, setCachedAt] = useState<number | null>(null);
 	const { user } = useSession();
+	const { isOnline } = useOffline();
 
 	const loadPeak = useCallback(async () => {
 		try {
 			setError(null);
-			const result = await apiFetch<PeakDetailResponse>(`/api/v1/peaks/${slug}`);
+			const { data: result, cachedAt: ts } = await cachedApiFetch<PeakDetailResponse>(
+				`/api/v1/peaks/${slug}`,
+				{
+					cache: CACHE_TIERS.STATIC,
+					onRefresh: (fresh) => {
+						setData(fresh as PeakDetailResponse);
+						setCachedAt(null);
+					},
+				},
+				isOnline
+			);
 			setData(result);
+			setCachedAt(ts);
 		} catch (e) {
 			setError(e instanceof Error ? e.message : 'Failed to load peak');
 		} finally {
 			setLoading(false);
 			setRefreshing(false);
 		}
-	}, [slug]);
+	}, [slug, isOnline]);
 
 	useEffect(() => {
 		loadPeak();
@@ -87,16 +105,17 @@ export default function PeakDetailScreen() {
 				}}
 			/>
 
+			<OfflineBanner />
 			<ScrollView
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
 				}>
 				{/* Hero Image */}
 				{peak.hero_image_url ? (
-					<Image
+					<CachedImage
 						source={{ uri: peak.hero_image_url }}
 						style={{ width: '100%', height: 240 }}
-						resizeMode="cover"
+						contentFit="cover"
 					/>
 				) : (
 					<View
@@ -173,6 +192,7 @@ export default function PeakDetailScreen() {
 					{/* Weather */}
 					{conditions.length > 0 && (
 						<Section title="Weather">
+							<StaleDataIndicator cachedAt={cachedAt} />
 							<WeatherSection conditions={conditions} />
 						</Section>
 					)}
@@ -328,14 +348,14 @@ export default function PeakDetailScreen() {
 										setGalleryIndex(index);
 										setGalleryVisible(true);
 									}}>
-										<Image
+										<CachedImage
 											source={{ uri: item.url }}
 											style={{
 												width: 140,
 												height: 140,
 												borderRadius: 8,
 											}}
-											resizeMode="cover"
+											contentFit="cover"
 										/>
 									</Pressable>
 								)}

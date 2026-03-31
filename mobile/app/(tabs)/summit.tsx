@@ -9,6 +9,9 @@ import { colors } from '@/lib/theme/colors';
 import { apiFetch } from '@/lib/api';
 import { useSession } from '@/lib/auth/AuthProvider';
 import { usePeaks } from '@/lib/peaks/PeaksProvider';
+import { useOffline } from '@/lib/offline/OfflineProvider';
+import { useSync } from '@/lib/offline/SyncProvider';
+import { enqueueSummit } from '@/lib/offline/actions';
 import { haversineDistance } from '@saltgoat/shared/utils/geo';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { NearbyPeakCard } from '@/components/summit/NearbyPeakCard';
@@ -29,7 +32,9 @@ interface DetectedPeak {
 
 export default function SummitScreen() {
 	const { user } = useSession();
-	const { peaks, refresh: refreshPeaks } = usePeaks();
+	const { peaks, refresh: refreshPeaks, addOptimisticSummit } = usePeaks();
+	const { isOnline } = useOffline();
+	const { refreshPendingCount } = useSync();
 	const pickerRef = useRef<BottomSheet>(null);
 
 	const [screenState, setScreenState] = useState<ScreenState>('detecting');
@@ -152,8 +157,8 @@ export default function SummitScreen() {
 	const handleSubmit = useCallback(async () => {
 		if (!selectedPeak || !user) return;
 
-		// Pre-flight check
-		if (canLog && !canLog.allowed) {
+		// Pre-flight check (skip if offline — we'll validate on sync)
+		if (isOnline && canLog && !canLog.allowed) {
 			Alert.alert(
 				'Summit Limit Reached',
 				'Free accounts can log up to 5 summits. Upgrade to Pro for unlimited summit logging.',
@@ -164,20 +169,41 @@ export default function SummitScreen() {
 
 		setScreenState('submitting');
 
-		try {
-			const body: Record<string, unknown> = {
-				peak_id: selectedPeak.id,
-				date_summited: dateStr,
-			};
-			if (conditions.length > 0) body.conditions = conditions.join(', ');
-			if (notes) body.notes = notes;
-			if (startTime) body.start_time = startTime;
-			if (summitTime) body.summit_time = summitTime;
-			if (partySize) body.party_size = parseInt(partySize, 10);
+		const payload = {
+			peak_id: selectedPeak.id,
+			date_summited: dateStr,
+			conditions: conditions.length > 0 ? conditions.join(', ') : null,
+			notes: notes || null,
+			start_time: startTime || null,
+			summit_time: summitTime || null,
+			party_size: partySize ? parseInt(partySize, 10) : null,
+		};
 
+		if (!isOnline) {
+			// Offline: queue for later sync
+			await enqueueSummit(payload);
+			addOptimisticSummit(selectedPeak.id);
+			await refreshPendingCount();
+
+			Alert.alert(
+				'Saved Offline',
+				`${selectedPeak.name} summit saved. It will sync when you're back online.`,
+				[{ text: 'OK' }]
+			);
+			setScreenState('ready');
+			setSelectedPeak(null);
+			setConditions([]);
+			setNotes('');
+			setStartTime('');
+			setSummitTime('');
+			setPartySize('');
+			return;
+		}
+
+		try {
 			const result = await apiFetch<SummitCreateResponse>('/api/v1/summits', {
 				method: 'POST',
-				body,
+				body: payload as Record<string, unknown>,
 			});
 
 			setSummitResult({
@@ -199,7 +225,7 @@ export default function SummitScreen() {
 			}
 			setScreenState('ready');
 		}
-	}, [selectedPeak, user, canLog, dateStr, conditions, notes, startTime, summitTime, partySize, refreshPeaks]);
+	}, [selectedPeak, user, canLog, dateStr, conditions, notes, startTime, summitTime, partySize, refreshPeaks, isOnline, addOptimisticSummit, refreshPendingCount]);
 
 	const handleCelebrationDismiss = useCallback(() => {
 		setSummitResult(null);

@@ -7,6 +7,9 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { colors } from '@/lib/theme/colors';
 import { apiFetch } from '@/lib/api';
 import { useSession } from '@/lib/auth/AuthProvider';
+import { useOffline } from '@/lib/offline/OfflineProvider';
+import { useSync } from '@/lib/offline/SyncProvider';
+import { enqueueReview } from '@/lib/offline/actions';
 import { StarRating } from '@/components/ui/StarRating';
 import type { ReviewCreateResponse } from '@/lib/types/api';
 
@@ -17,6 +20,8 @@ export default function ReviewModal() {
 		slug: string;
 	}>();
 	const { user } = useSession();
+	const { isOnline } = useOffline();
+	const { refreshPendingCount } = useSync();
 
 	const [rating, setRating] = useState(0);
 	const [title, setTitle] = useState('');
@@ -28,6 +33,22 @@ export default function ReviewModal() {
 
 		setLoading(true);
 		try {
+			if (!isOnline) {
+				await enqueueReview({
+					slug,
+					rating,
+					title: title.trim() || undefined,
+					body: body.trim() || undefined,
+				});
+				await refreshPendingCount();
+				Alert.alert(
+					'Saved Offline',
+					'Your review will be submitted when you\'re back online.',
+					[{ text: 'OK', onPress: () => router.back() }]
+				);
+				return;
+			}
+
 			const result = await apiFetch<ReviewCreateResponse>(
 				`/api/v1/peaks/${slug}/reviews`,
 				{
@@ -63,7 +84,7 @@ export default function ReviewModal() {
 		} finally {
 			setLoading(false);
 		}
-	}, [user, slug, rating, title, body]);
+	}, [user, slug, rating, title, body, isOnline, refreshPendingCount]);
 
 	return (
 		<KeyboardAvoidingView

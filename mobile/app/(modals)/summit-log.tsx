@@ -5,6 +5,9 @@ import { colors } from '@/lib/theme/colors';
 import { apiFetch } from '@/lib/api';
 import { useSession } from '@/lib/auth/AuthProvider';
 import { usePeaks } from '@/lib/peaks/PeaksProvider';
+import { useOffline } from '@/lib/offline/OfflineProvider';
+import { useSync } from '@/lib/offline/SyncProvider';
+import { enqueueSummit } from '@/lib/offline/actions';
 import { ConditionChips } from '@/components/summit/ConditionChips';
 import { PeakPickerSheet } from '@/components/summit/PeakPickerSheet';
 import type BottomSheet from '@gorhom/bottom-sheet';
@@ -14,7 +17,9 @@ import type { SummitCreateResponse, PeakDetailResponse } from '@/lib/types/api';
 export default function SummitLogModal() {
 	const { peakId, summitId } = useLocalSearchParams<{ peakId?: string; summitId?: string }>();
 	const { user } = useSession();
-	const { peaks, refresh: refreshPeaks } = usePeaks();
+	const { peaks, refresh: refreshPeaks, addOptimisticSummit } = usePeaks();
+	const { isOnline } = useOffline();
+	const { refreshPendingCount } = useSync();
 	const pickerRef = useRef<BottomSheet>(null);
 
 	const isEditMode = !!summitId;
@@ -132,6 +137,25 @@ export default function SummitLogModal() {
 
 			if (isEditMode) {
 				await apiFetch(`/api/v1/summits/${summitId}`, { method: 'PATCH', body });
+			} else if (!isOnline) {
+				// Offline: queue for later sync
+				await enqueueSummit({
+					peak_id: selectedPeak.id,
+					date_summited: dateSummited,
+					conditions: conditions.length > 0 ? conditions.join(', ') : null,
+					notes: notes || null,
+					start_time: startTime || null,
+					summit_time: summitTime || null,
+					party_size: partySize ? parseInt(partySize, 10) : null,
+					route_id: routeId,
+				});
+				addOptimisticSummit(selectedPeak.id);
+				await refreshPendingCount();
+				Alert.alert(
+					'Saved Offline',
+					`${selectedPeak.name} summit saved. It will sync when you're back online.`,
+					[{ text: 'OK' }]
+				);
 			} else {
 				body.peak_id = selectedPeak.id;
 				await apiFetch<SummitCreateResponse>('/api/v1/summits', { method: 'POST', body });
@@ -148,7 +172,7 @@ export default function SummitLogModal() {
 		} finally {
 			setLoading(false);
 		}
-	}, [selectedPeak, user, dateSummited, conditions, notes, startTime, summitTime, partySize, routeId, isEditMode, summitId, refreshPeaks]);
+	}, [selectedPeak, user, dateSummited, conditions, notes, startTime, summitTime, partySize, routeId, isEditMode, summitId, refreshPeaks, isOnline, addOptimisticSummit, refreshPendingCount]);
 
 	if (loadingExisting) {
 		return (

@@ -7,6 +7,9 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { colors } from '@/lib/theme/colors';
 import { apiFetch } from '@/lib/api';
 import { useSession } from '@/lib/auth/AuthProvider';
+import { useOffline } from '@/lib/offline/OfflineProvider';
+import { useSync } from '@/lib/offline/SyncProvider';
+import { enqueueTrailReport } from '@/lib/offline/actions';
 import type { TrailReportCreateResponse } from '@/lib/types/api';
 
 const TRAIL_STATUS_OPTIONS = [
@@ -47,6 +50,8 @@ export default function TrailReportModal() {
 		slug: string;
 	}>();
 	const { user } = useSession();
+	const { isOnline } = useOffline();
+	const { refreshPendingCount } = useSync();
 
 	const [hikeDate, setHikeDate] = useState(new Date().toISOString().split('T')[0]);
 	const [trailStatus, setTrailStatus] = useState('clear');
@@ -70,6 +75,26 @@ export default function TrailReportModal() {
 
 		setLoading(true);
 		try {
+			if (!isOnline) {
+				await enqueueTrailReport({
+					slug,
+					hike_date: hikeDate,
+					trail_status: trailStatus,
+					snow_depth: showSnowDepth && snowDepth ? snowDepth : null,
+					crowd_level: crowdLevel,
+					road_status: roadStatus,
+					hazards,
+					notes: notes.trim() || null,
+				});
+				await refreshPendingCount();
+				Alert.alert(
+					'Saved Offline',
+					'Your trail report will be submitted when you\'re back online.',
+					[{ text: 'OK', onPress: () => router.back() }]
+				);
+				return;
+			}
+
 			const result = await apiFetch<TrailReportCreateResponse>(
 				`/api/v1/peaks/${slug}/trail-reports`,
 				{
@@ -100,7 +125,7 @@ export default function TrailReportModal() {
 		} finally {
 			setLoading(false);
 		}
-	}, [user, slug, hikeDate, trailStatus, snowDepth, crowdLevel, roadStatus, hazards, notes, showSnowDepth]);
+	}, [user, slug, hikeDate, trailStatus, snowDepth, crowdLevel, roadStatus, hazards, notes, showSnowDepth, isOnline, refreshPendingCount]);
 
 	return (
 		<KeyboardAvoidingView

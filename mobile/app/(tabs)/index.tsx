@@ -8,6 +8,7 @@ import { usePeaks } from '@/lib/peaks/PeaksProvider';
 import { PeakCard } from '@/components/peaks/PeakCard';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { OfflineBanner } from '@/components/ui/OfflineBanner';
 
 const RANGES = [
 	'Sawatch Range',
@@ -69,6 +70,7 @@ export default function ExploreScreen() {
 
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+			<OfflineBanner />
 			{/* Header */}
 			<View style={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 4 }}>
 				<Text

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, Image, FlatList, RefreshControl, Pressable, Alert } from 'react-native';
+import { View, Text, ScrollView, FlatList, RefreshControl, Pressable, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { SymbolView } from 'expo-symbols';
@@ -7,6 +7,11 @@ import { colors } from '@/lib/theme/colors';
 import { useSession } from '@/lib/auth/AuthProvider';
 import { usePeaks } from '@/lib/peaks/PeaksProvider';
 import { apiFetch } from '@/lib/api';
+import { cachedApiFetch } from '@/lib/offline/cache';
+import { useOffline } from '@/lib/offline/OfflineProvider';
+import { CACHE_TIERS } from '@/lib/offline/types';
+import { OfflineBanner } from '@/components/ui/OfflineBanner';
+import { CachedImage } from '@/components/ui/CachedImage';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { StatsBar } from '@/components/profile/StatsBar';
@@ -18,6 +23,7 @@ import type { ProfileResponse } from '@/lib/types/api';
 export default function ProfileScreen() {
 	const { user, loading: authLoading, signOut } = useSession();
 	const { refresh: refreshPeaks } = usePeaks();
+	const { isOnline } = useOffline();
 	const [data, setData] = useState<ProfileResponse | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
@@ -27,7 +33,14 @@ export default function ProfileScreen() {
 		if (!user) return;
 		try {
 			setError(null);
-			const result = await apiFetch<ProfileResponse>('/api/v1/profile');
+			const { data: result } = await cachedApiFetch<ProfileResponse>(
+				'/api/v1/profile',
+				{
+					cache: CACHE_TIERS.USER_DATA,
+					onRefresh: (fresh) => setData(fresh as ProfileResponse),
+				},
+				isOnline
+			);
 			setData(result);
 		} catch (e) {
 			setError(e instanceof Error ? e.message : 'Failed to load profile');
@@ -35,7 +48,7 @@ export default function ProfileScreen() {
 			setLoading(false);
 			setRefreshing(false);
 		}
-	}, [user]);
+	}, [user, isOnline]);
 
 	useEffect(() => {
 		if (user) {
@@ -145,13 +158,14 @@ export default function ProfileScreen() {
 		<ScrollView
 			style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}
 			refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
+			<OfflineBanner />
 			{/* Cover image area */}
 			<View style={{ height: 140, backgroundColor: colors.mountain.slate }}>
 				{profile?.cover_image_url && (
-					<Image
+					<CachedImage
 						source={{ uri: profile.cover_image_url }}
 						style={{ width: '100%', height: 140 }}
-						resizeMode="cover"
+						contentFit="cover"
 					/>
 				)}
 			</View>
@@ -169,10 +183,10 @@ export default function ProfileScreen() {
 						overflow: 'hidden'
 					}}>
 					{profile?.avatar_url ? (
-						<Image
+						<CachedImage
 							source={{ uri: profile.avatar_url }}
 							style={{ width: 72, height: 72 }}
-							resizeMode="cover"
+							contentFit="cover"
 						/>
 					) : (
 						<View

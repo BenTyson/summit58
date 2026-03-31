@@ -11,6 +11,7 @@ import { shadows } from '@/lib/theme/shadows';
 import { usePeaks } from '@/lib/peaks/PeaksProvider';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { OfflineBanner } from '@/components/ui/OfflineBanner';
 import { PeakBottomSheet } from '@/components/map/PeakBottomSheet';
 import type { PeakWithStandardRoute } from '@saltgoat/shared/types/helpers';
 
@@ -96,6 +97,9 @@ export default function MapScreen() {
 
 	return (
 		<View style={{ flex: 1 }}>
+			<View style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+				<OfflineBanner />
+			</View>
 			<MapView
 				ref={mapRef}
 				style={StyleSheet.absoluteFill}

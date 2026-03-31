@@ -18,29 +18,9 @@
 | 3C | Reviews + trail reports | Review modal (star rating, title, body), trail report modal (chip selectors, conditional snow depth, multi-select hazards), API endpoints, peak detail CTAs |
 | 3D | Social features | Activity feed (Following/You tabs), public user profiles, follow/unfollow, summit reactions, comments bottom sheet, suggested climbers |
 | 3E | Photo upload | `POST /api/v1/peaks/[slug]/images`, upload modal (camera/library, categories, progress bar), full-screen gallery viewer (pinch-to-zoom, swipe) |
+| 4 | Offline-first | SQLite cache (3 tiers), sync outbox (summits/reviews/trail reports/photos), background prefetch (58 peak details + hero images), connectivity detection, offline UI (banner, sync badge, stale indicators, sync toast), storage management modal, auth cleanup on sign-out |
 
 **Supabase config still needed:** Add `saltgoat://auth/callback` to redirect URLs, configure Google OAuth iOS client ID, enable Apple provider.
-
-## Phase 4: Offline-First (4-6 sessions)
-
-The defining differentiator. Users on mountains with no cell service.
-
-### Storage Tiers
-| Tier | Data | Size |
-|------|------|------|
-| 1 (always cached) | 58 peaks + 66 routes + static data + hero images | ~21MB |
-| 2 (synced on auth) | User summits, achievements, watchlist, profile | <15KB |
-| 3 (on demand) | Weather (6hr), trail reports (4hr), reviews (12hr), thumbnails (30d) | Variable |
-| 4 (selective) | Map tiles per peak (~4MB) or per range (~30-80MB) | User choice |
-
-### Sync Engine (Outbox Pattern)
-Local `sync_outbox` table, priority: watchlist > summits > trail reports > photos. Triggers: app foreground, connectivity change, 15min timer, pull-to-refresh.
-
-### Offline Map Tiles
-Mapbox SDK (first-class offline). User-initiated download per peak or range. Pro feature opportunity.
-
-### Connectivity UI
-"Offline Mode" banner, pending sync badge, stale data indicators, auto-sync toast on reconnection.
 
 ## Phase 5: Payments (2-3 sessions)
 
@@ -60,6 +40,7 @@ Mapbox SDK (first-class offline). User-initiated download per peak or range. Pro
 
 ## Phase 7: Mobile-Only Enhancements (Ongoing)
 
+- Offline map tiles (Mapbox SDK, user-initiated download per peak/range, Pro feature)
 - GPS tracking (live trace, auto-detect summit, save GPX)
 - Push notifications (`expo-notifications`): achievements, trail reports, follower activity, weather alerts
 - iOS widget (progress bar, next trip, weather)
@@ -98,9 +79,9 @@ Mapbox SDK (first-class offline). User-initiated download per peak or range. Pro
 | Phase | Sessions | Milestone |
 |-------|----------|-----------|
 | ~~3C-3E~~ | ~~3-4~~ | ~~Feature-complete beta~~ (done) |
-| 4 | 4-6 | Field-testable beta |
+| ~~4~~ | ~~5~~ | ~~Field-testable beta~~ (done) |
 | 5 | 2-3 | Monetization ready |
 | 6 | 2-3 | **Public launch** |
 | 7 | Ongoing | Enhancements |
 
-Phases 3C-3E complete. Feature-complete beta reached. Phases 5 and 4 can run in parallel.
+Phase 4 complete. Field-testable beta reached. Offline map tiles (Mapbox) deferred to Phase 7. Next: Phase 5 (RevenueCat payments).

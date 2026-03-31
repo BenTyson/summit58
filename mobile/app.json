@@ -47,7 +47,9 @@
           "photosPermission": "SaltGoat needs access to your photos to upload peak images.",
           "cameraPermission": "SaltGoat needs access to your camera to take peak photos."
         }
-      ]
+      ],
+      "expo-sqlite",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true

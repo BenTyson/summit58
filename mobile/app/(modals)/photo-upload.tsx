@@ -8,6 +8,9 @@ import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
 import { useSession } from '@/lib/auth/AuthProvider';
 import { pickImage, optimizeImage, uploadImageWithProgress } from '@/lib/imageUpload';
+import { useOffline } from '@/lib/offline/OfflineProvider';
+import { useSync } from '@/lib/offline/SyncProvider';
+import { enqueuePhoto } from '@/lib/offline/photoQueue';
 import { PHOTO_CATEGORIES } from '@saltgoat/shared/data/categories';
 
 export default function PhotoUploadModal() {
@@ -17,6 +20,8 @@ export default function PhotoUploadModal() {
 		slug: string;
 	}>();
 	const { user } = useSession();
+	const { isOnline } = useOffline();
+	const { refreshPendingCount } = useSync();
 
 	const [imageUri, setImageUri] = useState<string | null>(null);
 	const [imageWidth, setImageWidth] = useState(0);
@@ -45,6 +50,23 @@ export default function PhotoUploadModal() {
 		try {
 			const optimized = await optimizeImage(imageUri, imageWidth, imageHeight);
 
+			if (!isOnline) {
+				await enqueuePhoto({
+					slug,
+					optimizedUri: optimized.uri,
+					caption: caption.trim() || undefined,
+					category: category ?? undefined,
+					isPrivate,
+				});
+				await refreshPendingCount();
+				Alert.alert(
+					'Saved for Later',
+					'Your photo will upload when you\'re back online.',
+					[{ text: 'OK', onPress: () => router.back() }]
+				);
+				return;
+			}
+
 			await uploadImageWithProgress({
 				slug,
 				imageUri: optimized.uri,
@@ -60,7 +82,7 @@ export default function PhotoUploadModal() {
 		} finally {
 			setLoading(false);
 		}
-	}, [user, slug, imageUri, imageWidth, imageHeight, caption, category, isPrivate]);
+	}, [user, slug, imageUri, imageWidth, imageHeight, caption, category, isPrivate, isOnline, refreshPendingCount]);
 
 	return (
 		<KeyboardAvoidingView

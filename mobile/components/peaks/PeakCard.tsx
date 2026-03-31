@@ -1,8 +1,9 @@
-import { View, Text, Image, Pressable } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
 import { shadows } from '@/lib/theme/shadows';
 import { ClassBadge } from '@/components/ui/ClassBadge';
+import { CachedImage } from '@/components/ui/CachedImage';
 import type { PeakWithStandardRoute } from '@saltgoat/shared/types/helpers';
 
 interface PeakCardProps {
@@ -28,10 +29,10 @@ export function PeakCard({ peak, summited, onPress }: PeakCardProps) {
 			{/* Thumbnail */}
 			<View style={{ width: 100, height: 100 }}>
 				{peak.thumbnail_url ? (
-					<Image
+					<CachedImage
 						source={{ uri: peak.thumbnail_url }}
 						style={{ width: 100, height: 100 }}
-						resizeMode="cover"
+						contentFit="cover"
 					/>
 				) : (
 					<View

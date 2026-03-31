@@ -1,8 +1,8 @@
 # Current Status
 
 **Last Updated:** 2026-03-29
-**Current Phase:** Mobile 4 — Offline-First (Not Started)
-**What's Next:** Local caching (peaks, routes, user data), sync outbox for mutations, offline map tiles, connectivity UI
+**Current Phase:** Mobile 5 — Payments (Not Started)
+**What's Next:** RevenueCat IAP integration for App Store + Google Play subscriptions
 
 ## What's Built
 
@@ -46,7 +46,19 @@ All web features shipped. Outstanding: affiliate partnerships (Phase 7), notific
 - Full-screen gallery viewer (react-native-image-viewing) — pinch-to-zoom, swipe between images, caption/category/uploader footer
 - Peak detail: "Add a Photo" CTA, tappable thumbnails, photos section always visible, useFocusEffect refresh
 
-Feature-complete beta milestone reached.
+**Phase 4 — Offline-first**
+- SQLite cache layer (`expo-sqlite`): 3 tiers (static/user/on-demand) with TTL, `cachedApiFetch` stale-while-revalidate wrapper
+- Background prefetch of all 58 peak detail pages + hero/thumbnail images (`expo-image` disk cache)
+- Sync outbox engine: offline summit logging, reviews, trail reports, photo uploads — auto-syncs on connectivity restore and app foreground
+- Optimistic UI: peaks marked as summited immediately when queued offline
+- Connectivity detection (`@react-native-community/netinfo`): `OfflineProvider` + `useOffline()` hook
+- Offline UI: gold `OfflineBanner` on all tabs, `SyncBadge` (pending count on Summit tab), `StaleDataIndicator` (weather sections), `SyncToast` (sync status notifications)
+- Photo queue: optimized images saved to local filesystem (`expo-file-system`), uploaded via XHR on sync
+- Storage management modal: cache size by tier, clear Tier 3, pending upload count
+- Auth cleanup: Tier 2 cache cleared on sign-out
+- `CachedImage` component (`expo-image` wrapper) replaces `<Image>` for peak cards and detail hero
+
+Field-testable beta milestone reached.
 
 ## Phase Summary
 
@@ -60,7 +72,7 @@ Feature-complete beta milestone reached.
 | Mobile 3C (Reviews + trail reports) | COMPLETE |
 | Mobile 3D (Social features) | COMPLETE |
 | Mobile 3E (Photo upload) | COMPLETE |
-| Mobile 4 (Offline-first) | NOT STARTED |
+| Mobile 4 (Offline-first) | COMPLETE |
 | Mobile 5 (Payments) | NOT STARTED |
 | Mobile 6 (App Store) | NOT STARTED |
 

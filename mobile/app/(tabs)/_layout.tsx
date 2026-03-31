@@ -4,10 +4,12 @@ import { SymbolView } from 'expo-symbols';
 import { View } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
+import { useSync } from '@/lib/offline/SyncProvider';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme];
+  const { pendingCount } = useSync();
 
   return (
     <Tabs
@@ -54,6 +56,8 @@ export default function TabLayout() {
         name="summit"
         options={{
           title: 'Summit',
+          tabBarBadge: pendingCount > 0 ? pendingCount : undefined,
+          tabBarBadgeStyle: pendingCount > 0 ? { backgroundColor: '#e53e3e', fontSize: 11 } : undefined,
           tabBarIcon: ({ color, size }) => (
             <View
               style={{

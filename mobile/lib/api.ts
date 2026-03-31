@@ -11,7 +11,7 @@ export class ApiError extends Error {
 	}
 }
 
-interface ApiFetchOptions {
+export interface ApiFetchOptions {
 	/** Set to false to skip auth header (public endpoints). Default: true */
 	auth?: boolean;
 	/** HTTP method. Default: GET */

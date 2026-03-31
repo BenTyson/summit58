@@ -6,6 +6,8 @@ import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
 import { useSession } from '@/lib/auth/AuthProvider';
 import { apiFetch } from '@/lib/api';
+import { useOffline } from '@/lib/offline/OfflineProvider';
+import { OfflineBanner } from '@/components/ui/OfflineBanner';
 import { router } from 'expo-router';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
@@ -26,6 +28,7 @@ type FeedTab = 'following' | 'you';
 
 export default function ActivityScreen() {
 	const { user, loading: authLoading } = useSession();
+	const { isOnline } = useOffline();
 	const [activeTab, setActiveTab] = useState<FeedTab>('following');
 	const [items, setItems] = useState<ActivityItem[]>([]);
 	const [reactions, setReactions] = useState<Record<string, ReactionData>>({});
@@ -201,6 +204,25 @@ export default function ActivityScreen() {
 
 	return (
 		<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+			<OfflineBanner />
+			{!isOnline && user && (
+				<View style={{ padding: 20, alignItems: 'center' }}>
+					<SymbolView
+						name={{ ios: 'wifi.slash', android: 'signal_wifi_off', web: 'signal_wifi_off' }}
+						tintColor={colors.light.textMuted}
+						size={32}
+					/>
+					<Text style={{
+						fontFamily: 'Inter-Medium',
+						fontSize: 15,
+						color: colors.light.textSecondary,
+						textAlign: 'center',
+						marginTop: 12,
+					}}>
+						Activity feed requires an internet connection
+					</Text>
+				</View>
+			)}
 			{/* Segmented control */}
 			<View
 				style={{
