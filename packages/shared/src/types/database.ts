@@ -816,10 +816,13 @@ export type Database = {
       }
       user_subscriptions: {
         Row: {
+          app_store_transaction_id: string | null
           created_at: string | null
           current_period_end: string | null
           id: string
           plan: Database["public"]["Enums"]["subscription_plan"]
+          platform: string | null
+          revenuecat_id: string | null
           status: Database["public"]["Enums"]["subscription_status"]
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
@@ -827,10 +830,13 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          app_store_transaction_id?: string | null
           created_at?: string | null
           current_period_end?: string | null
           id?: string
           plan?: Database["public"]["Enums"]["subscription_plan"]
+          platform?: string | null
+          revenuecat_id?: string | null
           status?: Database["public"]["Enums"]["subscription_status"]
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
@@ -838,10 +844,13 @@ export type Database = {
           user_id: string
         }
         Update: {
+          app_store_transaction_id?: string | null
           created_at?: string | null
           current_period_end?: string | null
           id?: string
           plan?: Database["public"]["Enums"]["subscription_plan"]
+          platform?: string | null
+          revenuecat_id?: string | null
           status?: Database["public"]["Enums"]["subscription_status"]
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null

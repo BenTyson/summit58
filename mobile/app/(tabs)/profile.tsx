@@ -18,10 +18,12 @@ import { StatsBar } from '@/components/profile/StatsBar';
 import { My58Grid } from '@/components/profile/My58Grid';
 import { AchievementBadge } from '@/components/profile/AchievementBadge';
 import { SummitHistoryItem } from '@/components/profile/SummitHistoryItem';
+import { usePurchases } from '@/lib/purchases/PurchasesProvider';
 import type { ProfileResponse } from '@/lib/types/api';
 
 export default function ProfileScreen() {
 	const { user, loading: authLoading, signOut } = useSession();
+	const { isPro } = usePurchases();
 	const { refresh: refreshPeaks } = usePeaks();
 	const { isOnline } = useOffline();
 	const [data, setData] = useState<ProfileResponse | null>(null);
@@ -214,6 +216,20 @@ export default function ProfileScreen() {
 					}}>
 					{profile?.display_name || user.email?.split('@')[0]}
 				</Text>
+				{isPro && (
+					<View style={{
+						backgroundColor: colors.accent.default,
+						paddingHorizontal: 10,
+						paddingVertical: 3,
+						borderRadius: 6,
+						alignSelf: 'center',
+						marginTop: 4,
+					}}>
+						<Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 11, color: '#ffffff', letterSpacing: 0.5 }}>
+							PRO
+						</Text>
+					</View>
+				)}
 				{profile?.tagline && (
 					<Text
 						style={{

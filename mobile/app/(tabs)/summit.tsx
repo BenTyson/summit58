@@ -159,11 +159,7 @@ export default function SummitScreen() {
 
 		// Pre-flight check (skip if offline — we'll validate on sync)
 		if (isOnline && canLog && !canLog.allowed) {
-			Alert.alert(
-				'Summit Limit Reached',
-				'Free accounts can log up to 5 summits. Upgrade to Pro for unlimited summit logging.',
-				[{ text: 'OK' }]
-			);
+			router.push('/(modals)/paywall' as any);
 			return;
 		}
 
@@ -215,11 +211,7 @@ export default function SummitScreen() {
 			refreshPeaks();
 		} catch (e: any) {
 			if (e?.status === 403) {
-				Alert.alert(
-					'Summit Limit Reached',
-					'Free accounts can log up to 5 summits. Upgrade to Pro for unlimited summit logging.',
-					[{ text: 'OK' }]
-				);
+				router.push('/(modals)/paywall' as any);
 			} else {
 				Alert.alert('Error', 'Failed to log summit. Please try again.');
 			}
@@ -304,15 +296,21 @@ export default function SummitScreen() {
 						Log Summit
 					</Text>
 					{canLog && !canLog.isPro && (
-						<Text
-							style={{
-								fontFamily: 'Inter',
-								fontSize: 13,
-								color: colors.light.textMuted,
-								marginTop: 2,
-							}}>
-							{canLog.remaining} of 5 free summits remaining
-						</Text>
+						<Pressable
+							onPress={canLog.remaining === 0 ? () => router.push('/(modals)/paywall' as any) : undefined}
+							disabled={canLog.remaining > 0}>
+							<Text
+								style={{
+									fontFamily: 'Inter',
+									fontSize: 13,
+									color: canLog.remaining === 0 ? colors.accent.default : colors.light.textMuted,
+									marginTop: 2,
+								}}>
+								{canLog.remaining === 0
+									? 'Free limit reached — Upgrade to Pro'
+									: `${canLog.remaining} of 5 free summits remaining`}
+							</Text>
+						</Pressable>
 					)}
 				</View>
 

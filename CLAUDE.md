@@ -80,6 +80,7 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 - **Auth:** `AuthProvider` → `useSession()` hook at `mobile/lib/auth/AuthProvider.tsx`. Methods: `signInWithEmail`, `signUpWithEmail`, `signInWithGoogle` (expo-web-browser), `signInWithApple` (expo-apple-authentication), `signOut`, `resetPassword`. Tokens: `expo-secure-store`. Deep link: `saltgoat://auth/callback`
 - **API client:** `apiFetch<T>(path, options?)` at `mobile/lib/api.ts` — auto Bearer token, 401 refresh retry, GET/POST/PATCH/DELETE + FormData
 - **Peaks context:** `PeaksProvider` → `usePeaks()` at `mobile/lib/peaks/PeaksProvider.tsx` — shared peak data + summitedPeakIds across all tabs, `refresh()` after mutations
+- **Purchases:** `PurchasesProvider` → `usePurchases()` at `mobile/lib/purchases/PurchasesProvider.tsx` — RevenueCat SDK, `isPro`, `purchase()`, `restorePurchases()`, `manageSubscription()`. Identifies users via `Purchases.logIn(user.id)` on auth change
 - **Fonts:** `'InstrumentSerif'` (headings), `'Inter'`/`'Inter-Medium'`/`'Inter-SemiBold'`/`'Inter-Bold'`
 - **Icons:** `SymbolView` from `expo-symbols` (SF Symbols on iOS)
 - **Colors:** `colors` from `@/lib/theme/colors` for programmatic styling
@@ -89,7 +90,7 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 ## API Endpoints
 
 ### Web-Only
-`/api/webhooks/weather` (cron), `/api/checkout` (stub), `/api/portal` (stub), `/api/webhooks/stripe` (stub), `/api/export/summits` (Pro CSV)
+`/api/webhooks/weather` (cron), `/api/checkout` (stub), `/api/portal` (stub), `/api/webhooks/stripe` (stub), `/api/webhooks/revenuecat` (mobile IAP), `/api/export/summits` (Pro CSV)
 
 ### Mobile REST API (v1)
 

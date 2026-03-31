@@ -11,6 +11,9 @@ export interface Subscription {
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   current_period_end: string | null;
+  platform: string | null;
+  app_store_transaction_id: string | null;
+  revenuecat_id: string | null;
   created_at: string | null;
   updated_at: string | null;
 }

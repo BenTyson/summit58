@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { useColorScheme } from '@/components/useColorScheme';
 import { AuthProvider } from '@/lib/auth/AuthProvider';
+import { PurchasesProvider } from '@/lib/purchases/PurchasesProvider';
 import { PeaksProvider } from '@/lib/peaks/PeaksProvider';
 import { OfflineProvider } from '@/lib/offline/OfflineProvider';
 import { SyncProvider } from '@/lib/offline/SyncProvider';
@@ -84,26 +85,28 @@ function RootLayoutNav() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <OfflineProvider>
         <AuthProvider>
-          <PeaksProvider>
-            <SyncProvider>
-              <ThemeProvider value={theme}>
-                <Stack>
-                  <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                  <Stack.Screen
-                    name="(modals)"
-                    options={{ headerShown: false, presentation: 'modal' }}
-                  />
-                  <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                  <Stack.Screen
-                    name="users/[id]"
-                    options={{ title: 'Profile' }}
-                  />
-                  <Stack.Screen name="+not-found" />
-                </Stack>
-                <SyncToast />
-              </ThemeProvider>
-            </SyncProvider>
-          </PeaksProvider>
+          <PurchasesProvider>
+            <PeaksProvider>
+              <SyncProvider>
+                <ThemeProvider value={theme}>
+                  <Stack>
+                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                    <Stack.Screen
+                      name="(modals)"
+                      options={{ headerShown: false, presentation: 'modal' }}
+                    />
+                    <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                    <Stack.Screen
+                      name="users/[id]"
+                      options={{ title: 'Profile' }}
+                    />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+                  <SyncToast />
+                </ThemeProvider>
+              </SyncProvider>
+            </PeaksProvider>
+          </PurchasesProvider>
         </AuthProvider>
       </OfflineProvider>
     </GestureHandlerRootView>

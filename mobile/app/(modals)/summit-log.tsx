@@ -165,7 +165,7 @@ export default function SummitLogModal() {
 			router.back();
 		} catch (e: any) {
 			if (e?.status === 403) {
-				Alert.alert('Summit Limit Reached', 'Upgrade to Pro for unlimited summit logging.');
+				router.push('/(modals)/paywall' as any);
 			} else {
 				Alert.alert('Error', `Failed to ${isEditMode ? 'update' : 'log'} summit.`);
 			}

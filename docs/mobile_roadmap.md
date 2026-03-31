@@ -19,17 +19,9 @@
 | 3D | Social features | Activity feed (Following/You tabs), public user profiles, follow/unfollow, summit reactions, comments bottom sheet, suggested climbers |
 | 3E | Photo upload | `POST /api/v1/peaks/[slug]/images`, upload modal (camera/library, categories, progress bar), full-screen gallery viewer (pinch-to-zoom, swipe) |
 | 4 | Offline-first | SQLite cache (3 tiers), sync outbox (summits/reviews/trail reports/photos), background prefetch (58 peak details + hero images), connectivity detection, offline UI (banner, sync badge, stale indicators, sync toast), storage management modal, auth cleanup on sign-out |
+| 5 | Payments | RevenueCat SDK (`react-native-purchases`), PurchasesProvider, paywall modal (dynamic pricing, purchase/restore), RevenueCat webhook endpoint, subscription + restore in settings, Pro badge on profile, summit limit → paywall routing |
 
 **Supabase config still needed:** Add `saltgoat://auth/callback` to redirect URLs, configure Google OAuth iOS client ID, enable Apple provider.
-
-## Phase 5: Payments (2-3 sessions)
-
-**RevenueCat** (`react-native-purchases`) for App Store + Google Play alongside existing Stripe web subscriptions. Apple requires IAP.
-
-- Add `platform`, `app_store_transaction_id` columns to `user_subscriptions`
-- RevenueCat webhooks update subscriptions
-- `isPro()` check unchanged — works regardless of platform
-- Paywall screen, restore purchases, manage subscription link
 
 ## Phase 6: App Store Submission (2-3 sessions)
 
@@ -80,8 +72,15 @@
 |-------|----------|-----------|
 | ~~3C-3E~~ | ~~3-4~~ | ~~Feature-complete beta~~ (done) |
 | ~~4~~ | ~~5~~ | ~~Field-testable beta~~ (done) |
-| 5 | 2-3 | Monetization ready |
+| ~~5~~ | ~~1~~ | ~~Monetization ready~~ (done) |
 | 6 | 2-3 | **Public launch** |
 | 7 | Ongoing | Enhancements |
 
-Phase 4 complete. Field-testable beta reached. Offline map tiles (Mapbox) deferred to Phase 7. Next: Phase 5 (RevenueCat payments).
+Phase 5 complete. Monetization ready. Next: Phase 6 (App Store submission).
+
+**External setup still needed for Phase 5:**
+- RevenueCat dashboard: create project, apps, "pro" entitlement, default offering, webhook URL (`https://saltgoat.co/api/webhooks/revenuecat`)
+- App Store Connect: subscription group + product (~$29.99/year)
+- Google Play Console: matching subscription product
+- Railway: add `REVENUECAT_WEBHOOK_SECRET` env var
+- Push migration: `supabase db push` (adds platform, app_store_transaction_id, revenuecat_id columns)

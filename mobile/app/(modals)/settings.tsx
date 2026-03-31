@@ -2,10 +2,25 @@ import { View, Text, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
+import { usePurchases } from '@/lib/purchases/PurchasesProvider';
 
 export default function SettingsModal() {
+  const { isPro, restorePurchases, manageSubscription } = usePurchases();
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.light.bgPrimary, padding: 20 }}>
+      <SettingsRow
+        icon={{ ios: 'creditcard', android: 'credit_card', web: 'credit_card' }}
+        title="Subscription"
+        subtitle={isPro ? 'SaltGoat Pro' : 'Free Plan'}
+        onPress={isPro ? manageSubscription : () => router.push('/(modals)/paywall' as any)}
+      />
+      <SettingsRow
+        icon={{ ios: 'arrow.counterclockwise', android: 'restore', web: 'restore' }}
+        title="Restore Purchases"
+        subtitle="Restore a previous subscription"
+        onPress={restorePurchases}
+      />
       <SettingsRow
         icon={{ ios: 'internaldrive', android: 'storage', web: 'storage' }}
         title="Offline Storage"
