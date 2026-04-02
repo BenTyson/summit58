@@ -17,10 +17,10 @@ import { RouteCard } from '@/components/peaks/RouteCard';
 import { ReviewCard } from '@/components/peaks/ReviewCard';
 import { TrailReportCard } from '@/components/peaks/TrailReportCard';
 import { PeakCard } from '@/components/peaks/PeakCard';
-import { WeatherSection } from '@/components/weather/WeatherSection';
+import { WeatherSummaryCard } from '@/components/weather/WeatherSummaryCard';
 import { ImageGalleryViewer } from '@/components/gallery/ImageGalleryViewer';
 import { useSession } from '@/lib/auth/AuthProvider';
-import type { PeakDetailResponse } from '@/lib/types/api';
+import type { PeakDetailResponse, ForecastResponse } from '@/lib/types/api';
 
 export default function PeakDetailScreen() {
 	const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -31,6 +31,7 @@ export default function PeakDetailScreen() {
 	const [galleryVisible, setGalleryVisible] = useState(false);
 	const [galleryIndex, setGalleryIndex] = useState(0);
 	const [cachedAt, setCachedAt] = useState<number | null>(null);
+	const [forecast, setForecast] = useState<ForecastResponse | null>(null);
 	const { user } = useSession();
 	const { isOnline } = useOffline();
 
@@ -58,9 +59,27 @@ export default function PeakDetailScreen() {
 		}
 	}, [slug, isOnline]);
 
+	const loadForecast = useCallback(async () => {
+		try {
+			const { data } = await cachedApiFetch<ForecastResponse>(
+				`/api/v1/peaks/${slug}/forecast`,
+				{
+					cache: CACHE_TIERS.WEATHER,
+					fetchOptions: { auth: false },
+					onRefresh: (fresh) => setForecast(fresh as ForecastResponse),
+				},
+				isOnline
+			);
+			setForecast(data);
+		} catch {
+			// Non-critical — weather section just won't show
+		}
+	}, [slug, isOnline]);
+
 	useEffect(() => {
 		loadPeak();
-	}, [loadPeak]);
+		loadForecast();
+	}, [loadPeak, loadForecast]);
 
 	// Re-fetch when screen regains focus (e.g. returning from upload modal)
 	useFocusEffect(
@@ -92,7 +111,7 @@ export default function PeakDetailScreen() {
 		);
 	}
 
-	const { peak, reviews, avgRating, totalReviews, images, conditions, trailReports, relatedPeaks } =
+	const { peak, reviews, avgRating, totalReviews, images, trailReports, relatedPeaks } =
 		data;
 	const standardRoute = peak.routes?.find((r) => r.is_standard);
 
@@ -190,10 +209,13 @@ export default function PeakDetailScreen() {
 					</View>
 
 					{/* Weather */}
-					{conditions.length > 0 && (
+					{forecast && (
 						<Section title="Weather">
 							<StaleDataIndicator cachedAt={cachedAt} />
-							<WeatherSection conditions={conditions} />
+							<WeatherSummaryCard
+								forecast={forecast}
+								onViewFull={() => router.push(`/peaks/${slug}/weather`)}
+							/>
 						</Section>
 					)}
 

@@ -11,8 +11,15 @@ import type {
 	UserReview,
 	UserSummitWithPeak,
 	UserAchievementWithDef,
-	Profile
+	Profile,
+	ForecastResponse,
+	ElevationBandForecast,
+	DayForecast,
+	PeriodForecast,
+	HikerInsight
 } from '@saltgoat/shared/types/helpers';
+
+export type { ForecastResponse, ElevationBandForecast, DayForecast, PeriodForecast, HikerInsight };
 
 export interface PeaksListResponse {
 	peaks: PeakWithStandardRoute[];
