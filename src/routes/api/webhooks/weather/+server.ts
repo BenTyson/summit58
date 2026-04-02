@@ -1,6 +1,7 @@
 // Weather data pipeline — triggered by external cron (Railway / cron-job.org)
 // Schedule: 4x daily at 00:00, 06:00, 12:00, 18:00 Mountain Time (06:00, 12:00, 18:00, 00:00 UTC)
 // Fetches 3 elevation bands x 58 peaks = 174 Open-Meteo calls per run (~696/day)
+// Rate limiting: 2 peaks concurrent, bands fetched sequentially, 1.5s between batches (~60s total)
 
 import type { RequestHandler } from './$types';
 import { env } from '$env/dynamic/private';
@@ -15,7 +16,7 @@ import {
   cleanStaleForecasts,
   computeElevationBands
 } from '$lib/server/conditions';
-const CONCURRENCY = 5;
+const CONCURRENCY = 2;
 
 interface PeakWithTrailhead {
   id: string;
@@ -34,15 +35,14 @@ async function processPeak(
   let v2Success = false;
   let v1Success = false;
 
-  // Fetch all 3 elevation bands in parallel
+  // Fetch all 3 elevation bands sequentially to avoid rate limiting
   try {
-    const bandResults = await Promise.all(
-      bands.map(async (band) => {
-        const raw = await fetchDetailedWeather(peak.latitude, peak.longitude, band.elevation_ft);
-        const periods = aggregateHourlyToPeriods(raw, band.elevation_ft);
-        return { band, periods };
-      })
-    );
+    const bandResults: { band: typeof bands[0]; periods: ReturnType<typeof aggregateHourlyToPeriods> }[] = [];
+    for (const band of bands) {
+      const raw = await fetchDetailedWeather(peak.latitude, peak.longitude, band.elevation_ft);
+      const periods = aggregateHourlyToPeriods(raw, band.elevation_ft);
+      bandResults.push({ band, periods });
+    }
 
     // Upsert all bands into peak_forecasts
     await Promise.all(
@@ -157,9 +157,9 @@ export const POST: RequestHandler = async ({ request }) => {
         }
       }
 
-      // Brief pause between batches to be a good API citizen
+      // Pause between batches to stay under Open-Meteo rate limits
       if (i + CONCURRENCY < peaksWithTrailhead.length) {
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 1500));
       }
     }
 
