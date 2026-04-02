@@ -3,6 +3,7 @@ import type { Database, Tables, TablesInsert } from '$lib/types/database';
 
 export type PeakConditions = Tables<'peak_conditions'>;
 export type PeakConditionsInsert = TablesInsert<'peak_conditions'>;
+export type PeakForecastInsert = TablesInsert<'peak_forecasts'>;
 
 // Re-export weather utilities for convenience
 export { weatherCodeToDescription, weatherCodeToIcon, degreesToCardinal } from '$lib/utils/weather';
@@ -155,4 +156,406 @@ export async function getConditionsForPeak(
   }
 
   return data ?? [];
+}
+
+// ─── V2: Elevation-banded, sub-daily forecasts ─────────────────────────
+
+export interface ElevationBand {
+  band: 'summit' | 'mid' | 'base';
+  elevation_ft: number;
+}
+
+export type TimePeriod = 'morning' | 'afternoon' | 'night';
+
+interface OpenMeteoHourlyResponse {
+  hourly: {
+    time: string[];
+    temperature_2m: number[];
+    apparent_temperature: number[];
+    relative_humidity_2m: number[];
+    dewpoint_2m: number[];
+    precipitation: number[];
+    snowfall: number[];
+    rain: number[];
+    weather_code: number[];
+    cloud_cover: number[];
+    wind_speed_10m: number[];
+    wind_direction_10m: number[];
+    wind_gusts_10m: number[];
+    visibility: number[];
+    uv_index: number[];
+    freezinglevel_height: number[];
+  };
+  daily: {
+    time: string[];
+    sunrise: string[];
+    sunset: string[];
+    temperature_2m_max: number[];
+    temperature_2m_min: number[];
+  };
+}
+
+export interface PeriodData {
+  date: string;
+  time_period: TimePeriod;
+  temperature_f: number;
+  feels_like_f: number;
+  humidity_percent: number;
+  dewpoint_f: number;
+  wind_speed_mph: number;
+  wind_gust_mph: number;
+  wind_direction: number;
+  precipitation_in: number;
+  snow_in: number;
+  rain_in: number;
+  cloud_cover_percent: number;
+  weather_code: number;
+  visibility_miles: number;
+  freezing_level_ft: number;
+  cloud_base_ft: number | null;
+  uv_index: number;
+  high_f: number;
+  low_f: number;
+  sunrise: string;
+  sunset: string;
+}
+
+export function computeElevationBands(
+  peakElevation: number,
+  trailheadElevation: number | null
+): ElevationBand[] {
+  const summit = peakElevation;
+  const base = trailheadElevation ?? summit - 4000;
+  const mid = Math.round((summit + base) / 2 / 100) * 100;
+
+  return [
+    { band: 'summit', elevation_ft: summit },
+    { band: 'mid', elevation_ft: mid },
+    { band: 'base', elevation_ft: base }
+  ];
+}
+
+export async function fetchDetailedWeather(
+  latitude: number,
+  longitude: number,
+  elevation_ft: number
+): Promise<OpenMeteoHourlyResponse> {
+  const elevation_m = Math.round(elevation_ft * 0.3048);
+
+  const params = new URLSearchParams({
+    latitude: latitude.toString(),
+    longitude: longitude.toString(),
+    elevation: elevation_m.toString(),
+    hourly:
+      'temperature_2m,apparent_temperature,relative_humidity_2m,' +
+      'dewpoint_2m,precipitation,snowfall,rain,' +
+      'weather_code,cloud_cover,' +
+      'wind_speed_10m,wind_direction_10m,wind_gusts_10m,' +
+      'visibility,uv_index,freezinglevel_height',
+    daily: 'sunrise,sunset,temperature_2m_max,temperature_2m_min',
+    temperature_unit: 'fahrenheit',
+    wind_speed_unit: 'mph',
+    precipitation_unit: 'inch',
+    timezone: 'America/Denver',
+    forecast_days: '7'
+  });
+
+  const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
+
+  if (!response.ok) {
+    throw new Error(`Open-Meteo API error: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Most severe WMO weather code wins
+const WMO_SEVERITY: Record<number, number> = {
+  0: 0, 1: 1, 2: 2, 3: 3, // clear → overcast
+  45: 4, 48: 5, // fog
+  51: 6, 53: 7, 55: 8, // drizzle
+  61: 9, 63: 10, 65: 11, // rain
+  66: 12, 67: 13, // freezing rain
+  71: 14, 73: 15, 75: 16, 77: 17, // snow
+  80: 18, 81: 19, 82: 20, // rain showers
+  85: 21, 86: 22, // snow showers
+  95: 23, 96: 24, 99: 25 // thunderstorms
+};
+
+function mostSevereWeatherCode(codes: number[]): number {
+  let maxSeverity = -1;
+  let maxCode = 0;
+  for (const code of codes) {
+    const severity = WMO_SEVERITY[code] ?? 0;
+    if (severity > maxSeverity) {
+      maxSeverity = severity;
+      maxCode = code;
+    }
+  }
+  return maxCode;
+}
+
+function modeOfDirections(directions: number[]): number {
+  if (directions.length === 0) return 0;
+  // Bucket into 16 cardinal directions (22.5° each), take the mode
+  const buckets = new Map<number, number>();
+  for (const d of directions) {
+    const bucket = Math.round(d / 22.5) % 16;
+    buckets.set(bucket, (buckets.get(bucket) ?? 0) + 1);
+  }
+  let maxCount = 0;
+  let maxBucket = 0;
+  for (const [bucket, count] of buckets) {
+    if (count > maxCount) {
+      maxCount = count;
+      maxBucket = bucket;
+    }
+  }
+  return maxBucket * 22.5;
+}
+
+// Meters to feet
+function metersToFeet(m: number): number {
+  return Math.round(m * 3.28084);
+}
+
+// Meters to miles
+function metersToMiles(m: number): number {
+  return Math.round((m / 1609.344) * 10) / 10;
+}
+
+// Cloud base from dewpoint depression: ((temp - dewpoint) / 4.4) * 1000 + station_elevation
+function calculateCloudBase(
+  tempF: number,
+  dewpointF: number,
+  elevationFt: number
+): number | null {
+  const spread = tempF - dewpointF;
+  if (spread < 0) return null;
+  // The 4.4°F per 1000ft is the standard lapse rate for cloud base estimation
+  return Math.round((spread / 4.4) * 1000 + elevationFt);
+}
+
+// Period hour ranges in Mountain Time (Open-Meteo returns in this TZ)
+// Morning: 06:00-11:59, Afternoon: 12:00-17:59, Night: 18:00-05:59
+function getTimePeriod(hour: number): TimePeriod {
+  if (hour >= 6 && hour < 12) return 'morning';
+  if (hour >= 12 && hour < 18) return 'afternoon';
+  return 'night';
+}
+
+export function aggregateHourlyToPeriods(
+  data: OpenMeteoHourlyResponse,
+  elevationFt: number
+): PeriodData[] {
+  const { hourly, daily } = data;
+  const totalHours = hourly.time.length;
+
+  // Build a map of daily values for sunrise/sunset/high/low
+  const dailyMap = new Map<string, {
+    sunrise: string;
+    sunset: string;
+    high_f: number;
+    low_f: number;
+  }>();
+  for (let i = 0; i < daily.time.length; i++) {
+    dailyMap.set(daily.time[i], {
+      sunrise: daily.sunrise[i],
+      sunset: daily.sunset[i],
+      high_f: Math.round(daily.temperature_2m_max[i]),
+      low_f: Math.round(daily.temperature_2m_min[i])
+    });
+  }
+
+  // Group hourly indices by date + period
+  const groups = new Map<string, number[]>();
+  for (let i = 0; i < totalHours; i++) {
+    // Open-Meteo format: "2026-04-02T06:00"
+    const timeStr = hourly.time[i];
+    const date = timeStr.slice(0, 10);
+    const hour = parseInt(timeStr.slice(11, 13), 10);
+    const period = getTimePeriod(hour);
+    const key = `${date}|${period}`;
+
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(i);
+  }
+
+  const periods: PeriodData[] = [];
+
+  for (const [key, indices] of groups) {
+    const [date, period] = key.split('|') as [string, TimePeriod];
+    const dayData = dailyMap.get(date);
+    if (!dayData || indices.length === 0) continue;
+
+    // Gather raw values for this period
+    const temps = indices.map((i) => hourly.temperature_2m[i]);
+    const feelsLike = indices.map((i) => hourly.apparent_temperature[i]);
+    const humidity = indices.map((i) => hourly.relative_humidity_2m[i]);
+    const dewpoints = indices.map((i) => hourly.dewpoint_2m[i]);
+    const windSpeeds = indices.map((i) => hourly.wind_speed_10m[i]);
+    const windGusts = indices.map((i) => hourly.wind_gusts_10m[i]);
+    const windDirs = indices.map((i) => hourly.wind_direction_10m[i]);
+    const precip = indices.map((i) => hourly.precipitation[i]);
+    const snow = indices.map((i) => hourly.snowfall[i]);
+    const rain = indices.map((i) => hourly.rain[i]);
+    const clouds = indices.map((i) => hourly.cloud_cover[i]);
+    const codes = indices.map((i) => hourly.weather_code[i]);
+    const vis = indices.map((i) => hourly.visibility[i]);
+    const uv = indices.map((i) => hourly.uv_index[i]);
+    const freezing = indices.map((i) => hourly.freezinglevel_height[i]);
+
+    const avgTemp = temps.reduce((a, b) => a + b, 0) / temps.length;
+    const avgDewpoint = dewpoints.reduce((a, b) => a + b, 0) / dewpoints.length;
+
+    periods.push({
+      date,
+      time_period: period,
+      temperature_f: Math.round(avgTemp),
+      feels_like_f: Math.round(Math.min(...feelsLike)),
+      humidity_percent: Math.round(humidity.reduce((a, b) => a + b, 0) / humidity.length),
+      dewpoint_f: Math.round(avgDewpoint),
+      wind_speed_mph: Math.round(Math.max(...windSpeeds)),
+      wind_gust_mph: Math.round(Math.max(...windGusts)),
+      wind_direction: Math.round(modeOfDirections(windDirs)),
+      precipitation_in: Math.round(precip.reduce((a, b) => a + b, 0) * 100) / 100,
+      snow_in: Math.round(snow.reduce((a, b) => a + b, 0) * 100) / 100,
+      rain_in: Math.round(rain.reduce((a, b) => a + b, 0) * 100) / 100,
+      cloud_cover_percent: Math.round(clouds.reduce((a, b) => a + b, 0) / clouds.length),
+      weather_code: mostSevereWeatherCode(codes),
+      visibility_miles: metersToMiles(Math.min(...vis)),
+      freezing_level_ft: metersToFeet(Math.min(...freezing)),
+      cloud_base_ft: calculateCloudBase(avgTemp, avgDewpoint, elevationFt),
+      uv_index: Math.round(Math.max(...uv)),
+      high_f: dayData.high_f,
+      low_f: dayData.low_f,
+      sunrise: dayData.sunrise,
+      sunset: dayData.sunset
+    });
+  }
+
+  // Sort by date then period order
+  const periodOrder: Record<TimePeriod, number> = { morning: 0, afternoon: 1, night: 2 };
+  periods.sort((a, b) => {
+    const dateCompare = a.date.localeCompare(b.date);
+    if (dateCompare !== 0) return dateCompare;
+    return periodOrder[a.time_period] - periodOrder[b.time_period];
+  });
+
+  return periods;
+}
+
+export async function upsertForecasts(
+  supabase: SupabaseClient<Database>,
+  peakId: string,
+  band: ElevationBand,
+  periods: PeriodData[]
+): Promise<void> {
+  const records: PeakForecastInsert[] = periods.map((p) => ({
+    peak_id: peakId,
+    elevation_band: band.band,
+    elevation_ft: band.elevation_ft,
+    forecast_date: p.date,
+    time_period: p.time_period,
+    temperature_f: p.temperature_f,
+    feels_like_f: p.feels_like_f,
+    humidity_percent: p.humidity_percent,
+    dewpoint_f: p.dewpoint_f,
+    wind_speed_mph: p.wind_speed_mph,
+    wind_gust_mph: p.wind_gust_mph,
+    wind_direction: p.wind_direction,
+    precipitation_in: p.precipitation_in,
+    snow_in: p.snow_in,
+    rain_in: p.rain_in,
+    cloud_cover_percent: p.cloud_cover_percent,
+    weather_code: p.weather_code,
+    visibility_miles: p.visibility_miles,
+    freezing_level_ft: p.freezing_level_ft,
+    cloud_base_ft: p.cloud_base_ft,
+    uv_index: p.uv_index,
+    high_f: p.high_f,
+    low_f: p.low_f,
+    sunrise: p.sunrise,
+    sunset: p.sunset,
+    fetched_at: new Date().toISOString()
+  }));
+
+  const { error } = await supabase
+    .from('peak_forecasts')
+    .upsert(records, { onConflict: 'peak_id,elevation_band,forecast_date,time_period' });
+
+  if (error) {
+    console.error('Error upserting forecasts:', error);
+    throw error;
+  }
+}
+
+/**
+ * Convert summit-band period data back to legacy ForecastDay format
+ * for backward-compatible writes to peak_conditions.
+ */
+export function periodsToLegacyForecast(periods: PeriodData[]): ForecastDay[] {
+  // Group by date
+  const byDate = new Map<string, PeriodData[]>();
+  for (const p of periods) {
+    if (!byDate.has(p.date)) byDate.set(p.date, []);
+    byDate.get(p.date)!.push(p);
+  }
+
+  const forecast: ForecastDay[] = [];
+  const dates = [...byDate.keys()].sort();
+
+  for (let i = 0; i < dates.length; i++) {
+    const date = dates[i];
+    const dayPeriods = byDate.get(date)!;
+    const morning = dayPeriods.find((p) => p.time_period === 'morning');
+    const afternoon = dayPeriods.find((p) => p.time_period === 'afternoon');
+
+    // Aggregate precipitation/snow across all periods for the day
+    const totalPrecip = dayPeriods.reduce((sum, p) => sum + p.precipitation_in, 0);
+    const totalSnow = dayPeriods.reduce((sum, p) => sum + p.snow_in, 0);
+
+    const day: ForecastDay = {
+      date,
+      high_f: dayPeriods[0].high_f,
+      low_f: dayPeriods[0].low_f,
+      precipitation_in: Math.round(totalPrecip * 100) / 100,
+      snow_in: Math.round(totalSnow * 100) / 100,
+      uv_index: Math.max(...dayPeriods.map((p) => p.uv_index)),
+      weather_code: mostSevereWeatherCode(dayPeriods.map((p) => p.weather_code))
+    };
+
+    // For today (first date), add "current" conditions from morning or afternoon
+    if (i === 0) {
+      const current = afternoon ?? morning ?? dayPeriods[0];
+      day.temperature_f = current.temperature_f;
+      day.feels_like_f = current.feels_like_f;
+      day.humidity_percent = current.humidity_percent;
+      day.wind_speed_mph = current.wind_speed_mph;
+      day.wind_gust_mph = current.wind_gust_mph;
+      day.wind_direction = current.wind_direction;
+      day.cloud_cover_percent = current.cloud_cover_percent;
+    }
+
+    forecast.push(day);
+  }
+
+  return forecast;
+}
+
+export async function cleanStaleForecasts(
+  supabase: SupabaseClient<Database>
+): Promise<void> {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const cutoff = yesterday.toISOString().split('T')[0];
+
+  const { error } = await supabase
+    .from('peak_forecasts')
+    .delete()
+    .lt('forecast_date', cutoff);
+
+  if (error) {
+    console.error('Error cleaning stale forecasts:', error);
+  }
 }

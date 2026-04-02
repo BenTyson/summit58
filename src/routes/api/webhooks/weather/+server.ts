@@ -1,19 +1,88 @@
 import type { RequestHandler } from './$types';
 import { env } from '$env/dynamic/private';
 import { createSupabaseServiceClient } from '$lib/server/supabase';
-import { fetchWeatherForPeak, upsertConditions } from '$lib/server/conditions';
+import {
+  fetchWeatherForPeak,
+  upsertConditions,
+  fetchDetailedWeather,
+  aggregateHourlyToPeriods,
+  upsertForecasts,
+  periodsToLegacyForecast,
+  cleanStaleForecasts,
+  computeElevationBands
+} from '$lib/server/conditions';
+const CONCURRENCY = 5;
+
+interface PeakWithTrailhead {
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  elevation: number;
+  trailhead_elevation: number | null;
+}
+
+async function processPeak(
+  supabase: ReturnType<typeof createSupabaseServiceClient>,
+  peak: PeakWithTrailhead
+): Promise<{ v2Success: boolean; v1Success: boolean; error?: string }> {
+  const bands = computeElevationBands(peak.elevation, peak.trailhead_elevation);
+  let v2Success = false;
+  let v1Success = false;
+
+  // Fetch all 3 elevation bands in parallel
+  try {
+    const bandResults = await Promise.all(
+      bands.map(async (band) => {
+        const raw = await fetchDetailedWeather(peak.latitude, peak.longitude, band.elevation_ft);
+        const periods = aggregateHourlyToPeriods(raw, band.elevation_ft);
+        return { band, periods };
+      })
+    );
+
+    // Upsert all bands into peak_forecasts
+    await Promise.all(
+      bandResults.map(({ band, periods }) =>
+        upsertForecasts(supabase, peak.id, band, periods)
+      )
+    );
+    v2Success = true;
+
+    // Write summit band back to legacy peak_conditions for backward compat
+    const summitResult = bandResults.find((r) => r.band.band === 'summit');
+    if (summitResult) {
+      const legacyForecast = periodsToLegacyForecast(summitResult.periods);
+      await upsertConditions(supabase, peak.id, legacyForecast);
+      v1Success = true;
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+
+    // If v2 failed, try legacy v1 fetch as fallback so peak_conditions stays fresh
+    if (!v1Success) {
+      try {
+        const forecast = await fetchWeatherForPeak(peak.latitude, peak.longitude);
+        await upsertConditions(supabase, peak.id, forecast);
+        v1Success = true;
+      } catch {
+        // Both failed
+      }
+    }
+
+    return { v2Success, v1Success, error: message };
+  }
+
+  return { v2Success, v1Success };
+}
 
 export const POST: RequestHandler = async ({ request }) => {
-  // Verify webhook secret (check multiple header variations)
   const webhookSecret = env.WEBHOOK_SECRET;
-  const secret = request.headers.get('x-webhook-secret')
-    || request.headers.get('X-Webhook-Secret')
-    || request.headers.get('X-WEBHOOK-SECRET');
-
-  console.log('Webhook request received, secret present:', !!secret);
+  const secret =
+    request.headers.get('x-webhook-secret') ||
+    request.headers.get('X-Webhook-Secret') ||
+    request.headers.get('X-WEBHOOK-SECRET');
 
   if (!webhookSecret || secret !== webhookSecret) {
-    console.warn('Unauthorized webhook attempt. Expected:', webhookSecret?.slice(0, 8) + '...', 'Got:', secret?.slice(0, 8) + '...');
     return new Response('Unauthorized', { status: 401 });
   }
 
@@ -22,15 +91,14 @@ export const POST: RequestHandler = async ({ request }) => {
   try {
     const supabase = createSupabaseServiceClient();
 
-    // Get all peaks with coordinates
+    // Get all peaks with their lowest-elevation route's trailhead
     const { data: peaks, error: peaksError } = await supabase
       .from('peaks')
-      .select('id, name, latitude, longitude');
+      .select('id, name, latitude, longitude, elevation');
 
     if (peaksError) {
       throw new Error(`Failed to fetch peaks: ${peaksError.message}`);
     }
-
     if (!peaks || peaks.length === 0) {
       return new Response(JSON.stringify({ success: false, error: 'No peaks found' }), {
         status: 500,
@@ -38,38 +106,74 @@ export const POST: RequestHandler = async ({ request }) => {
       });
     }
 
-    console.log(`Fetching weather for ${peaks.length} peaks...`);
+    // Get trailhead elevations: pick the first route per peak (ordered by id)
+    const { data: routes } = await supabase
+      .from('routes')
+      .select('peak_id, trailhead_elevation')
+      .not('trailhead_elevation', 'is', null)
+      .order('id', { ascending: true });
 
-    let successCount = 0;
+    // Build a map of peak_id → trailhead_elevation (first route wins)
+    const trailheadMap = new Map<string, number>();
+    if (routes) {
+      for (const route of routes) {
+        if (!trailheadMap.has(route.peak_id) && route.trailhead_elevation != null) {
+          trailheadMap.set(route.peak_id, route.trailhead_elevation);
+        }
+      }
+    }
+
+    const peaksWithTrailhead: PeakWithTrailhead[] = peaks.map((p) => ({
+      ...p,
+      trailhead_elevation: trailheadMap.get(p.id) ?? null
+    }));
+
+    console.log(`Fetching weather for ${peaksWithTrailhead.length} peaks (3 elevation bands each)...`);
+
+    let v2Success = 0;
+    let v1Success = 0;
     let errorCount = 0;
     const errors: string[] = [];
 
-    // Fetch weather for each peak with small delay to avoid rate limiting
-    for (const peak of peaks) {
-      try {
-        const forecast = await fetchWeatherForPeak(peak.latitude, peak.longitude);
-        await upsertConditions(supabase, peak.id, forecast);
-        successCount++;
-      } catch (error) {
-        errorCount++;
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        errors.push(`${peak.name}: ${message}`);
-        console.error(`Error fetching weather for ${peak.name}:`, error);
+    // Process peaks in batches of CONCURRENCY
+    for (let i = 0; i < peaksWithTrailhead.length; i += CONCURRENCY) {
+      const batch = peaksWithTrailhead.slice(i, i + CONCURRENCY);
+
+      const results = await Promise.all(
+        batch.map((peak) => processPeak(supabase, peak))
+      );
+
+      for (let j = 0; j < results.length; j++) {
+        const result = results[j];
+        if (result.v2Success) v2Success++;
+        if (result.v1Success) v1Success++;
+        if (result.error) {
+          errorCount++;
+          errors.push(`${batch[j].name}: ${result.error}`);
+        }
       }
 
-      // Small delay between requests (100ms)
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Brief pause between batches to be a good API citizen
+      if (i + CONCURRENCY < peaksWithTrailhead.length) {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      }
     }
 
+    // Clean up old forecast data
+    await cleanStaleForecasts(supabase);
+
     const duration = Date.now() - startTime;
-    console.log(`Weather fetch complete: ${successCount} success, ${errorCount} errors in ${duration}ms`);
+    console.log(
+      `Weather fetch complete: ${v2Success} v2, ${v1Success} v1 legacy, ${errorCount} errors in ${duration}ms`
+    );
 
     return new Response(
       JSON.stringify({
         success: errorCount === 0,
-        count: successCount,
+        v2: v2Success,
+        v1_legacy: v1Success,
         errors: errorCount,
-        errorDetails: errors.slice(0, 5), // First 5 errors
+        errorDetails: errors.slice(0, 5),
         duration: `${duration}ms`
       }),
       {
@@ -92,7 +196,7 @@ export const POST: RequestHandler = async ({ request }) => {
   }
 };
 
-// Also support GET for manual testing (remove in production if desired)
+// Support GET for manual testing
 export const GET: RequestHandler = async ({ url }) => {
   const secret = url.searchParams.get('secret');
   const webhookSecret = env.WEBHOOK_SECRET;
@@ -101,7 +205,6 @@ export const GET: RequestHandler = async ({ url }) => {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  // Redirect to POST handler logic by creating a fake request
   const request = new Request(url, {
     method: 'POST',
     headers: { 'x-webhook-secret': secret }

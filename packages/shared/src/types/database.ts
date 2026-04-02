@@ -118,6 +118,104 @@ export type Database = {
           },
         ]
       }
+      peak_forecasts: {
+        Row: {
+          cloud_base_ft: number | null
+          cloud_cover_percent: number | null
+          dewpoint_f: number | null
+          elevation_band: string
+          elevation_ft: number
+          feels_like_f: number | null
+          fetched_at: string | null
+          forecast_date: string
+          freezing_level_ft: number | null
+          high_f: number | null
+          humidity_percent: number | null
+          id: string
+          low_f: number | null
+          peak_id: string
+          precipitation_in: number | null
+          rain_in: number | null
+          snow_in: number | null
+          sunrise: string | null
+          sunset: string | null
+          temperature_f: number | null
+          time_period: string
+          uv_index: number | null
+          visibility_miles: number | null
+          weather_code: number | null
+          wind_direction: number | null
+          wind_gust_mph: number | null
+          wind_speed_mph: number | null
+        }
+        Insert: {
+          cloud_base_ft?: number | null
+          cloud_cover_percent?: number | null
+          dewpoint_f?: number | null
+          elevation_band: string
+          elevation_ft: number
+          feels_like_f?: number | null
+          fetched_at?: string | null
+          forecast_date: string
+          freezing_level_ft?: number | null
+          high_f?: number | null
+          humidity_percent?: number | null
+          id?: string
+          low_f?: number | null
+          peak_id: string
+          precipitation_in?: number | null
+          rain_in?: number | null
+          snow_in?: number | null
+          sunrise?: string | null
+          sunset?: string | null
+          temperature_f?: number | null
+          time_period: string
+          uv_index?: number | null
+          visibility_miles?: number | null
+          weather_code?: number | null
+          wind_direction?: number | null
+          wind_gust_mph?: number | null
+          wind_speed_mph?: number | null
+        }
+        Update: {
+          cloud_base_ft?: number | null
+          cloud_cover_percent?: number | null
+          dewpoint_f?: number | null
+          elevation_band?: string
+          elevation_ft?: number
+          feels_like_f?: number | null
+          fetched_at?: string | null
+          forecast_date?: string
+          freezing_level_ft?: number | null
+          high_f?: number | null
+          humidity_percent?: number | null
+          id?: string
+          low_f?: number | null
+          peak_id?: string
+          precipitation_in?: number | null
+          rain_in?: number | null
+          snow_in?: number | null
+          sunrise?: string | null
+          sunset?: string | null
+          temperature_f?: number | null
+          time_period?: string
+          uv_index?: number | null
+          visibility_miles?: number | null
+          weather_code?: number | null
+          wind_direction?: number | null
+          wind_gust_mph?: number | null
+          wind_speed_mph?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "peak_forecasts_peak_id_fkey"
+            columns: ["peak_id"]
+            isOneToOne: false
+            referencedRelation: "peaks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       peak_images: {
         Row: {
           caption: string | null
@@ -619,6 +717,67 @@ export type Database = {
             columns: ["peak_id"]
             isOneToOne: false
             referencedRelation: "peaks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      summit_comments: {
+        Row: {
+          body: string
+          created_at: string | null
+          id: string
+          summit_id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string | null
+          id?: string
+          summit_id: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string | null
+          id?: string
+          summit_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "summit_comments_summit_id_fkey"
+            columns: ["summit_id"]
+            isOneToOne: false
+            referencedRelation: "user_summits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      summit_reactions: {
+        Row: {
+          created_at: string | null
+          id: string
+          summit_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          summit_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          summit_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "summit_reactions_summit_id_fkey"
+            columns: ["summit_id"]
+            isOneToOne: false
+            referencedRelation: "user_summits"
             referencedColumns: ["id"]
           },
         ]
