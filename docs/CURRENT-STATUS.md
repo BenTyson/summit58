@@ -1,13 +1,51 @@
 # Current Status
 
-**Last Updated:** 2026-03-29
-**Current Phase:** Mobile 5 — Payments (Not Started)
-**What's Next:** RevenueCat IAP integration for App Store + Google Play subscriptions
+**Last Updated:** 2026-04-02
+**Current Phase:** Weather v2 complete, Mobile 6 — App Store (Not Started)
+**What's Next:** App Store submission prep
 
 ## What's Built
 
 ### Web (Complete — Phases 1-13)
 All web features shipped. Outstanding: affiliate partnerships (Phase 7), notifications/email digests/rate limiting/a11y audit (Phase 8 fragments).
+
+### Weather Forecast v2 (Complete — Phases 1-6)
+Mountain-grade weather forecast system across both platforms.
+
+**Phase 1 — Data pipeline**
+- `peak_forecasts` table: 3 elevation bands (summit/mid/trailhead) x 3 periods (morning/afternoon/night) x 7 days
+- Expanded Open-Meteo fetch with elevation parameter override per band
+- Hourly-to-period aggregation (safety-first: min feels-like, max wind, most severe weather code)
+- Webhook runs 4x daily (00:00, 06:00, 12:00, 18:00 MT), 2 peaks concurrent, ~60s total
+- Legacy `peak_conditions` dual-write maintained for backward compatibility
+
+**Phase 2 — API + shared types**
+- `ForecastResponse` type with `ElevationBandForecast`, `DayForecast`, `PeriodForecast`, `HikerInsight`
+- Weather utils in `@saltgoat/shared`: summary generation, hiker insights engine, color/severity helpers, SF Symbol map
+- `GET /api/v1/peaks/[slug]/forecast` — public endpoint, 30-min cache
+
+**Phase 3 — Web UI**
+- `/peaks/[slug]/weather` page: elevation band selector, NL summary, hiker insights, current conditions hero, CSS Grid forecast table (11 metric rows x 21 columns), sunrise/sunset
+- `WeatherSummaryCard` on peak detail with "View Full Forecast" link
+- `RouteWeatherStrip` on route pages (trailhead-elevation, 2-day)
+
+**Phase 4 — Mobile UI**
+- Weather detail screen with band selector, NL summary, insights, hero, horizontal FlatList day cards
+- `WeatherSummaryCard` on peak detail with forecast navigation
+- SF Symbol weather icons via `expo-symbols`
+
+**Phase 5 — Pro gating**
+- Free: summit band, daily only, no insights/summaries
+- Pro: full 3-band, sub-daily, insights, NL summaries
+- Admin users treated as Pro
+- Upgrade prompts on web (banner) and mobile (paywall gate)
+
+**Phase 6 — Polish**
+- Loading skeletons: web (lazy-loaded ForecastTable with skeleton fallback), mobile (animated skeleton screen)
+- Accessibility: ARIA labels on forecast cells, screen reader text on weather icons, keyboard nav on band selector (role=tablist, arrow keys)
+- SEO: JSON-LD structured data, enhanced meta tags, Twitter cards
+- Performance: lazy-load ForecastTable, React.memo on ForecastDayCard/WeatherHero/HikerInsightsPanel
+- Legacy deprecation timeline documented in `conditions.ts`
 
 ### Mobile
 
@@ -73,7 +111,8 @@ Field-testable beta milestone reached.
 | Mobile 3D (Social features) | COMPLETE |
 | Mobile 3E (Photo upload) | COMPLETE |
 | Mobile 4 (Offline-first) | COMPLETE |
-| Mobile 5 (Payments) | NOT STARTED |
+| Mobile 5 (Payments) | COMPLETE |
+| Weather v2 (Phases 1-6) | COMPLETE |
 | Mobile 6 (App Store) | NOT STARTED |
 
 ## Known Issues
@@ -84,3 +123,5 @@ Field-testable beta milestone reached.
 - No error monitoring (Sentry)
 - Stripe integration stubbed
 - Date inputs on mobile are plain TextInput (YYYY-MM-DD) — no native picker yet
+- Legacy `peak_conditions` table still active — deprecation timeline in `src/lib/server/conditions.ts`
+- Open-Meteo free tier is non-commercial — need commercial API key (~10 EUR/month) for production

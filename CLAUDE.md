@@ -52,7 +52,7 @@ mobile/lib/             Supabase client, API client, auth provider, peaks contex
 | `achievements.ts` | Check + award achievements (`checkAndAwardAchievements(supabase, userId, trigger)`) |
 | `subscriptions.ts` | `getSubscription`, `isPro`, `canLogSummit` (free tier: 5 summits) |
 | `images.ts` | Image gallery CRUD + moderation |
-| `conditions.ts` | Weather fetch + queries |
+| `conditions.ts` | Weather v1 (legacy `peak_conditions`) + v2 (`peak_forecasts`: 3-band, 3-period, 7-day forecasts, `getForecastForPeak()`) |
 | `leaderboard.ts` | Leaderboard aggregation |
 | `reactions.ts` | Summit reactions (toggle, batch-fetch with avatar stack) |
 | `comments.ts` | Summit comments (create, delete, batch-fetch) |
@@ -90,7 +90,7 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 ## API Endpoints
 
 ### Web-Only
-`/api/webhooks/weather` (cron), `/api/checkout` (stub), `/api/portal` (stub), `/api/webhooks/stripe` (stub), `/api/webhooks/revenuecat` (mobile IAP), `/api/export/summits` (Pro CSV)
+`/api/webhooks/weather` (cron, 4x daily — fetches 3 elevation bands x 58 peaks, writes to `peak_forecasts` + legacy `peak_conditions`), `/api/checkout` (stub), `/api/portal` (stub), `/api/webhooks/stripe` (stub), `/api/webhooks/revenuecat` (mobile IAP), `/api/export/summits` (Pro CSV)
 
 ### Mobile REST API (v1)
 
@@ -98,7 +98,8 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 |----------|--------|------|---------|
 | `/api/v1/peaks` | GET | Optional | All 58 peaks + summitedPeakIds if authenticated |
 | `/api/v1/peaks/[slug]` | GET | Optional | Aggregated detail: peak + reviews + images + conditions + trail reports |
-| `/api/v1/peaks/[slug]/conditions` | GET | No | 7-day weather forecast |
+| `/api/v1/peaks/[slug]/conditions` | GET | No | 7-day weather forecast (legacy v1, uses `peak_conditions`) |
+| `/api/v1/peaks/[slug]/forecast` | GET | No | 7-day elevation-banded forecast (v2, uses `peak_forecasts`) — returns `ForecastResponse` |
 | `/api/v1/profile` | GET | Required | Stats + summits + achievements + grid |
 | `/api/v1/summits` | GET | Required | Can-log pre-flight check (allowed, remaining, isPro) |
 | `/api/v1/summits` | POST | Required | Create summit → returns `{ summit, newAchievements }` |
@@ -122,7 +123,7 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 
 ### Tables
 
-**Core (public read):** `peaks` (58), `routes` (66), `peak_conditions` (7-day weather)
+**Core (public read):** `peaks` (58), `routes` (66), `peak_conditions` (legacy 7-day weather), `peak_forecasts` (v2: 3-band x 3-period x 7-day forecasts)
 **User (RLS: own CRUD):** `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`, `peak_watchlist`, `user_subscriptions`, `content_flags`, `summit_reactions`, `summit_comments`
 **Storage:** `peak-images` (gallery, authenticated write), `profile-images` (avatar/cover, own write)
 
@@ -137,6 +138,7 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | `profiles` | display_name, username, avatar_url, cover_image_url, bio, tagline, location, is_public |
 | `user_subscriptions` | plan (free/pro), status (active/canceled/past_due/trialing), stripe_customer_id |
 | `peak_images` | peak_id, storage_path, caption, category, status, is_private, flag_count |
+| `peak_forecasts` | peak_id, elevation_band (summit/mid/base), elevation_ft, forecast_date, time_period (morning/afternoon/night), temperature_f, feels_like_f, wind_speed_mph, wind_gust_mph, precipitation_in, snow_in, weather_code, freezing_level_ft, cloud_base_ft, uv_index, high_f, low_f, sunrise, sunset |
 
 ### RLS Summary
 
@@ -152,8 +154,9 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 
 | Route | Purpose |
 |-------|---------|
-| `/peaks/[slug]` | Peak detail (reviews, weather, trail reports, gallery) |
-| `/peaks/[slug]/[route]` | Route detail (trail map, elevation, parking) |
+| `/peaks/[slug]` | Peak detail (reviews, weather summary card, trail reports, gallery) |
+| `/peaks/[slug]/weather` | Full weather forecast (elevation bands, forecast table, insights) — Pro gated |
+| `/peaks/[slug]/[route]` | Route detail (trail map, elevation, parking, route weather strip) |
 | `/profile` | User dashboard (tabs: activity, photos, trips, buddies) |
 | `/admin` | Admin dashboard (overview, moderation, users, content, subscriptions) |
 | `/pricing` | Free vs Pro comparison |
@@ -177,6 +180,9 @@ Other routes: `/`, `/peaks`, `/ranges`, `/ranges/[slug]`, `/map`, `/leaderboard`
 - No error monitoring (Sentry)
 - Stripe integration is stubbed — see `docs/ben.md` for setup steps
 - PWA glob warning and `semver` circular dependency warning are harmless (ignore)
+- Legacy `peak_conditions` still dual-written — deprecation timeline in `src/lib/server/conditions.ts`
+- Open-Meteo free tier is non-commercial — need commercial key for production with paid subscriptions
+- Weather webhook cron not yet configured — see `docs/ben.md`
 
 ## Remaining Web Roadmap
 
