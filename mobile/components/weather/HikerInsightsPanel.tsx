@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { View, Text } from 'react-native';
 import { colors } from '@/lib/theme/colors';
 import { HikerInsightCard } from './HikerInsightCard';
@@ -7,7 +8,7 @@ interface HikerInsightsPanelProps {
   insights: HikerInsight[];
 }
 
-export function HikerInsightsPanel({ insights }: HikerInsightsPanelProps) {
+export const HikerInsightsPanel = memo(function HikerInsightsPanel({ insights }: HikerInsightsPanelProps) {
   if (insights.length === 0) return null;
 
   return (
@@ -26,4 +27,4 @@ export function HikerInsightsPanel({ insights }: HikerInsightsPanelProps) {
       ))}
     </View>
   );
-}
+});

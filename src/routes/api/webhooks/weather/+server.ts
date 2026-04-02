@@ -1,3 +1,7 @@
+// Weather data pipeline — triggered by external cron (Railway / cron-job.org)
+// Schedule: 4x daily at 00:00, 06:00, 12:00, 18:00 Mountain Time (06:00, 12:00, 18:00, 00:00 UTC)
+// Fetches 3 elevation bands x 58 peaks = 174 Open-Meteo calls per run (~696/day)
+
 import type { RequestHandler } from './$types';
 import { env } from '$env/dynamic/private';
 import { createSupabaseServiceClient } from '$lib/server/supabase';

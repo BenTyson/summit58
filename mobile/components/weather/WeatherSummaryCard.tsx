@@ -28,10 +28,12 @@ const SEVERITY_COLORS: Record<HikerInsight['severity'], string> = {
 
 interface WeatherSummaryCardProps {
   forecast: ForecastResponse;
+  isPro: boolean;
   onViewFull: () => void;
+  onUpgrade: () => void;
 }
 
-export function WeatherSummaryCard({ forecast, onViewFull }: WeatherSummaryCardProps) {
+export function WeatherSummaryCard({ forecast, isPro, onViewFull, onUpgrade }: WeatherSummaryCardProps) {
   const summit = forecast.bands.summit;
   const today = summit.days[0];
   if (!today) return null;
@@ -155,32 +157,40 @@ export function WeatherSummaryCard({ forecast, onViewFull }: WeatherSummaryCardP
 
       {/* Full forecast link */}
       <Pressable
-        onPress={onViewFull}
+        onPress={isPro ? onViewFull : onUpgrade}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
           paddingVertical: 10,
           borderRadius: 10,
-          backgroundColor: colors.mountain.blue + '0A',
+          backgroundColor: isPro ? colors.mountain.blue + '0A' : colors.accent.default + '0A',
           borderWidth: 1,
-          borderColor: colors.mountain.blue + '20',
+          borderColor: isPro ? colors.mountain.blue + '20' : colors.accent.default + '20',
           gap: 6,
         }}
       >
+        {!isPro && (
+          <SymbolView
+            name="lock.fill"
+            size={12}
+            tintColor={colors.accent.default}
+            style={{ width: 12, height: 12 }}
+          />
+        )}
         <Text
           style={{
             fontFamily: 'Inter-SemiBold',
             fontSize: 14,
-            color: colors.mountain.blueLight,
+            color: isPro ? colors.mountain.blueLight : colors.accent.default,
           }}
         >
-          Full Forecast
+          {isPro ? 'Full Forecast' : 'Full Forecast — Pro'}
         </Text>
         <SymbolView
-          name="chevron.right"
+          name={isPro ? 'chevron.right' : 'chevron.right'}
           size={12}
-          tintColor={colors.mountain.blueLight}
+          tintColor={isPro ? colors.mountain.blueLight : colors.accent.default}
           style={{ width: 12, height: 12 }}
         />
       </Pressable>

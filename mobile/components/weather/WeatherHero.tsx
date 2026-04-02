@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { View, Text } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
@@ -62,7 +63,7 @@ interface WeatherHeroProps {
   bandLabel: string;
 }
 
-export function WeatherHero({ period, day, bandLabel }: WeatherHeroProps) {
+export const WeatherHero = memo(function WeatherHero({ period, day, bandLabel }: WeatherHeroProps) {
   const description = weatherCodeToDescription(period.weather_code);
   const tempColorKey = getTemperatureColor(period.temperature_f);
   const tempColor = TEMP_COLORS[tempColorKey] || colors.light.textPrimary;
@@ -136,4 +137,4 @@ export function WeatherHero({ period, day, bandLabel }: WeatherHeroProps) {
       </View>
     </View>
   );
-}
+});

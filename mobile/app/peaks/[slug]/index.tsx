@@ -20,6 +20,7 @@ import { PeakCard } from '@/components/peaks/PeakCard';
 import { WeatherSummaryCard } from '@/components/weather/WeatherSummaryCard';
 import { ImageGalleryViewer } from '@/components/gallery/ImageGalleryViewer';
 import { useSession } from '@/lib/auth/AuthProvider';
+import { usePurchases } from '@/lib/purchases/PurchasesProvider';
 import type { PeakDetailResponse, ForecastResponse } from '@/lib/types/api';
 
 export default function PeakDetailScreen() {
@@ -33,6 +34,7 @@ export default function PeakDetailScreen() {
 	const [cachedAt, setCachedAt] = useState<number | null>(null);
 	const [forecast, setForecast] = useState<ForecastResponse | null>(null);
 	const { user } = useSession();
+	const { isPro } = usePurchases();
 	const { isOnline } = useOffline();
 
 	const loadPeak = useCallback(async () => {
@@ -214,7 +216,9 @@ export default function PeakDetailScreen() {
 							<StaleDataIndicator cachedAt={cachedAt} />
 							<WeatherSummaryCard
 								forecast={forecast}
+								isPro={isPro}
 								onViewFull={() => router.push(`/peaks/${slug}/weather`)}
+								onUpgrade={() => router.push('/(modals)/paywall')}
 							/>
 						</Section>
 					)}

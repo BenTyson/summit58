@@ -5,7 +5,14 @@
   import WeatherSummaryText from '$lib/components/weather/WeatherSummaryText.svelte';
   import HikerInsights from '$lib/components/weather/HikerInsights.svelte';
   import WeatherHero from '$lib/components/weather/WeatherHero.svelte';
-  import ForecastTable from '$lib/components/weather/ForecastTable.svelte';
+  import { onMount } from 'svelte';
+
+  let ForecastTable: typeof import('$lib/components/weather/ForecastTable.svelte').default | null = $state(null);
+  onMount(async () => {
+    const mod = await import('$lib/components/weather/ForecastTable.svelte');
+    ForecastTable = mod.default;
+  });
+  import Skeleton from '$lib/components/ui/Skeleton.svelte';
   import type { PageData } from './$types';
 
   interface Props {
@@ -16,6 +23,7 @@
 
   const peak = $derived(data.peak);
   const forecast = $derived(data.forecast);
+  const userIsPro = $derived(data.isPro);
 
   type BandKey = 'summit' | 'mid' | 'base';
   let selectedBand: BandKey = $state('summit');
@@ -57,9 +65,50 @@
   }
 
   const canonicalUrl = $derived(`https://saltgoat.co/peaks/${peak.slug}/weather`);
-  const pageTitle = $derived(`${peak.name} Weather Forecast`);
+  const pageTitle = $derived(`${peak.name} Weather Forecast — 7-Day Mountain Forecast`);
   const pageDescription = $derived(
-    `7-day mountain weather forecast for ${peak.name} (${peak.elevation.toLocaleString()}') with elevation-banded conditions, hiker insights, and detailed sub-daily forecasts.`
+    `7-day mountain weather forecast for ${peak.name} (${peak.elevation.toLocaleString()}') in Colorado. Elevation-banded conditions for summit, mid-mountain, and trailhead with hiker insights and sub-daily detail.`
+  );
+
+  const jsonLd = $derived(
+    forecast && activeBand
+      ? JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: pageTitle,
+          description: pageDescription,
+          url: canonicalUrl,
+          mainEntity: {
+            '@type': 'Place',
+            name: peak.name,
+            geo: {
+              '@type': 'GeoCoordinates',
+              latitude: peak.latitude,
+              longitude: peak.longitude,
+              elevation: {
+                '@type': 'QuantitativeValue',
+                value: peak.elevation,
+                unitCode: 'FOT'
+              }
+            }
+          },
+          specialty: 'Mountain Weather Forecasting',
+          about: {
+            '@type': 'Dataset',
+            name: `${peak.name} Mountain Weather Forecast`,
+            description: `7-day elevation-banded weather forecast for ${peak.name}, Colorado 14er`,
+            temporalCoverage: forecast.bands.summit.days.length > 0
+              ? `${forecast.bands.summit.days[0].date}/${forecast.bands.summit.days[forecast.bands.summit.days.length - 1].date}`
+              : undefined,
+            dateModified: forecast.fetched_at
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'SaltGoat',
+            url: 'https://saltgoat.co'
+          }
+        })
+      : null
   );
 </script>
 
@@ -72,6 +121,12 @@
   <meta property="og:title" content="{pageTitle} | SaltGoat" />
   <meta property="og:description" content={pageDescription} />
   <meta property="og:site_name" content="SaltGoat" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="{pageTitle} | SaltGoat" />
+  <meta name="twitter:description" content={pageDescription} />
+  {#if jsonLd}
+    {@html `<script type="application/ld+json">${jsonLd}</script>`}
+  {/if}
 </svelte:head>
 
 <Container class="py-8 sm:py-12">
@@ -99,22 +154,65 @@
   </div>
 
   {#if forecast && activeBand}
-    <!-- Elevation Band Selector -->
-    <div class="animate-fade-in-up" style="animation-delay: 100ms">
-      <ElevationBandSelector
-        bands={bandInfos}
-        selected={selectedBand}
-        onSelect={(band) => { selectedBand = band; }}
-      />
+    <!-- Elevation Band Selector (Pro only) -->
+    <div class="animate-fade-in-up relative" style="animation-delay: 100ms">
+      {#if !userIsPro}
+        <div class="pointer-events-none select-none blur-[2px] opacity-50">
+          <ElevationBandSelector
+            bands={bandInfos}
+            selected={selectedBand}
+            onSelect={() => {}}
+          />
+        </div>
+      {:else}
+        <ElevationBandSelector
+          bands={bandInfos}
+          selected={selectedBand}
+          onSelect={(band) => { selectedBand = band; }}
+        />
+      {/if}
     </div>
 
-    <!-- Natural Language Summary -->
-    <div class="mt-6 animate-fade-in-up" style="animation-delay: 150ms">
-      <WeatherSummaryText summary={activeBand.summary} />
-    </div>
+    <!-- Pro Upgrade Banner (free users) -->
+    {#if !userIsPro}
+      <div class="mt-6 animate-fade-in-up rounded-xl border border-accent/30 bg-accent/5 dark:bg-accent/10 p-5" style="animation-delay: 125ms">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div class="flex-1">
+            <h3 class="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+              <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Unlock Full Mountain Forecast
+            </h3>
+            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              Upgrade to Pro for elevation-banded forecasts, sub-daily detail (AM/PM/Night), hiker insights, and natural language summaries.
+            </p>
+          </div>
+          <a
+            href="/pricing"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white bg-accent hover:bg-accent/90 transition-colors shrink-0"
+          >
+            Upgrade to Pro
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    {/if}
 
-    <!-- Hiker Insights -->
-    {#if forecast.insights.length > 0}
+    <!-- Forecast content panel -->
+    <div id="forecast-panel" role="tabpanel" aria-label="{activeBand.label} forecast">
+
+    <!-- Natural Language Summary (Pro only) -->
+    {#if userIsPro}
+      <div class="mt-6 animate-fade-in-up" style="animation-delay: 150ms">
+        <WeatherSummaryText summary={activeBand.summary} />
+      </div>
+    {/if}
+
+    <!-- Hiker Insights (Pro only) -->
+    {#if userIsPro && forecast.insights.length > 0}
       <div class="mt-6 animate-fade-in-up" style="animation-delay: 175ms">
         <h2 class="heading-section text-slate-900 dark:text-white mb-3 flex items-center gap-2">
           <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,12 +234,25 @@
       </div>
     {/if}
 
-    <!-- Forecast Table -->
+    <!-- Forecast Table (lazy-loaded) -->
     <div class="mt-8 animate-fade-in-up" style="animation-delay: 250ms">
       <h2 class="heading-section text-slate-900 dark:text-white mb-3">
-        7-Day Detailed Forecast
+        {userIsPro ? '7-Day Detailed Forecast' : '7-Day Summit Forecast'}
       </h2>
-      <ForecastTable days={activeBand.days} bandElevation={activeBand.elevation_ft} />
+      {#if ForecastTable}
+        <ForecastTable days={activeBand.days} bandElevation={activeBand.elevation_ft} />
+      {:else}
+        <div class="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden" role="status" aria-label="Loading forecast table">
+          {#each Array(8) as _, row}
+            <div class="flex gap-2 px-4 py-2.5 {row < 7 ? 'border-b border-slate-100 dark:border-slate-700/50' : ''}">
+              <Skeleton width="120px" height="0.875rem" />
+              {#each Array(7) as _}
+                <Skeleton width="60px" height="0.875rem" class="flex-shrink-0" />
+              {/each}
+            </div>
+          {/each}
+        </div>
+      {/if}
     </div>
 
     <!-- Sunrise / Sunset -->
@@ -163,6 +274,8 @@
         </span>
       </div>
     {/if}
+
+    </div><!-- /forecast-panel -->
 
     <!-- Attribution -->
     <p class="mt-8 text-xs text-slate-400 dark:text-slate-500 animate-fade-in-up" style="animation-delay: 300ms">

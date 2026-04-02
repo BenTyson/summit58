@@ -50,6 +50,29 @@ export interface ForecastDay {
   cloud_cover_percent?: number;
 }
 
+// ─── LEGACY: peak_conditions (v1 weather system) ─────────────────────
+//
+// The functions below (fetchWeatherForPeak, upsertConditions, getConditionsForPeak)
+// serve the legacy peak_conditions table used by:
+//   - GET /api/v1/peaks/[slug]/conditions (mobile v1.x clients)
+//   - GET /api/v1/peaks/[slug] → conditions field
+//
+// Deprecation timeline:
+//   1. [Current] Dual-write: webhook writes to both peak_forecasts (v2) and
+//      peak_conditions (v1) on every run. Both tables stay fresh.
+//   2. [Monitor] Track request volume to /api/v1/peaks/[slug]/conditions via
+//      Railway logs. When <10% of mobile clients are on v1.x (pre-forecast),
+//      proceed to step 3.
+//   3. [Stop writes] Remove upsertConditions() calls from the webhook. The
+//      peak_conditions table will go stale but won't break reads.
+//   4. [Remove reads] Once 0% traffic to legacy endpoints, remove
+//      getConditionsForPeak() and the /conditions endpoint.
+//   5. [Drop table] Migration to DROP TABLE peak_conditions and clean up types.
+//
+// Do NOT remove any code here until step 4. Old mobile clients in the wild
+// will crash if the endpoint disappears before they update.
+// ──────────────────────────────────────────────────────────────────────
+
 export async function fetchWeatherForPeak(
   latitude: number,
   longitude: number

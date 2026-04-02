@@ -100,6 +100,12 @@
 
   // Column template: 1 label col + N data cols
   const gridCols = $derived(`140px repeat(${columns.length}, minmax(72px, 1fr))`);
+
+  function cellLabel(col: PeriodColumn, metric: string, value: string): string {
+    const dayLabel = formatDayHeader(col.day.date, col.dayIndex);
+    const period = periodLabel(col.periodName);
+    return `${dayLabel} ${period}: ${metric} ${value}`;
+  }
 </script>
 
 <div class="rounded-xl border border-slate-200 dark:border-slate-700 shadow-card overflow-hidden">
@@ -108,6 +114,8 @@
     <div
       class="grid min-w-max"
       style="grid-template-columns: {gridCols};"
+      role="grid"
+      aria-label="7-day weather forecast table"
     >
       <!-- ═══ Row 1: Day headers ═══ -->
       <div
@@ -150,9 +158,13 @@
         Conditions
       </div>
       {#each columns as col}
-        <div class="flex flex-col items-center justify-center py-2.5 border-b border-slate-100 dark:border-slate-700/50 {nightTint(col.periodName)}">
+        <div
+          class="flex flex-col items-center justify-center py-2.5 border-b border-slate-100 dark:border-slate-700/50 {nightTint(col.periodName)}"
+          role="gridcell"
+          aria-label={cellLabel(col, 'conditions', weatherCodeToDescription(col.period.weather_code))}
+        >
           <WeatherIcon code={col.period.weather_code} class="h-5 w-5" />
-          <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 text-center leading-tight">
+          <span class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 text-center leading-tight" aria-hidden="true">
             {weatherCodeToDescription(col.period.weather_code)}
           </span>
         </div>
@@ -163,7 +175,11 @@
         Temp (°F)
       </div>
       {#each columns as col}
-        <div class="flex items-center justify-center py-2 text-sm font-semibold stats-number border-b border-slate-100 dark:border-slate-700/50 {nightTint(col.periodName)} {tempColorClass(col.period.temperature_f)}">
+        <div
+          class="flex items-center justify-center py-2 text-sm font-semibold stats-number border-b border-slate-100 dark:border-slate-700/50 {nightTint(col.periodName)} {tempColorClass(col.period.temperature_f)}"
+          role="gridcell"
+          aria-label={cellLabel(col, 'temperature', `${col.period.temperature_f} degrees`)}
+        >
           {col.period.temperature_f}°
         </div>
       {/each}
@@ -174,7 +190,11 @@
       </div>
       {#each columns as col}
         {@const diff = col.period.feels_like_f - col.period.temperature_f}
-        <div class="flex items-center justify-center py-2 text-sm stats-number border-b border-slate-100 dark:border-slate-700/50 {nightTint(col.periodName)} {diff < -10 ? 'text-red-500 font-semibold' : 'text-slate-600 dark:text-slate-400'}">
+        <div
+          class="flex items-center justify-center py-2 text-sm stats-number border-b border-slate-100 dark:border-slate-700/50 {nightTint(col.periodName)} {diff < -10 ? 'text-red-500 font-semibold' : 'text-slate-600 dark:text-slate-400'}"
+          role="gridcell"
+          aria-label={cellLabel(col, 'feels like', `${col.period.feels_like_f} degrees`)}
+        >
           {col.period.feels_like_f}°
         </div>
       {/each}
@@ -184,7 +204,11 @@
         Wind (mph)
       </div>
       {#each columns as col}
-        <div class="flex items-center justify-center gap-1 py-2 text-sm stats-number border-b border-slate-100 dark:border-slate-700/50 {nightTint(col.periodName)} {windBgClass(col.period.wind_speed_mph)} {windColorClass(col.period.wind_speed_mph)}">
+        <div
+          class="flex items-center justify-center gap-1 py-2 text-sm stats-number border-b border-slate-100 dark:border-slate-700/50 {nightTint(col.periodName)} {windBgClass(col.period.wind_speed_mph)} {windColorClass(col.period.wind_speed_mph)}"
+          role="gridcell"
+          aria-label={cellLabel(col, 'wind', `${col.period.wind_speed_mph} mph from ${degreesToCardinal(col.period.wind_direction)}`)}
+        >
           {col.period.wind_speed_mph}
           <WindArrow degrees={col.period.wind_direction} class="h-3 w-3" />
         </div>
@@ -263,8 +287,12 @@
         UV Index
       </div>
       {#each columns as col}
-        <div class="flex items-center justify-center gap-1.5 py-2 text-sm stats-number {nightTint(col.periodName)}">
-          <span class="h-2 w-2 rounded-full {uvDotClass(col.period.uv_index)}"></span>
+        <div
+          class="flex items-center justify-center gap-1.5 py-2 text-sm stats-number {nightTint(col.periodName)}"
+          role="gridcell"
+          aria-label={cellLabel(col, 'UV index', `${col.period.uv_index}, ${getUvLevel(col.period.uv_index).replace('_', ' ')}`)}
+        >
+          <span class="h-2 w-2 rounded-full {uvDotClass(col.period.uv_index)}" aria-hidden="true"></span>
           <span class="text-slate-600 dark:text-slate-400">{col.period.uv_index}</span>
         </div>
       {/each}

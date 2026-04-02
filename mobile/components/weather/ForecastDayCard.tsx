@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { View, Text } from 'react-native';
 import { colors } from '@/lib/theme/colors';
 import { WeatherIcon } from './WeatherIcon';
@@ -66,7 +67,7 @@ function PeriodColumn({ period, label, isNight }: { period: PeriodForecast; labe
   );
 }
 
-export function ForecastDayCard({ day, isToday }: ForecastDayCardProps) {
+export const ForecastDayCard = memo(function ForecastDayCard({ day, isToday }: ForecastDayCardProps) {
   const date = new Date(day.date + 'T12:00:00');
   const dayName = isToday ? 'Today' : date.toLocaleDateString('en-US', { weekday: 'short' });
   const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -122,4 +123,4 @@ export function ForecastDayCard({ day, isToday }: ForecastDayCardProps) {
       </View>
     </View>
   );
-}
+});

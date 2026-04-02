@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, RefreshControl } from 'react-native';
-import { useLocalSearchParams, Stack } from 'expo-router';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { View, Text, ScrollView, RefreshControl, Pressable, Animated } from 'react-native';
+import { useLocalSearchParams, Stack, router } from 'expo-router';
 import { colors } from '@/lib/theme/colors';
 import { cachedApiFetch } from '@/lib/offline/cache';
 import { useOffline } from '@/lib/offline/OfflineProvider';
+import { usePurchases } from '@/lib/purchases/PurchasesProvider';
 import { CACHE_TIERS } from '@/lib/offline/types';
-import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { OfflineBanner } from '@/components/ui/OfflineBanner';
 import { StaleDataIndicator } from '@/components/ui/StaleDataIndicator';
@@ -17,8 +17,87 @@ import { ForecastGrid } from '@/components/weather/ForecastGrid';
 import { SymbolView } from 'expo-symbols';
 import type { ForecastResponse } from '@/lib/types/api';
 
+function SkeletonBlock({ width, height, style }: { width: number | string; height: number; style?: any }) {
+  const opacity = useRef(new Animated.Value(0.3)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, { toValue: 0.7, duration: 800, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0.3, duration: 800, useNativeDriver: true }),
+      ])
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [opacity]);
+
+  return (
+    <Animated.View
+      style={[
+        {
+          width,
+          height,
+          borderRadius: 6,
+          backgroundColor: colors.light.border,
+          opacity,
+        },
+        style,
+      ]}
+    />
+  );
+}
+
+function WeatherSkeleton() {
+  return (
+    <ScrollView contentContainerStyle={{ padding: 16, gap: 20 }}>
+      {/* Header */}
+      <View style={{ gap: 4 }}>
+        <SkeletonBlock width={180} height={28} />
+        <SkeletonBlock width={160} height={14} />
+      </View>
+
+      {/* Band selector */}
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        {[0, 1, 2].map((i) => (
+          <SkeletonBlock key={i} width={100} height={44} style={{ borderRadius: 10 }} />
+        ))}
+      </View>
+
+      {/* Summary */}
+      <View style={{ gap: 6 }}>
+        <SkeletonBlock width="100%" height={14} />
+        <SkeletonBlock width="85%" height={14} />
+      </View>
+
+      {/* Hero */}
+      <View style={{ alignItems: 'center', padding: 20, backgroundColor: colors.light.bgSecondary, borderRadius: 14, gap: 8 }}>
+        <SkeletonBlock width={100} height={12} />
+        <SkeletonBlock width={48} height={48} style={{ borderRadius: 24 }} />
+        <SkeletonBlock width={80} height={40} />
+        <SkeletonBlock width={120} height={14} />
+        <View style={{ flexDirection: 'row', gap: 8, marginTop: 8 }}>
+          {[0, 1, 2, 3].map((i) => (
+            <SkeletonBlock key={i} width={70} height={36} style={{ borderRadius: 8 }} />
+          ))}
+        </View>
+      </View>
+
+      {/* Forecast cards */}
+      <View style={{ gap: 6 }}>
+        <SkeletonBlock width={120} height={16} />
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          {[0, 1, 2].map((i) => (
+            <SkeletonBlock key={i} width={200} height={180} style={{ borderRadius: 12 }} />
+          ))}
+        </View>
+      </View>
+    </ScrollView>
+  );
+}
+
 export default function WeatherScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
+  const { isPro } = usePurchases();
   const [forecast, setForecast] = useState<ForecastResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -65,7 +144,7 @@ export default function WeatherScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
         <Stack.Screen options={{ title: 'Weather' }} />
-        <LoadingState message="Loading forecast..." />
+        <WeatherSkeleton />
       </View>
     );
   }
@@ -75,6 +154,51 @@ export default function WeatherScreen() {
       <View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
         <Stack.Screen options={{ title: 'Weather' }} />
         <ErrorState message={error || 'Forecast not available'} onRetry={loadForecast} />
+      </View>
+    );
+  }
+
+  if (!isPro) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+        <Stack.Screen options={{ title: `${forecast.peak.name} Weather` }} />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+          <SymbolView
+            name="lock.fill"
+            size={36}
+            tintColor={colors.light.textMuted}
+            style={{ width: 36, height: 36, marginBottom: 16 }}
+          />
+          <Text style={{ fontFamily: 'InstrumentSerif', fontSize: 24, color: colors.light.textPrimary, textAlign: 'center' }}>
+            Full Forecast
+          </Text>
+          <Text style={{ fontFamily: 'Inter', fontSize: 14, color: colors.light.textMuted, textAlign: 'center', marginTop: 8, lineHeight: 20 }}>
+            Upgrade to Pro for elevation-banded forecasts, sub-daily detail, hiker insights, and more.
+          </Text>
+          <Pressable
+            onPress={() => router.push('/(modals)/paywall')}
+            style={({ pressed }) => ({
+              marginTop: 24,
+              paddingHorizontal: 32,
+              paddingVertical: 14,
+              borderRadius: 12,
+              backgroundColor: colors.accent.default,
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <Text style={{ fontFamily: 'Inter-SemiBold', fontSize: 16, color: '#ffffff' }}>
+              Upgrade to Pro
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => router.back()}
+            style={{ marginTop: 12, paddingVertical: 8 }}
+          >
+            <Text style={{ fontFamily: 'Inter', fontSize: 14, color: colors.light.textMuted }}>
+              Not Now
+            </Text>
+          </Pressable>
+        </View>
       </View>
     );
   }
