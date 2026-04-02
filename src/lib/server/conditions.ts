@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database, Tables, TablesInsert } from '$lib/types/database';
+import type { Database, Tables, TablesInsert, ForecastResponse, ElevationBandForecast, DayForecast, PeriodForecast, PeakForecastRow } from '$lib/types/database';
+import { generateForecastSummary, generateHikerInsights } from '$lib/utils/weather';
 
 export type PeakConditions = Tables<'peak_conditions'>;
 export type PeakConditionsInsert = TablesInsert<'peak_conditions'>;
@@ -558,4 +559,117 @@ export async function cleanStaleForecasts(
   if (error) {
     console.error('Error cleaning stale forecasts:', error);
   }
+}
+
+// ─── V2: Query function for API layer ───────────────────────────────
+
+function rowToPeriod(row: PeakForecastRow): PeriodForecast {
+  return {
+    temperature_f: row.temperature_f ?? 0,
+    feels_like_f: row.feels_like_f ?? 0,
+    humidity_percent: row.humidity_percent ?? 0,
+    wind_speed_mph: row.wind_speed_mph ?? 0,
+    wind_gust_mph: row.wind_gust_mph ?? 0,
+    wind_direction: row.wind_direction ?? 0,
+    precipitation_in: Number(row.precipitation_in ?? 0),
+    snow_in: Number(row.snow_in ?? 0),
+    cloud_cover_percent: row.cloud_cover_percent ?? 0,
+    weather_code: row.weather_code ?? 0,
+    freezing_level_ft: row.freezing_level_ft ?? 0,
+    cloud_base_ft: row.cloud_base_ft ?? null,
+    uv_index: row.uv_index ?? 0,
+    visibility_miles: Number(row.visibility_miles ?? 0)
+  };
+}
+
+const BAND_LABELS: Record<string, (ft: number) => string> = {
+  summit: (ft) => `Summit (${ft.toLocaleString()}')`,
+  mid: (ft) => `Mid Mountain (${ft.toLocaleString()}')`,
+  base: (ft) => `Trailhead (${ft.toLocaleString()}')`
+};
+
+function groupRowsIntoBand(
+  rows: PeakForecastRow[],
+  bandName: string
+): ElevationBandForecast {
+  const bandRows = rows.filter((r) => r.elevation_band === bandName);
+  const elevationFt = bandRows[0]?.elevation_ft ?? 0;
+
+  // Group by date
+  const byDate = new Map<string, PeakForecastRow[]>();
+  for (const row of bandRows) {
+    if (!byDate.has(row.forecast_date)) byDate.set(row.forecast_date, []);
+    byDate.get(row.forecast_date)!.push(row);
+  }
+
+  const days: DayForecast[] = [];
+  const dates = [...byDate.keys()].sort();
+
+  for (const date of dates) {
+    const dayRows = byDate.get(date)!;
+    const morning = dayRows.find((r) => r.time_period === 'morning');
+    const afternoon = dayRows.find((r) => r.time_period === 'afternoon');
+    const night = dayRows.find((r) => r.time_period === 'night');
+
+    // Need all 3 periods for a complete day
+    if (!morning || !afternoon || !night) continue;
+
+    days.push({
+      date,
+      high_f: morning.high_f ?? 0,
+      low_f: morning.low_f ?? 0,
+      sunrise: morning.sunrise ?? '',
+      sunset: morning.sunset ?? '',
+      morning: rowToPeriod(morning),
+      afternoon: rowToPeriod(afternoon),
+      night: rowToPeriod(night)
+    });
+  }
+
+  const labelFn = BAND_LABELS[bandName] ?? ((ft: number) => `${bandName} (${ft.toLocaleString()}')`);
+
+  return {
+    elevation_ft: elevationFt,
+    label: labelFn(elevationFt),
+    summary: generateForecastSummary(days),
+    days
+  };
+}
+
+export async function getForecastForPeak(
+  supabase: SupabaseClient<Database>,
+  peakId: string,
+  peak: { name: string; slug: string; elevation: number }
+): Promise<ForecastResponse | null> {
+  const today = new Date().toISOString().split('T')[0];
+
+  const { data: rows, error } = await supabase
+    .from('peak_forecasts')
+    .select('*')
+    .eq('peak_id', peakId)
+    .gte('forecast_date', today)
+    .order('forecast_date', { ascending: true })
+    .order('time_period', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching forecasts:', error);
+    return null;
+  }
+
+  if (!rows || rows.length === 0) return null;
+
+  const bands = {
+    summit: groupRowsIntoBand(rows, 'summit'),
+    mid: groupRowsIntoBand(rows, 'mid'),
+    base: groupRowsIntoBand(rows, 'base')
+  };
+
+  const insights = generateHikerInsights(bands);
+
+  return {
+    peak: { name: peak.name, slug: peak.slug, elevation: peak.elevation },
+    bands,
+    insights,
+    fetched_at: rows[0].fetched_at ?? new Date().toISOString()
+  };
 }
