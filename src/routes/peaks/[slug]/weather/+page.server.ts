@@ -4,6 +4,7 @@ import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getPeakBySlug } from '$lib/server/peaks';
 import { getForecastForPeak } from '$lib/server/conditions';
 import { getSubscription, isPro } from '$lib/server/subscriptions';
+import { isAdmin } from '$lib/server/admin';
 import { error } from '@sveltejs/kit';
 
 /** Aggregate AM/PM/Night into a single daily row for free users */
@@ -54,8 +55,12 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
 	let userIsPro = false;
 	if (session?.user) {
-		const subscription = await getSubscription(supabase, session.user.id);
-		userIsPro = isPro(subscription);
+		if (isAdmin(session.user.id)) {
+			userIsPro = true;
+		} else {
+			const subscription = await getSubscription(supabase, session.user.id);
+			userIsPro = isPro(subscription);
+		}
 	}
 
 	const forecast = await getForecastForPeak(supabase, peak.id, {
