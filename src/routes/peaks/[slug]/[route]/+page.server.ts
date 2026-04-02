@@ -2,6 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getRouteBySlug } from '$lib/server/peaks';
 import { getBestTrace, getTracesForRoute, uploadTrace, toggleVote, deleteTrace, getTraceDownloadUrl } from '$lib/server/traces';
+import { getForecastForPeak } from '$lib/server/conditions';
 import { error, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
@@ -18,8 +19,8 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
   const { data: { session } } = await supabase.auth.getSession();
   const userId = session?.user?.id;
 
-  // Fetch parking reports + traces in parallel
-  const [parkingResult, bestTrace, allTracesRaw] = await Promise.all([
+  // Fetch parking reports + traces + forecast in parallel
+  const [parkingResult, bestTrace, allTracesRaw, forecast] = await Promise.all([
     supabase
       .from('trail_reports')
       .select('parking_status, arrival_time, hike_date')
@@ -28,7 +29,12 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
       .order('hike_date', { ascending: false })
       .limit(5),
     getBestTrace(supabase, result.route.id),
-    getTracesForRoute(supabase, result.route.id, userId)
+    getTracesForRoute(supabase, result.route.id, userId),
+    getForecastForPeak(supabase, result.peak.id, {
+      name: result.peak.name,
+      slug: result.peak.slug,
+      elevation: result.peak.elevation
+    })
   ]);
 
   // Map traces to the shape TrailMapSection expects
@@ -58,7 +64,8 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     allTraces,
     downloadUrls,
     isLoggedIn: !!session,
-    currentUserId: userId
+    currentUserId: userId,
+    forecast
   };
 };
 

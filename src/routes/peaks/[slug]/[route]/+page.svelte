@@ -4,6 +4,7 @@
   import StatsBar from '$lib/components/peak/StatsBar.svelte';
   import TrailMapSection from '$lib/components/map/TrailMapSection.svelte';
   import ParkingCard from '$lib/components/parking/ParkingCard.svelte';
+  import RouteWeatherStrip from '$lib/components/weather/RouteWeatherStrip.svelte';
   import { invalidateAll } from '$app/navigation';
   import type { PageData } from './$types';
 
@@ -373,6 +374,11 @@
     <div class="animate-fade-in-up" style="animation-delay: 250ms">
       <ParkingCard {route} recentReports={data.recentParkingReports || []} />
     </div>
+
+    <!-- Route Weather Strip -->
+    {#if data.forecast?.bands.base}
+      <RouteWeatherStrip band={data.forecast.bands.base} peakSlug={peak.slug} />
+    {/if}
   </div>
 
   <!-- Description & Notes Section -->

@@ -18,7 +18,7 @@ import {
   isAdmin,
   flagImage
 } from '$lib/server/images';
-import { getConditionsForPeak } from '$lib/server/conditions';
+import { getConditionsForPeak, getForecastForPeak } from '$lib/server/conditions';
 import { getRecentTrailReports, createTrailReport } from '$lib/server/trailReports';
 import { checkAndAwardAchievements } from '$lib/server/achievements';
 import { isOnWatchlist, addToWatchlist, removeFromWatchlist } from '$lib/server/watchlist';
@@ -52,13 +52,14 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     ]);
   }
 
-  const [reviews, reviewStats, images, conditions, trailReports, relatedPeaks] = await Promise.all([
+  const [reviews, reviewStats, images, conditions, trailReports, relatedPeaks, forecast] = await Promise.all([
     getPeakReviews(supabase, peak.id),
     getPeakReviewStats(supabase, peak.id),
     getImagesForPeak(supabase, peak.id),
     getConditionsForPeak(supabase, peak.id),
     getRecentTrailReports(supabase, peak.id),
-    getRelatedPeaks(supabase, peak.id, peak.range, peak.elevation)
+    getRelatedPeaks(supabase, peak.id, peak.range, peak.elevation),
+    getForecastForPeak(supabase, peak.id, { name: peak.name, slug: peak.slug, elevation: peak.elevation })
   ]);
 
   return {
@@ -76,7 +77,8 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     trailReports,
     relatedPeaks,
     summitLimit,
-    isWatched
+    isWatched,
+    forecast
   };
 };
 

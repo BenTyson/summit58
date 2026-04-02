@@ -16,7 +16,7 @@
   import ReviewSection from '$lib/components/review/ReviewSection.svelte';
   import ImageGallery from '$lib/components/gallery/ImageGallery.svelte';
   import ImageUploader from '$lib/components/gallery/ImageUploader.svelte';
-  import WeatherCard from '$lib/components/weather/WeatherCard.svelte';
+  import WeatherSummaryCard from '$lib/components/weather/WeatherSummaryCard.svelte';
   import TrailReportSection from '$lib/components/trail/TrailReportSection.svelte';
   import type { SummitFormData } from '$lib/components/summit/SummitModal.svelte';
   import type { ReviewFormData } from '$lib/components/review/ReviewForm.svelte';
@@ -41,6 +41,7 @@
   const totalReviews = $derived(data.totalReviews);
   const images = $derived(data.images);
   const conditions = $derived(data.conditions);
+  const forecast = $derived(data.forecast);
   const trailReports = $derived(data.trailReports);
   const summitLimit = $derived(data.summitLimit);
   const isWatched = $derived(data.isWatched);
@@ -426,7 +427,9 @@
   </div>
 
   <!-- Weather Conditions -->
-  <WeatherCard {conditions} />
+  {#if forecast}
+    <WeatherSummaryCard {forecast} />
+  {/if}
 
   <!-- Description -->
   {#if peak.description}
