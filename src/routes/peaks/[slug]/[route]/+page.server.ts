@@ -3,6 +3,8 @@ import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getRouteBySlug } from '$lib/server/peaks';
 import { getBestTrace, getTracesForRoute, uploadTrace, toggleVote, deleteTrace, getTraceDownloadUrl } from '$lib/server/traces';
 import { getForecastForPeak } from '$lib/server/conditions';
+import { getSubscription, isPro } from '$lib/server/subscriptions';
+import { isAdmin } from '$lib/server/admin';
 import { error, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
@@ -18,6 +20,16 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
   const { data: { session } } = await supabase.auth.getSession();
   const userId = session?.user?.id;
+
+  let userIsPro = false;
+  if (userId) {
+    if (isAdmin(userId)) {
+      userIsPro = true;
+    } else {
+      const subscription = await getSubscription(supabase, userId);
+      userIsPro = isPro(subscription);
+    }
+  }
 
   // Fetch parking reports + traces + forecast in parallel
   const [parkingResult, bestTrace, allTracesRaw, forecast] = await Promise.all([
@@ -65,7 +77,8 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     downloadUrls,
     isLoggedIn: !!session,
     currentUserId: userId,
-    forecast
+    forecast,
+    isPro: userIsPro
   };
 };
 

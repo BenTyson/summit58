@@ -14,7 +14,10 @@
   import { computeOverviewCamera, computeBirdsEyeCamera } from './camera-presets';
   import { findTreelinePoint, findCruxPoint } from './waypoint-utils';
   import { isWebGLSupported } from '$lib/utils/webgl';
+  import { startFlythrough, type FlythroughControls as FlythroughHandle } from './flythrough';
   import CameraControls from './CameraControls.svelte';
+  import FlythroughControls from './FlythroughControls.svelte';
+  import ProUpsellOverlay from './ProUpsellOverlay.svelte';
 
   interface Props {
     trailGeometry: TrailGeometry | null;
@@ -54,6 +57,15 @@
 
   // Store initial camera for reset
   let initialCamera: { center: [number, number]; zoom: number; pitch: number; bearing: number } | null = null;
+
+  // Flythrough state
+  let flythroughActive = $state(false);
+  let flythroughPlaying = $state(false);
+  let flythroughSpeed = $state(1);
+  let flythroughProgress = $state(0);
+  let flythroughHandle: FlythroughHandle | null = null;
+  let showUpsell = $state(false);
+  let teaserTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   const waypointSvgs = {
     treeline: `<svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
@@ -312,6 +324,160 @@
     });
   }
 
+  function returnToOverview() {
+    if (!map || !trailGeometry) return;
+    const camera = computeOverviewCamera(trailGeometry.coordinates);
+    map.flyTo({
+      center: camera.center,
+      zoom: camera.zoom,
+      pitch: camera.pitch,
+      bearing: camera.bearing,
+      duration: 1200,
+      essential: true
+    });
+  }
+
+  function stopFlythrough() {
+    if (flythroughHandle) {
+      flythroughHandle.stop();
+      flythroughHandle = null;
+    }
+    if (teaserTimeoutId !== null) {
+      clearTimeout(teaserTimeoutId);
+      teaserTimeoutId = null;
+    }
+    flythroughActive = false;
+    flythroughPlaying = false;
+    flythroughProgress = 0;
+    onPointHover?.(null);
+  }
+
+  function handleFlythroughRequest() {
+    if (!map || !trailGeometry) return;
+
+    if (isPro) {
+      startFullFlythrough();
+    } else {
+      startTeaserFlythrough();
+    }
+  }
+
+  function startFullFlythrough() {
+    if (!map || !trailGeometry) return;
+
+    stopFlythrough();
+    flythroughActive = true;
+    flythroughPlaying = true;
+    flythroughSpeed = 1;
+    flythroughProgress = 0;
+
+    flythroughHandle = startFlythrough({
+      map,
+      coordinates: trailGeometry.coordinates,
+      speed: flythroughSpeed,
+      onProgress(progress, pointIndex) {
+        flythroughProgress = progress;
+        onPointHover?.(pointIndex);
+      },
+      onComplete() {
+        flythroughPlaying = false;
+        flythroughProgress = 1;
+        setTimeout(() => {
+          stopFlythrough();
+          returnToOverview();
+        }, 500);
+      }
+    });
+  }
+
+  function startTeaserFlythrough() {
+    if (!map || !trailGeometry) return;
+
+    stopFlythrough();
+    flythroughActive = true;
+    flythroughPlaying = true;
+
+    const teaserCoords = trailGeometry.coordinates.slice(
+      0,
+      Math.min(20, trailGeometry.coordinates.length)
+    ) as [number, number, number][];
+
+    flythroughHandle = startFlythrough({
+      map,
+      coordinates: teaserCoords,
+      speed: 0.8,
+      onProgress(progress, pointIndex) {
+        flythroughProgress = progress;
+        onPointHover?.(pointIndex);
+      },
+      onComplete() {
+        flythroughPlaying = false;
+        showUpsell = true;
+      }
+    });
+
+    // Safety fallback: show upsell after 3s regardless
+    teaserTimeoutId = setTimeout(() => {
+      if (flythroughHandle && !showUpsell) {
+        flythroughHandle.stop();
+        flythroughPlaying = false;
+        showUpsell = true;
+      }
+    }, 3000);
+  }
+
+  function handleUpsellDismiss() {
+    showUpsell = false;
+    stopFlythrough();
+    returnToOverview();
+  }
+
+  function handleFlythroughPlay() {
+    if (flythroughHandle) {
+      flythroughHandle.resume();
+      flythroughPlaying = true;
+    } else {
+      startFullFlythrough();
+    }
+  }
+
+  function handleFlythroughPause() {
+    if (flythroughHandle) {
+      flythroughHandle.pause();
+      flythroughPlaying = false;
+    }
+  }
+
+  function handleFlythroughStop() {
+    stopFlythrough();
+    returnToOverview();
+  }
+
+  function handleSpeedChange(newSpeed: number) {
+    flythroughSpeed = newSpeed;
+    // Restart with new speed (simplest approach — preserves position via fresh start)
+    if (flythroughHandle && map && trailGeometry) {
+      flythroughHandle.stop();
+      flythroughHandle = startFlythrough({
+        map,
+        coordinates: trailGeometry.coordinates,
+        speed: newSpeed,
+        onProgress(progress, pointIndex) {
+          flythroughProgress = progress;
+          onPointHover?.(pointIndex);
+        },
+        onComplete() {
+          flythroughPlaying = false;
+          flythroughProgress = 1;
+          setTimeout(() => {
+            stopFlythrough();
+            returnToOverview();
+          }, 500);
+        }
+      });
+    }
+  }
+
   function updateHoverMarker(index: number | null) {
     if (!map || !maplibregl || !trailGeometry) return;
 
@@ -356,6 +522,7 @@
   });
 
   onDestroy(() => {
+    stopFlythrough();
     if (hoverMarker) hoverMarker.remove();
     if (summitMarker) summitMarker.remove();
     if (trailheadMarker) trailheadMarker.remove();
@@ -594,6 +761,26 @@
   <div bind:this={mapContainer} class="terrain-map-container"></div>
 
   {#if isLoaded && trailGeometry}
-    <CameraControls onPreset={flyToPreset} />
+    {#if flythroughActive && !showUpsell && isPro}
+      <FlythroughControls
+        playing={flythroughPlaying}
+        speed={flythroughSpeed}
+        progress={flythroughProgress}
+        onPlay={handleFlythroughPlay}
+        onPause={handleFlythroughPause}
+        onStop={handleFlythroughStop}
+        onSpeedChange={handleSpeedChange}
+      />
+    {:else}
+      <CameraControls
+        onPreset={flyToPreset}
+        {isPro}
+        onFlythrough={handleFlythroughRequest}
+      />
+    {/if}
+  {/if}
+
+  {#if showUpsell}
+    <ProUpsellOverlay feature="flythrough" onDismiss={handleUpsellDismiss} />
   {/if}
 </div>

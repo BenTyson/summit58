@@ -43,6 +43,7 @@
     allTraces?: TraceInfo[];
     isLoggedIn?: boolean;
     currentUserId?: string;
+    isPro?: boolean;
     onUpload?: (file: File) => Promise<void>;
     onVote?: (traceId: string) => Promise<void>;
     onDelete?: (traceId: string) => Promise<void>;
@@ -56,6 +57,7 @@
     allTraces = [],
     isLoggedIn = false,
     currentUserId,
+    isPro = false,
     onUpload,
     onVote,
     onDelete,
@@ -210,7 +212,7 @@
                   routeName={route.name}
                   {hoveredIndex}
                   onPointHover={handleHover}
-                  isPro={false}
+                  {isPro}
                   onWebGLUnsupported={handleWebGLUnsupported}
                 />
               </div>

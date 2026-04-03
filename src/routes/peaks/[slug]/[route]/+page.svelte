@@ -182,6 +182,7 @@
       allTraces={data.allTraces}
       isLoggedIn={data.isLoggedIn}
       currentUserId={data.currentUserId}
+      isPro={data.isPro}
       onUpload={handleUploadTrace}
       onVote={handleVoteTrace}
       onDelete={handleDeleteTrace}
