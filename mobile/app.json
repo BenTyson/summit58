@@ -50,7 +50,7 @@
       ],
       "expo-sqlite",
       "expo-image",
-      "react-native-purchases"
+      "@maplibre/maplibre-react-native"
     ],
     "experiments": {
       "typedRoutes": true
