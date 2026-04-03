@@ -20,7 +20,9 @@ export const GET: RequestHandler = async ({ params, url }) => {
 	peak.hero_image_url = peak.hero_image_url ? `${baseUrl}${peak.hero_image_url}` : null;
 	peak.thumbnail_url = peak.thumbnail_url ? `${baseUrl}${peak.thumbnail_url}` : null;
 
+	// Prefer community trace, fall back to route's built-in geometry
 	const bestTrace = await getBestTrace(client, route.id);
+	const trailGeometry = bestTrace ?? (route.trail_geometry as Record<string, unknown> | null);
 
 	return new Response(
 		JSON.stringify({
@@ -45,7 +47,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 				typical_time_hours: route.typical_time_hours,
 				is_standard: route.is_standard
 			},
-			trailGeometry: bestTrace
+			trailGeometry
 		}),
 		{ headers: { 'Content-Type': 'application/json' } }
 	);
