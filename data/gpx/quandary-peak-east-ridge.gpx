@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="SaltGoat Test Data"
+  xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Quandary Peak - East Ridge (Test)</name>
+    <desc>Synthetic test route for 3D viewer development. Approximates the East Ridge route from the Quandary Peak trailhead to summit.</desc>
+  </metadata>
+  <trk>
+    <name>Quandary Peak East Ridge</name>
+    <trkseg>
+      <!-- Trailhead / Parking (10,850 ft) -->
+      <trkpt lat="39.39170" lon="-106.11780"><ele>3307.1</ele></trkpt>
+      <trkpt lat="39.39185" lon="-106.11750"><ele>3312.0</ele></trkpt>
+      <trkpt lat="39.39200" lon="-106.11710"><ele>3319.0</ele></trkpt>
+      <trkpt lat="39.39220" lon="-106.11670"><ele>3328.0</ele></trkpt>
+      <trkpt lat="39.39245" lon="-106.11630"><ele>3338.0</ele></trkpt>
+      <!-- Through trees, gentle grade -->
+      <trkpt lat="39.39270" lon="-106.11590"><ele>3350.0</ele></trkpt>
+      <trkpt lat="39.39300" lon="-106.11550"><ele>3362.0</ele></trkpt>
+      <trkpt lat="39.39330" lon="-106.11510"><ele>3375.0</ele></trkpt>
+      <trkpt lat="39.39360" lon="-106.11465"><ele>3389.0</ele></trkpt>
+      <trkpt lat="39.39390" lon="-106.11420"><ele>3404.0</ele></trkpt>
+      <trkpt lat="39.39415" lon="-106.11375"><ele>3420.0</ele></trkpt>
+      <trkpt lat="39.39440" lon="-106.11330"><ele>3436.0</ele></trkpt>
+      <trkpt lat="39.39460" lon="-106.11280"><ele>3451.0</ele></trkpt>
+      <!-- Approaching treeline (~11,400 ft / 3475m) -->
+      <trkpt lat="39.39480" lon="-106.11230"><ele>3467.0</ele></trkpt>
+      <trkpt lat="39.39500" lon="-106.11180"><ele>3475.0</ele></trkpt>
+      <trkpt lat="39.39515" lon="-106.11130"><ele>3490.0</ele></trkpt>
+      <trkpt lat="39.39530" lon="-106.11080"><ele>3505.0</ele></trkpt>
+      <trkpt lat="39.39545" lon="-106.11025"><ele>3521.0</ele></trkpt>
+      <trkpt lat="39.39560" lon="-106.10970"><ele>3538.0</ele></trkpt>
+      <trkpt lat="39.39575" lon="-106.10915"><ele>3556.0</ele></trkpt>
+      <!-- Above treeline, open tundra -->
+      <trkpt lat="39.39590" lon="-106.10860"><ele>3575.0</ele></trkpt>
+      <trkpt lat="39.39610" lon="-106.10810"><ele>3594.0</ele></trkpt>
+      <trkpt lat="39.39630" lon="-106.10760"><ele>3614.0</ele></trkpt>
+      <trkpt lat="39.39650" lon="-106.10710"><ele>3635.0</ele></trkpt>
+      <trkpt lat="39.39670" lon="-106.10660"><ele>3657.0</ele></trkpt>
+      <trkpt lat="39.39685" lon="-106.10610"><ele>3680.0</ele></trkpt>
+      <trkpt lat="39.39700" lon="-106.10560"><ele>3703.0</ele></trkpt>
+      <!-- Ridge steepens (~12,500 ft) -->
+      <trkpt lat="39.39710" lon="-106.10510"><ele>3727.0</ele></trkpt>
+      <trkpt lat="39.39720" lon="-106.10460"><ele>3752.0</ele></trkpt>
+      <trkpt lat="39.39730" lon="-106.10410"><ele>3778.0</ele></trkpt>
+      <trkpt lat="39.39740" lon="-106.10360"><ele>3804.0</ele></trkpt>
+      <trkpt lat="39.39745" lon="-106.10310"><ele>3831.0</ele></trkpt>
+      <trkpt lat="39.39750" lon="-106.10260"><ele>3858.0</ele></trkpt>
+      <trkpt lat="39.39755" lon="-106.10210"><ele>3886.0</ele></trkpt>
+      <!-- False summit area (~13,300 ft) -->
+      <trkpt lat="39.39758" lon="-106.10160"><ele>3914.0</ele></trkpt>
+      <trkpt lat="39.39760" lon="-106.10110"><ele>3940.0</ele></trkpt>
+      <trkpt lat="39.39762" lon="-106.10060"><ele>3962.0</ele></trkpt>
+      <trkpt lat="39.39763" lon="-106.10010"><ele>3980.0</ele></trkpt>
+      <trkpt lat="39.39760" lon="-106.09960"><ele>3998.0</ele></trkpt>
+      <!-- Final push, rocky terrain -->
+      <trkpt lat="39.39755" lon="-106.09910"><ele>4018.0</ele></trkpt>
+      <trkpt lat="39.39750" lon="-106.09860"><ele>4038.0</ele></trkpt>
+      <trkpt lat="39.39745" lon="-106.09810"><ele>4058.0</ele></trkpt>
+      <trkpt lat="39.39740" lon="-106.09760"><ele>4078.0</ele></trkpt>
+      <trkpt lat="39.39735" lon="-106.09710"><ele>4098.0</ele></trkpt>
+      <trkpt lat="39.39730" lon="-106.09660"><ele>4118.0</ele></trkpt>
+      <trkpt lat="39.39725" lon="-106.09620"><ele>4138.0</ele></trkpt>
+      <!-- Approaching summit -->
+      <trkpt lat="39.39722" lon="-106.09580"><ele>4158.0</ele></trkpt>
+      <trkpt lat="39.39720" lon="-106.09540"><ele>4178.0</ele></trkpt>
+      <trkpt lat="39.39718" lon="-106.09500"><ele>4198.0</ele></trkpt>
+      <trkpt lat="39.39717" lon="-106.09460"><ele>4218.0</ele></trkpt>
+      <trkpt lat="39.39718" lon="-106.09420"><ele>4238.0</ele></trkpt>
+      <trkpt lat="39.39719" lon="-106.09380"><ele>4258.0</ele></trkpt>
+      <!-- Summit ridge -->
+      <trkpt lat="39.39720" lon="-106.09340"><ele>4278.0</ele></trkpt>
+      <trkpt lat="39.39720" lon="-106.09300"><ele>4298.0</ele></trkpt>
+      <trkpt lat="39.39720" lon="-106.09270"><ele>4318.0</ele></trkpt>
+      <trkpt lat="39.39720" lon="-106.09240"><ele>4335.0</ele></trkpt>
+      <!-- Summit (14,265 ft / 4347m) -->
+      <trkpt lat="39.39720" lon="-106.10630"><ele>4347.0</ele></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
