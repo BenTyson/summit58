@@ -11,6 +11,10 @@
     computeTrailCenter,
     classColors
   } from './terrain-styles';
+  import { computeOverviewCamera, computeBirdsEyeCamera } from './camera-presets';
+  import { findTreelinePoint, findCruxPoint } from './waypoint-utils';
+  import { isWebGLSupported } from '$lib/utils/webgl';
+  import CameraControls from './CameraControls.svelte';
 
   interface Props {
     trailGeometry: TrailGeometry | null;
@@ -22,6 +26,7 @@
     hoveredIndex?: number | null;
     onPointHover?: (index: number | null) => void;
     isPro?: boolean;
+    onWebGLUnsupported?: () => void;
   }
 
   let {
@@ -33,7 +38,8 @@
     routeName = '',
     hoveredIndex = null,
     onPointHover,
-    isPro = false
+    isPro = false,
+    onWebGLUnsupported
   }: Props = $props();
 
   let mapContainer: HTMLDivElement;
@@ -41,9 +47,39 @@
   let summitMarker: Marker | null = null;
   let trailheadMarker: Marker | null = null;
   let hoverMarker: Marker | null = null;
+  let waypointMarkers: Marker[] = [];
   let maplibregl: typeof import('maplibre-gl') | null = null;
   let isLoaded = $state(false);
   let loadError = $state<string | null>(null);
+
+  // Store initial camera for reset
+  let initialCamera: { center: [number, number]; zoom: number; pitch: number; bearing: number } | null = null;
+
+  const waypointSvgs = {
+    treeline: `<svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="wp-shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-opacity="0.25"/>
+        </filter>
+      </defs>
+      <g filter="url(#wp-shadow)">
+        <circle cx="18" cy="18" r="14" fill="#2D6A4F" stroke="white" stroke-width="2.5"/>
+        <path d="M18 8 L18 28 M14 14 L18 10 L22 14 M12 20 L18 14 L24 20 M10 26 L18 18 L26 26" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </svg>`,
+    crux: `<svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="crux-shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-opacity="0.25"/>
+        </filter>
+      </defs>
+      <g filter="url(#crux-shadow)">
+        <path d="M18 4 L32 28 L4 28 Z" fill="#D97706" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M18 13 L18 20" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="18" cy="24" r="1.5" fill="white"/>
+      </g>
+    </svg>`
+  };
 
   // Detect dark mode
   const isDark = $derived(
@@ -73,6 +109,12 @@
   async function initMap() {
     if (typeof window === 'undefined' || !mapContainer) return;
 
+    if (!isWebGLSupported()) {
+      onWebGLUnsupported?.();
+      loadError = '3D terrain requires WebGL support';
+      return;
+    }
+
     if (!PUBLIC_MAPTILER_API_KEY) {
       loadError = 'MapTiler API key not configured';
       return;
@@ -94,6 +136,8 @@
         ? computeTrailBearing(trailGeometry.coordinates)
         : 0;
 
+      initialCamera = { center, zoom, pitch: 60, bearing };
+
       map = new maplibregl.Map({
         container: mapContainer,
         style,
@@ -109,6 +153,7 @@
       map.on('load', () => {
         addRouteLayers();
         addMarkers();
+        addWaypointMarkers();
         isLoaded = true;
       });
 
@@ -202,6 +247,71 @@
     }
   }
 
+  function addWaypointMarkers() {
+    if (!map || !maplibregl || !trailGeometry) return;
+
+    const coords = trailGeometry.coordinates;
+
+    const treeline = findTreelinePoint(coords);
+    if (treeline) {
+      const [lng, lat] = coords[treeline.index];
+      const el = createMarkerElement(waypointSvgs.treeline, 36);
+      const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+        .setLngLat([lng, lat])
+        .setPopup(
+          new maplibregl.Popup({ offset: 20, className: 'terrain-popup' }).setHTML(`
+            <div class="terrain-popup-content">
+              <div class="terrain-popup-badge treeline">Treeline</div>
+              <div class="terrain-popup-title">${treeline.elevation.toLocaleString()}'</div>
+            </div>
+          `)
+        )
+        .addTo(map);
+      waypointMarkers.push(marker);
+    }
+
+    const crux = findCruxPoint(coords, difficultyClass);
+    if (crux) {
+      const [lng, lat] = coords[crux.index];
+      const el = createMarkerElement(waypointSvgs.crux, 36);
+      const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
+        .setLngLat([lng, lat])
+        .setPopup(
+          new maplibregl.Popup({ offset: 20, className: 'terrain-popup' }).setHTML(`
+            <div class="terrain-popup-content">
+              <div class="terrain-popup-badge crux">Crux</div>
+              <div class="terrain-popup-title">${crux.elevation.toLocaleString()}'</div>
+            </div>
+          `)
+        )
+        .addTo(map);
+      waypointMarkers.push(marker);
+    }
+  }
+
+  function flyToPreset(preset: 'overview' | 'birdsEye' | 'reset') {
+    if (!map || !trailGeometry) return;
+
+    let camera: { center: [number, number]; zoom: number; pitch: number; bearing: number };
+
+    if (preset === 'reset' && initialCamera) {
+      camera = initialCamera;
+    } else if (preset === 'overview') {
+      camera = computeOverviewCamera(trailGeometry.coordinates);
+    } else {
+      camera = computeBirdsEyeCamera(trailGeometry.coordinates);
+    }
+
+    map.flyTo({
+      center: camera.center,
+      zoom: camera.zoom,
+      pitch: camera.pitch,
+      bearing: camera.bearing,
+      duration: 1500,
+      essential: true
+    });
+  }
+
   function updateHoverMarker(index: number | null) {
     if (!map || !maplibregl || !trailGeometry) return;
 
@@ -236,6 +346,7 @@
       map.once('style.load', () => {
         addRouteLayers();
         addMarkers();
+        addWaypointMarkers();
       });
     }
   });
@@ -248,6 +359,8 @@
     if (hoverMarker) hoverMarker.remove();
     if (summitMarker) summitMarker.remove();
     if (trailheadMarker) trailheadMarker.remove();
+    for (const m of waypointMarkers) m.remove();
+    waypointMarkers = [];
     if (map) {
       map.remove();
       map = null;
@@ -394,6 +507,14 @@
     background: linear-gradient(135deg, #C8A55C, #A8873A);
   }
 
+  :global(.terrain-popup-badge.treeline) {
+    background: linear-gradient(135deg, #2D6A4F, #1B4332);
+  }
+
+  :global(.terrain-popup-badge.crux) {
+    background: linear-gradient(135deg, #D97706, #B45309);
+  }
+
   :global(.terrain-popup-title) {
     font-size: 16px;
     font-weight: 700;
@@ -471,4 +592,8 @@
   </div>
 
   <div bind:this={mapContainer} class="terrain-map-container"></div>
+
+  {#if isLoaded && trailGeometry}
+    <CameraControls onPreset={flyToPreset} />
+  {/if}
 </div>

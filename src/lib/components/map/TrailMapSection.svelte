@@ -2,6 +2,7 @@
   import type { TrailGeometry } from '$lib/server/gpx';
   import GpxUploader from '$lib/components/trail/GpxUploader.svelte';
   import ViewModeToggle from './ViewModeToggle.svelte';
+  import { isWebGLSupported } from '$lib/utils/webgl';
   import { page } from '$app/stores';
   import { fade } from 'svelte/transition';
 
@@ -70,6 +71,7 @@
   // View mode
   let viewMode = $state<'2d' | '3d'>('2d');
   let loading3D = $state(false);
+  let webglSupported = $state(false);
 
   // Shared hover state
   let hoveredIndex = $state<number | null>(null);
@@ -101,9 +103,10 @@
   // Summit coordinates
   const summitCoords = $derived({ lat: peak.latitude, lng: peak.longitude });
 
-  // Load components dynamically
+  // Load components dynamically + check WebGL
   $effect(() => {
     if (typeof window !== 'undefined') {
+      webglSupported = isWebGLSupported();
       Promise.all([
         import('./TrailMap.svelte'),
         import('./ElevationProfile.svelte')
@@ -120,6 +123,10 @@
   }
 
   async function handleViewModeChange(mode: '2d' | '3d') {
+    if (mode === '3d' && !webglSupported) {
+      viewMode = '2d';
+      return;
+    }
     viewMode = mode;
     if (mode === '3d' && !TerrainViewer3D) {
       loading3D = true;
@@ -130,6 +137,11 @@
         loading3D = false;
       }
     }
+  }
+
+  function handleWebGLUnsupported() {
+    webglSupported = false;
+    viewMode = '2d';
   }
 
   async function handleVote(traceId: string) {
@@ -150,7 +162,9 @@
         </svg>
         Trail Map & Elevation
       </h2>
-      <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} {loading3D} />
+      {#if webglSupported}
+        <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} {loading3D} />
+      {/if}
     </div>
 
     <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-card">
@@ -197,6 +211,7 @@
                   {hoveredIndex}
                   onPointHover={handleHover}
                   isPro={false}
+                  onWebGLUnsupported={handleWebGLUnsupported}
                 />
               </div>
             {/if}
