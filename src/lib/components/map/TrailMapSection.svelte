@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { TrailGeometry } from '$lib/server/gpx';
   import GpxUploader from '$lib/components/trail/GpxUploader.svelte';
+  import ViewModeToggle from './ViewModeToggle.svelte';
   import { page } from '$app/stores';
+  import { fade } from 'svelte/transition';
 
   interface Route {
     name: string;
@@ -62,7 +64,12 @@
   // Lazy load map components (client-side only)
   let TrailMap: typeof import('./TrailMap.svelte').default | null = $state(null);
   let ElevationProfile: typeof import('./ElevationProfile.svelte').default | null = $state(null);
+  let TerrainViewer3D: typeof import('./TerrainViewer3D.svelte').default | null = $state(null);
   let isLoading = $state(true);
+
+  // View mode
+  let viewMode = $state<'2d' | '3d'>('2d');
+  let loading3D = $state(false);
 
   // Shared hover state
   let hoveredIndex = $state<number | null>(null);
@@ -112,6 +119,19 @@
     hoveredIndex = index;
   }
 
+  async function handleViewModeChange(mode: '2d' | '3d') {
+    viewMode = mode;
+    if (mode === '3d' && !TerrainViewer3D) {
+      loading3D = true;
+      try {
+        const mod = await import('./TerrainViewer3D.svelte');
+        TerrainViewer3D = mod.default;
+      } finally {
+        loading3D = false;
+      }
+    }
+  }
+
   async function handleVote(traceId: string) {
     if (onVote) await onVote(traceId);
   }
@@ -123,12 +143,15 @@
 
 {#if hasTrail}
   <section class="animate-fade-in-up" style="animation-delay: 175ms">
-    <h2 class="heading-section text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-      <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-      </svg>
-      Trail Map & Elevation
-    </h2>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2">
+        <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        </svg>
+        Trail Map & Elevation
+      </h2>
+      <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} {loading3D} />
+    </div>
 
     <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-card">
       {#if isLoading}
@@ -148,17 +171,35 @@
       {:else if TrailMap && ElevationProfile && activeGeometry}
         <div class="grid lg:grid-cols-5 gap-0">
           <!-- Map (60% on desktop) -->
-          <div class="lg:col-span-3 h-[350px] lg:h-[400px]">
-            <TrailMap
-              trailGeometry={activeGeometry}
-              {trailheadCoords}
-              {summitCoords}
-              difficultyClass={route.difficulty_class}
-              peakName={peak.name}
-              routeName={route.name}
-              {hoveredIndex}
-              onPointHover={handleHover}
-            />
+          <div class="lg:col-span-3 h-[350px] lg:h-[400px] relative">
+            {#if viewMode === '2d'}
+              <div class="absolute inset-0" transition:fade={{ duration: 200 }}>
+                <TrailMap
+                  trailGeometry={activeGeometry}
+                  {trailheadCoords}
+                  {summitCoords}
+                  difficultyClass={route.difficulty_class}
+                  peakName={peak.name}
+                  routeName={route.name}
+                  {hoveredIndex}
+                  onPointHover={handleHover}
+                />
+              </div>
+            {:else if TerrainViewer3D}
+              <div class="absolute inset-0" transition:fade={{ duration: 200 }}>
+                <TerrainViewer3D
+                  trailGeometry={activeGeometry}
+                  {trailheadCoords}
+                  {summitCoords}
+                  difficultyClass={route.difficulty_class}
+                  peakName={peak.name}
+                  routeName={route.name}
+                  {hoveredIndex}
+                  onPointHover={handleHover}
+                  isPro={false}
+                />
+              </div>
+            {/if}
           </div>
 
           <!-- Elevation Profile (40% on desktop) -->
