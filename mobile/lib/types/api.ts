@@ -16,10 +16,11 @@ import type {
 	ElevationBandForecast,
 	DayForecast,
 	PeriodForecast,
-	HikerInsight
+	HikerInsight,
+	TrailGeometry
 } from '@saltgoat/shared/types/helpers';
 
-export type { ForecastResponse, ElevationBandForecast, DayForecast, PeriodForecast, HikerInsight };
+export type { ForecastResponse, ElevationBandForecast, DayForecast, PeriodForecast, HikerInsight, TrailGeometry };
 
 export interface PeaksListResponse {
 	peaks: PeakWithStandardRoute[];
@@ -254,4 +255,30 @@ export interface PublicProfileResponse {
 	isFollowing: boolean | null;
 	reactions: Record<string, ReactionData>;
 	comments: Record<string, CommentData>;
+}
+
+// Route detail (3D viewer)
+export interface RouteDetailResponse {
+	peak: {
+		id: string;
+		name: string;
+		slug: string;
+		elevation: number;
+		range: string;
+		latitude: number;
+		longitude: number;
+		hero_image_url: string | null;
+		thumbnail_url: string | null;
+	};
+	route: {
+		id: string;
+		name: string;
+		slug: string;
+		distance_miles: number;
+		elevation_gain_ft: number;
+		difficulty_class: number;
+		typical_time_hours: number | null;
+		is_standard: boolean | null;
+	};
+	trailGeometry: TrailGeometry | null;
 }

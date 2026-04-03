@@ -228,11 +228,15 @@ export default function PeakDetailScreen() {
 						<Section title="Routes">
 							<View style={{ gap: 10 }}>
 								{peak.routes.map((route) => (
-									<RouteCard
+									<Pressable
 										key={route.id}
-										route={route}
-										isStandard={route.is_standard ?? false}
-									/>
+										onPress={() => router.push(`/peaks/${slug}/${route.slug}`)}
+									>
+										<RouteCard
+											route={route}
+											isStandard={route.is_standard ?? false}
+										/>
+									</Pressable>
 								))}
 							</View>
 						</Section>

@@ -98,6 +98,36 @@ export interface PeriodForecast {
 	visibility_miles: number;
 }
 
+// ─── 3D Viewer types ───────────────────────────────────────────────
+
+export interface ViewerCameraPosition {
+	center: [number, number];
+	zoom: number;
+	pitch: number;
+	bearing: number;
+}
+
+export interface ViewerWaypoint {
+	type: 'treeline' | 'crux';
+	index: number;
+	elevation: number;
+	coordinates: [number, number];
+}
+
+export interface TrailGeometry {
+	type: 'LineString';
+	coordinates: [number, number, number][];
+	properties: {
+		elevationGain: number;
+		elevationLoss: number;
+		minElevation: number;
+		maxElevation: number;
+		totalDistanceMiles: number;
+	};
+}
+
+// ─── Weather Forecast v2 types ──────────────────────────────────────
+
 export interface HikerInsight {
 	type:
 		| 'summit_window'
