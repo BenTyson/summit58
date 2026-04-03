@@ -129,6 +129,8 @@ Each phase is an independent terminal session with clean context.
 - `.env.example` — MapTiler key placeholder
 - `vite.config.ts` — Add `maplibre-gl` to `optimizeDeps.include` if needed
 
+**Manual steps:** See `docs/ben.md` > "3D Route Viewer (MapTiler)" for API key setup and GPX sourcing.
+
 **Done when:** TerrainViewer3D renders 3D terrain with route line and markers. Orbit/zoom works. Dark mode works.
 
 ---

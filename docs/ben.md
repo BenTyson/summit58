@@ -75,6 +75,14 @@ The weather data pipeline runs at `POST /api/webhooks/weather` (or `GET` with `?
 - [ ] Set up cron service (Railway cron or cron-job.org) to hit `POST https://saltgoat.co/api/webhooks/weather` with header `x-webhook-secret: <WEBHOOK_SECRET>` at 06:00, 12:00, 18:00, 00:00 UTC (00:00, 06:00, 12:00, 18:00 MT)
 - [ ] Upgrade to Open-Meteo commercial API key (~10 EUR/month) — required for commercial use with paid subscriptions
 
+## 3D Route Viewer (MapTiler)
+
+- [ ] Sign up at [maptiler.com](https://www.maptiler.com/) and get a free API key
+- [ ] Set `PUBLIC_MAPTILER_API_KEY` in `.env` (local) and Railway env vars
+- [ ] Source GPX files from CalTopo for priority routes (Phase 0 — see `docs/gpx-import-guide.md`)
+- [ ] Run `node scripts/import-gpx.mjs data/gpx/` to populate `routes.trail_geometry`
+- [ ] Upgrade to MapTiler paid plan if traffic exceeds 100K tiles/month free tier
+
 ## Other
 
 - [x] ~~Plausible~~ Umami analytics configured (self-hosted on Railway)
