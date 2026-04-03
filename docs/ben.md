@@ -32,25 +32,27 @@ Set these in Railway (and locally in `.env` for dev):
 
 ## RevenueCat Setup (Mobile IAP)
 
-- [ ] Create account at revenuecat.com
-- [ ] Create project "SaltGoat"
-- [ ] Add iOS app: bundle ID `com.saltgoat.app`, paste App Store Connect shared secret
+- [x] Create account at revenuecat.com
+- [x] Create project "SaltGoat"
+- [x] Add iOS app: bundle ID `com.saltgoat.app`, App Store Connect API key linked
 - [ ] Add Android app: package `com.saltgoat.app`, upload Google service account JSON
-- [ ] Create entitlement: `pro`
-- [ ] Create product mapping to App Store / Play Store subscription product IDs
-- [ ] Create offering: `default` with annual package linked to the product
-- [ ] Configure webhook: URL `https://saltgoat.co/api/webhooks/revenuecat`, Authorization header `Bearer <REVENUECAT_WEBHOOK_SECRET>`
-- [ ] Copy API keys (iOS public key `appl_...`, Android public key `goog_...`) to `mobile/.env`
-- [ ] Run `supabase db push` to apply `20260331000000_add_revenuecat_columns.sql`
-- [ ] Set `REVENUECAT_WEBHOOK_SECRET` in Railway env vars
+- [x] Create entitlement: `SaltGoat Pro` (code constant: `PRO_ENTITLEMENT = 'SaltGoat Pro'`)
+- [x] Create product mapping: `saltgoat_pro_annual` (App Store) + `yearly` (Test Store)
+- [x] Create offering: `default` with annual package linked to the product
+- [x] Configure webhook: URL `https://saltgoat.co/api/webhooks/revenuecat`, Authorization header `Bearer <REVENUECAT_WEBHOOK_SECRET>`
+- [x] Copy iOS API key (`appl_...`) to `mobile/.env`
+- [ ] Copy Android API key (`goog_...`) to `mobile/.env` when Android app is added
+- [x] Run `supabase db push` to apply `20260331000000_add_revenuecat_columns.sql`
+- [x] Set `REVENUECAT_WEBHOOK_SECRET` in Railway env vars
+- [ ] Test purchase flow on physical device with sandbox tester account
 
 ### App Store Connect (subscription product)
 
-- [ ] App Store Connect > My Apps > SaltGoat > Subscriptions
-- [ ] Create subscription group: "SaltGoat Pro"
-- [ ] Create subscription product: $29.99/year, product ID e.g. `saltgoat_pro_annual`
-- [ ] Add localized display name and description
-- [ ] Copy shared secret to RevenueCat dashboard
+- [x] App Store Connect > My Apps > SaltGoat > Subscriptions
+- [x] Create subscription group: "SaltGoat Pro"
+- [x] Create subscription product: $29.99/year, product ID `saltgoat_pro_annual`
+- [x] Add localized display name and description
+- [x] App Store Connect API key created and linked to RevenueCat
 
 ### Google Play Console (subscription product)
 
@@ -77,10 +79,12 @@ The weather data pipeline runs at `POST /api/webhooks/weather` (or `GET` with `?
 
 ## 3D Route Viewer (MapTiler)
 
-- [ ] Sign up at [maptiler.com](https://www.maptiler.com/) and get a free API key
-- [ ] Set `PUBLIC_MAPTILER_API_KEY` in `.env` (local) and Railway env vars
-- [ ] Source GPX files from CalTopo for priority routes (Phase 0 — see `docs/gpx-import-guide.md`)
-- [ ] Run `node scripts/import-gpx.mjs data/gpx/` to populate `routes.trail_geometry`
+- [x] Sign up at [maptiler.com](https://www.maptiler.com/) and get a free API key
+- [x] Set `PUBLIC_MAPTILER_API_KEY` in `.env` (local) and Railway env vars
+- [x] Set `EXPO_PUBLIC_MAPTILER_API_KEY` in `mobile/.env` (same key)
+- [x] Test GPX imported for Quandary Peak - East Ridge (synthetic, 57 points)
+- [ ] Source real GPX files from CalTopo for priority routes (see `docs/gpx-import-guide.md`)
+- [ ] Run `node scripts/import-gpx.mjs data/gpx/` to populate `routes.trail_geometry` for remaining routes
 - [ ] Upgrade to MapTiler paid plan if traffic exceeds 100K tiles/month free tier
 
 ## Other

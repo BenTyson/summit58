@@ -10,7 +10,7 @@ import { useSession } from '@/lib/auth/AuthProvider';
 
 const REVENUECAT_IOS_KEY = process.env.EXPO_PUBLIC_REVENUECAT_IOS_API_KEY ?? '';
 const REVENUECAT_ANDROID_KEY = process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY ?? '';
-const PRO_ENTITLEMENT = 'pro';
+const PRO_ENTITLEMENT = 'SaltGoat Pro';
 
 interface PurchasesContextType {
   isPro: boolean;

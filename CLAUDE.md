@@ -100,6 +100,7 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | `/api/v1/peaks/[slug]` | GET | Optional | Aggregated detail: peak + reviews + images + conditions + trail reports |
 | `/api/v1/peaks/[slug]/conditions` | GET | No | 7-day weather forecast (legacy v1, uses `peak_conditions`) |
 | `/api/v1/peaks/[slug]/forecast` | GET | No | 7-day elevation-banded forecast (v2, uses `peak_forecasts`) — returns `ForecastResponse` |
+| `/api/v1/peaks/[slug]/routes/[route]` | GET | No | Route detail with trail geometry (best trace or route geometry) — returns `RouteDetailResponse` |
 | `/api/v1/profile` | GET | Required | Stats + summits + achievements + grid |
 | `/api/v1/summits` | GET | Required | Can-log pre-flight check (allowed, remaining, isPro) |
 | `/api/v1/summits` | POST | Required | Create summit → returns `{ summit, newAchievements }` |

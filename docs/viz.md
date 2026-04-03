@@ -273,7 +273,7 @@ Each phase is an independent terminal session with clean context.
 
 ---
 
-### Phase 6: Mobile 3D Viewer
+### Phase 6: Mobile 3D Viewer [COMPLETE]
 
 **Goal:** Implement 3D terrain viewer in Expo/React Native using `@maplibre/maplibre-react-native`.
 
@@ -282,22 +282,26 @@ Each phase is an independent terminal session with clean context.
 **New files:**
 | File | Purpose |
 |------|---------|
-| `mobile/components/map/TerrainViewer3D.tsx` | Native 3D viewer |
-| `mobile/components/map/FlythroughControls.tsx` | Native playback controls |
+| `mobile/components/map/TerrainViewer3D.tsx` | Native 3D viewer — MapTiler terrain DEM + satellite/topo, route line (ShapeSource + LineLayer), summit/trailhead markers, camera presets, flythrough animation, Pro teaser overlay, dark mode |
+| `mobile/components/map/FlythroughControls.tsx` | Native playback controls — play/pause (SF Symbols via expo-symbols), progress bar, speed selector (0.5x/1x/2x), stop button |
+| `src/routes/api/v1/peaks/[slug]/routes/[route]/+server.ts` | REST endpoint returning peak, route, and trail geometry (prefers community trace from `route_traces`, falls back to `routes.trail_geometry`) |
 
-**TerrainViewer3D.tsx specs:**
-- Same MapTiler style config as web (same tile URLs, terrain DEM)
-- Touch: pinch-zoom, two-finger-orbit (handled by MapLibre RN)
-- Route line, markers, camera presets
-- Pro gating for flythrough
+**Modified:**
+- `packages/shared/src/types/helpers.ts` — Added `ViewerCameraPosition`, `ViewerWaypoint`, `TrailGeometry` shared types
+- `mobile/lib/types/api.ts` — Added `RouteDetailResponse` type, re-exported `TrailGeometry`
+- `mobile/app/peaks/[slug]/[route].tsx` — Full route detail screen with 2D/3D toggle, cached API fetch, trail stats in 2D mode
+- `mobile/app/peaks/[slug]/index.tsx` — RouteCards now tappable, navigate to route detail
+- `mobile/.env` / `mobile/.env.example` — Added `EXPO_PUBLIC_MAPTILER_API_KEY`
+- `mobile/app.json` — Added `@maplibre/maplibre-react-native` config plugin, removed broken `react-native-purchases` plugin entry (SDK still works via auto-linking)
 
-**Modify:**
-- `packages/shared/src/types/helpers.ts` — Add shared types (`ViewerCameraPosition`, `ViewerWaypoint`)
-- `mobile/app/peaks/[slug]/[route].tsx` — Build out route detail screen with 3D viewer, 2D/3D toggle
-- Mobile env config — Add `PUBLIC_MAPTILER_API_KEY`
-- May need dedicated `/api/v1/peaks/[slug]/routes/[route]` endpoint
+**Architecture notes:**
+- Uses named imports from `@maplibre/maplibre-react-native` (`MapView`, `Camera`, `ShapeSource`, `LineLayer`, `PointAnnotation`) — not the deprecated default namespace
+- `MapView` accepts `mapStyle` prop (JSON string), same tile URLs as web `buildTerrainStyle()`
+- Camera ref typed as `CameraRef`, uses `setCamera()` with `CameraStop` shape (`zoomLevel`, `heading`, `pitch`, `centerCoordinate`)
+- Flythrough uses `requestAnimationFrame` loop with cubic interpolation + smooth bearing — ported from web `flythrough.ts`
+- Requires native build (`npx expo prebuild`, then `npx expo run:ios`) — not compatible with Expo Go
 
-**Done when:** 3D terrain renders in iOS simulator. Touch gestures work. Route line visible. Flythrough for Pro. Performance on iPhone 12+.
+**Done:** 3D terrain renders in iOS simulator. Touch gestures work (native MapLibre). Route line visible. Flythrough for Pro. Camera presets (Overview, Bird's Eye). 2D/3D toggle.
 
 ---
 
