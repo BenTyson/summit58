@@ -70,6 +70,7 @@ export function PurchasesProvider({ children }: { children: React.ReactNode }) {
 
     Purchases.getOfferings()
       .then((o) => setOfferings(o))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [configured]);
 
