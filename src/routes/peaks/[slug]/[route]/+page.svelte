@@ -183,6 +183,7 @@
       isLoggedIn={data.isLoggedIn}
       currentUserId={data.currentUserId}
       isPro={data.isPro}
+      forecast={data.forecast}
       onUpload={handleUploadTrace}
       onVote={handleVoteTrace}
       onDelete={handleDeleteTrace}

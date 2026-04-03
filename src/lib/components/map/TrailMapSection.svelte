@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TrailGeometry } from '$lib/server/gpx';
+  import type { ForecastResponse } from '$lib/types/database';
   import GpxUploader from '$lib/components/trail/GpxUploader.svelte';
   import ViewModeToggle from './ViewModeToggle.svelte';
   import { isWebGLSupported } from '$lib/utils/webgl';
@@ -44,6 +45,7 @@
     isLoggedIn?: boolean;
     currentUserId?: string;
     isPro?: boolean;
+    forecast?: ForecastResponse | null;
     onUpload?: (file: File) => Promise<void>;
     onVote?: (traceId: string) => Promise<void>;
     onDelete?: (traceId: string) => Promise<void>;
@@ -58,6 +60,7 @@
     isLoggedIn = false,
     currentUserId,
     isPro = false,
+    forecast = null,
     onUpload,
     onVote,
     onDelete,
@@ -214,6 +217,8 @@
                   onPointHover={handleHover}
                   {isPro}
                   onWebGLUnsupported={handleWebGLUnsupported}
+                  {allTraces}
+                  {forecast}
                 />
               </div>
             {/if}

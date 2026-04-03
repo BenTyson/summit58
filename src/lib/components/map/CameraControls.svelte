@@ -3,9 +3,25 @@
     onPreset: (preset: 'overview' | 'birdsEye' | 'reset') => void;
     isPro?: boolean;
     onFlythrough?: () => void;
+    tracesVisible?: boolean;
+    weatherVisible?: boolean;
+    hasTraces?: boolean;
+    hasForecast?: boolean;
+    onToggleTraces?: () => void;
+    onToggleWeather?: () => void;
   }
 
-  let { onPreset, isPro = false, onFlythrough }: Props = $props();
+  let {
+    onPreset,
+    isPro = false,
+    onFlythrough,
+    tracesVisible = false,
+    weatherVisible = false,
+    hasTraces = false,
+    hasForecast = false,
+    onToggleTraces,
+    onToggleWeather
+  }: Props = $props();
 </script>
 
 <style>
@@ -85,6 +101,24 @@
     color: #D4BC7E;
   }
 
+  .camera-btn.toggle-active {
+    background: rgba(74, 127, 181, 0.12);
+    color: #4A7FB5;
+  }
+
+  :global(.dark) .camera-btn.toggle-active {
+    background: rgba(74, 127, 181, 0.2);
+    color: #7CB3E0;
+  }
+
+  .camera-btn.toggle-active:hover {
+    background: rgba(74, 127, 181, 0.18);
+  }
+
+  :global(.dark) .camera-btn.toggle-active:hover {
+    background: rgba(74, 127, 181, 0.25);
+  }
+
   .lock-badge {
     position: absolute;
     top: 4px;
@@ -153,6 +187,56 @@
     >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
         <path d="M8 5v14l11-7z" />
+      </svg>
+      {#if !isPro}
+        <span class="lock-badge">
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke-width="2.5" />
+          </svg>
+        </span>
+      {/if}
+    </button>
+  {/if}
+
+  {#if hasTraces || hasForecast}
+    <div class="divider"></div>
+  {/if}
+
+  {#if hasTraces && onToggleTraces}
+    <button
+      class="camera-btn"
+      class:toggle-active={tracesVisible}
+      onclick={onToggleTraces}
+      aria-label="Toggle community traces"
+      title={isPro ? (tracesVisible ? 'Hide Traces' : 'Show Traces') : 'Community Traces (Pro)'}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+        <polyline points="2 17 12 22 22 17" />
+        <polyline points="2 12 12 17 22 12" />
+      </svg>
+      {#if !isPro}
+        <span class="lock-badge">
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" fill="none" stroke-width="2.5" />
+          </svg>
+        </span>
+      {/if}
+    </button>
+  {/if}
+
+  {#if hasForecast && onToggleWeather}
+    <button
+      class="camera-btn"
+      class:toggle-active={weatherVisible}
+      onclick={onToggleWeather}
+      aria-label="Toggle weather overlay"
+      title={isPro ? (weatherVisible ? 'Hide Weather' : 'Show Weather') : 'Weather Overlay (Pro)'}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
       </svg>
       {#if !isPro}
         <span class="lock-badge">

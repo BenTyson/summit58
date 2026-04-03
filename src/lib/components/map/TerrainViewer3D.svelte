@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { PUBLIC_MAPTILER_API_KEY } from '$env/static/public';
   import type { TrailGeometry } from '$lib/server/gpx';
+  import type { ForecastResponse } from '$lib/types/database';
   import type { Map, Marker } from 'maplibre-gl';
   import {
     buildTerrainStyle,
@@ -15,9 +16,23 @@
   import { findTreelinePoint, findCruxPoint } from './waypoint-utils';
   import { isWebGLSupported } from '$lib/utils/webgl';
   import { startFlythrough, type FlythroughControls as FlythroughHandle } from './flythrough';
+  import { buildWeatherLayers } from './weather-overlay';
   import CameraControls from './CameraControls.svelte';
   import FlythroughControls from './FlythroughControls.svelte';
   import ProUpsellOverlay from './ProUpsellOverlay.svelte';
+
+  interface TraceInfo {
+    id: string;
+    uploaderName: string;
+    uploaderId: string;
+    voteCount: number;
+    userVoted: boolean;
+    trailGeometry: TrailGeometry;
+    storagePath: string;
+    pointCount: number;
+    distanceMiles: number | null;
+    elevationGain: number | null;
+  }
 
   interface Props {
     trailGeometry: TrailGeometry | null;
@@ -30,6 +45,8 @@
     onPointHover?: (index: number | null) => void;
     isPro?: boolean;
     onWebGLUnsupported?: () => void;
+    allTraces?: TraceInfo[];
+    forecast?: ForecastResponse | null;
   }
 
   let {
@@ -42,7 +59,9 @@
     hoveredIndex = null,
     onPointHover,
     isPro = false,
-    onWebGLUnsupported
+    onWebGLUnsupported,
+    allTraces = [],
+    forecast = null
   }: Props = $props();
 
   let mapContainer: HTMLDivElement;
@@ -65,7 +84,17 @@
   let flythroughProgress = $state(0);
   let flythroughHandle: FlythroughHandle | null = null;
   let showUpsell = $state(false);
+  let upsellFeature = $state<'flythrough' | 'traces_3d' | 'weather_3d'>('flythrough');
   let teaserTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  // Traces + weather overlay state
+  let tracesVisible = $state(false);
+  let weatherVisible = $state(false);
+
+  const traceColors = ['#E76F51', '#2A9D8F', '#E9C46A', '#264653', '#F4A261', '#8338EC', '#FF6B6B', '#06D6A0'];
+
+  const hasTraces = $derived(allTraces.length > 0);
+  const hasForecast = $derived(!!forecast);
 
   const waypointSvgs = {
     treeline: `<svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
@@ -301,6 +330,116 @@
     }
   }
 
+  function addTraceLayers() {
+    if (!map || !tracesVisible || allTraces.length === 0) return;
+
+    for (let i = 0; i < allTraces.length; i++) {
+      const trace = allTraces[i];
+      const sourceId = `trace-${trace.id}`;
+      const lineId = `trace-line-${trace.id}`;
+      const color = traceColors[i % traceColors.length];
+
+      if (map.getSource(sourceId)) continue;
+
+      map.addSource(sourceId, {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: trace.trailGeometry.coordinates
+          }
+        }
+      });
+
+      map.addLayer({
+        id: lineId,
+        type: 'line',
+        source: sourceId,
+        paint: {
+          'line-color': color,
+          'line-width': 2.5,
+          'line-opacity': i === 0 ? 0.9 : 0.3
+        },
+        layout: {
+          'line-cap': 'round',
+          'line-join': 'round'
+        }
+      });
+    }
+  }
+
+  function removeTraceLayers() {
+    if (!map) return;
+    for (const trace of allTraces) {
+      const lineId = `trace-line-${trace.id}`;
+      const sourceId = `trace-${trace.id}`;
+      if (map.getLayer(lineId)) map.removeLayer(lineId);
+      if (map.getSource(sourceId)) map.removeSource(sourceId);
+    }
+  }
+
+  function addWeatherLayers() {
+    if (!map || !weatherVisible || !forecast || !trailGeometry) return;
+
+    const { layers, sources } = buildWeatherLayers(forecast, trailGeometry);
+
+    for (const src of sources) {
+      if (map.getSource(src.id)) continue;
+      map.addSource(src.id, { type: 'geojson', data: src.data });
+    }
+
+    for (const layer of layers) {
+      if (map.getLayer(layer.id)) continue;
+      map.addLayer({
+        id: layer.id,
+        type: layer.type,
+        source: layer.source,
+        paint: layer.paint
+      } as Parameters<Map['addLayer']>[0]);
+    }
+  }
+
+  function removeWeatherLayers() {
+    if (!map || !forecast || !trailGeometry) return;
+    const { layers, sources } = buildWeatherLayers(forecast, trailGeometry);
+    for (const layer of layers) {
+      if (map.getLayer(layer.id)) map.removeLayer(layer.id);
+    }
+    for (const src of sources) {
+      if (map.getSource(src.id)) map.removeSource(src.id);
+    }
+  }
+
+  function handleToggleTraces() {
+    if (!isPro) {
+      upsellFeature = 'traces_3d';
+      showUpsell = true;
+      return;
+    }
+    tracesVisible = !tracesVisible;
+    if (tracesVisible) {
+      addTraceLayers();
+    } else {
+      removeTraceLayers();
+    }
+  }
+
+  function handleToggleWeather() {
+    if (!isPro) {
+      upsellFeature = 'weather_3d';
+      showUpsell = true;
+      return;
+    }
+    weatherVisible = !weatherVisible;
+    if (weatherVisible) {
+      addWeatherLayers();
+    } else {
+      removeWeatherLayers();
+    }
+  }
+
   function flyToPreset(preset: 'overview' | 'birdsEye' | 'reset') {
     if (!map || !trailGeometry) return;
 
@@ -428,8 +567,10 @@
 
   function handleUpsellDismiss() {
     showUpsell = false;
-    stopFlythrough();
-    returnToOverview();
+    if (upsellFeature === 'flythrough') {
+      stopFlythrough();
+      returnToOverview();
+    }
   }
 
   function handleFlythroughPlay() {
@@ -508,11 +649,12 @@
       const mode = isDark ? 'dark' : 'light';
       const style = buildTerrainStyle(PUBLIC_MAPTILER_API_KEY, mode);
       map.setStyle(style);
-      // Re-add route layers + markers after style change
       map.once('style.load', () => {
         addRouteLayers();
         addMarkers();
         addWaypointMarkers();
+        if (tracesVisible) addTraceLayers();
+        if (weatherVisible) addWeatherLayers();
       });
     }
   });
@@ -776,11 +918,17 @@
         onPreset={flyToPreset}
         {isPro}
         onFlythrough={handleFlythroughRequest}
+        {tracesVisible}
+        {weatherVisible}
+        {hasTraces}
+        {hasForecast}
+        onToggleTraces={handleToggleTraces}
+        onToggleWeather={handleToggleWeather}
       />
     {/if}
   {/if}
 
   {#if showUpsell}
-    <ProUpsellOverlay feature="flythrough" onDismiss={handleUpsellDismiss} />
+    <ProUpsellOverlay feature={upsellFeature} onDismiss={handleUpsellDismiss} />
   {/if}
 </div>
