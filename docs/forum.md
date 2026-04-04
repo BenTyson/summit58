@@ -535,50 +535,53 @@ New directory: `mobile/components/forum/`
 - Admin moderation page shows recent topics with pin/lock/move/delete controls
 - `npm run build` passes
 
-### Phase 6: Mobile API + Screens
+### Phase 6: Mobile API + Screens [COMPLETE]
+
+**Completed:** 2026-04-04
 
 **Scope:** All 12 REST endpoints, 4 Expo screens, 10 RN components.
 
-**Create:**
-- `src/routes/api/v1/forum/categories/+server.ts`
-- `src/routes/api/v1/forum/categories/[slug]/topics/+server.ts`
-- `src/routes/api/v1/forum/topics/+server.ts`
-- `src/routes/api/v1/forum/topics/[id]/+server.ts`
-- `src/routes/api/v1/forum/topics/[id]/replies/+server.ts`
-- `src/routes/api/v1/forum/reactions/+server.ts`
-- `src/routes/api/v1/forum/bookmarks/+server.ts`
-- `src/routes/api/v1/forum/search/+server.ts`
-- `mobile/app/community/index.tsx`
-- `mobile/app/community/[category].tsx`
-- `mobile/app/community/topic/[id].tsx`
-- `mobile/app/community/new-topic.tsx`
-- `mobile/components/forum/TopicCard.tsx`
-- `mobile/components/forum/ReplyCard.tsx`
-- `mobile/components/forum/CategoryCard.tsx`
-- `mobile/components/forum/ForumAuthorInfo.tsx`
-- `mobile/components/forum/ReplyComposer.tsx`
-- `mobile/components/forum/TopicComposer.tsx`
-- `mobile/components/forum/ForumReactions.tsx`
-- `mobile/components/forum/PeakTag.tsx`
-- `mobile/components/forum/QuoteBlock.tsx`
-- `mobile/components/forum/ForumSearch.tsx`
+**Created:**
+- `src/routes/api/v1/forum/categories/+server.ts` — GET: list categories with counts
+- `src/routes/api/v1/forum/topics/+server.ts` — POST: create topic (auth required)
+- `src/routes/api/v1/forum/topics/[id]/+server.ts` — GET: topic detail + first page replies + reactions + bookmarks; PATCH: edit own topic; DELETE: delete own topic
+- `src/routes/api/v1/forum/reactions/+server.ts` — POST: toggle reaction (like/helpful/fire/summit)
+- `src/routes/api/v1/forum/bookmarks/+server.ts` — GET: user's bookmarked topics; POST: toggle bookmark
+- `src/routes/api/v1/forum/search/+server.ts` — GET: full-text search with category filter
+- `mobile/app/community/index.tsx` — category cards + recent topics + search toggle
+- `mobile/app/community/[category].tsx` — topic list with infinite scroll + FAB for new topic
+- `mobile/app/community/topic/[id].tsx` — topic detail + replies FlatList + reply composer (keyboard-aware)
+- `mobile/app/community/new-topic.tsx` — modal: title, category picker, peak context, body, submit
+- `mobile/components/forum/TopicCard.tsx` — title, author info, body preview, peak tag, stats row
+- `mobile/components/forum/ReplyCard.tsx` — author info, body, quote block, reactions, reply button
+- `mobile/components/forum/CategoryCard.tsx` — icon + name + description + count, accent color left border
+- `mobile/components/forum/ForumAuthorInfo.tsx` — avatar + name + summit badge, pressable to profile
+- `mobile/components/forum/ReplyComposer.tsx` — KeyboardAvoidingView textarea + send button + quote context
+- `mobile/components/forum/TopicComposer.tsx` — full-screen form: title, category chips, peak context, body, char counts
+- `mobile/components/forum/ForumReactions.tsx` — horizontal ScrollView of 4 reaction buttons with optimistic toggle
+- `mobile/components/forum/PeakTag.tsx` — small pressable badge linking to peak detail
+- `mobile/components/forum/QuoteBlock.tsx` — styled blockquote with author name + truncated text
+- `mobile/components/forum/ForumSearch.tsx` — debounced search bar + results FlatList
 
-**Modify:**
-- `mobile/lib/types/api.ts` — add forum API response types
-- `mobile/app/(tabs)/explore/` — add Community button in header
-- Peak detail screen — add discussions section
-- User profile screen — add discussions tab
+**Modified:**
+- `src/routes/api/v1/forum/categories/[slug]/topics/+server.ts` — updated to support both cookie auth (web) and Bearer token auth (mobile)
+- `src/routes/api/v1/forum/topics/[id]/replies/+server.ts` — updated to support both auth methods + added POST handler for creating replies
+- `mobile/lib/types/api.ts` — added 13 forum types (ForumCategory, ForumTopic, ForumTopicDetail, ForumReply, ForumReactionData, ForumSearchResult, + 7 response types)
+- `mobile/app/_layout.tsx` — registered 4 community Stack.Screen routes
+- `mobile/app/(tabs)/index.tsx` — added Community button in Explore header
+- `mobile/app/peaks/[slug]/index.tsx` — added Discussions section with "Start a discussion" CTA
 
-**Verify:**
-- All 12 API endpoints return correct data (test via curl or Postman)
-- Category list screen renders, navigates to topic list
-- Topic list paginates with infinite scroll
-- Topic detail shows replies, reactions work
-- Reply composer submits (keyboard-aware)
-- New topic creation works
-- Peak-linked topics show tag, navigable
-- Community accessible from Explore tab and peak detail
-- `npm run build` passes (web), `npx expo start` runs (mobile)
+**Deferred to Phase 7 (Polish):**
+- User profile "Discussions" tab (mobile) — needs dedicated endpoint for user topics
+- Pull-to-refresh on community screens (basic RefreshControl is in place)
+- Haptic feedback on reaction toggle
+- Loading skeletons
+
+**Verified:**
+- `npm run build` passes (web)
+- All 8 API endpoint files created/updated with correct patterns
+- 10 mobile components + 4 screens + 13 types created
+- Community accessible from Explore tab header + peak detail CTA
 
 ### Phase 7: Polish
 

@@ -344,6 +344,34 @@ export default function PeakDetailScreen() {
 						)}
 					</Section>
 
+					{/* Discussions */}
+					<Section title="Discussions">
+						<Pressable
+							onPress={() =>
+								router.push({
+									pathname: '/community/new-topic' as any,
+									params: {
+										peakId: peak.id,
+										peakName: peak.name,
+										peakSlug: peak.slug
+									}
+								})
+							}
+							style={{
+								alignItems: 'center',
+								justifyContent: 'center',
+								paddingVertical: 12,
+								borderRadius: 10,
+								borderWidth: 1,
+								borderColor: colors.accent.default,
+								borderStyle: 'dashed',
+							}}>
+							<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: colors.accent.default }}>
+								Start a discussion about {peak.name}
+							</Text>
+						</Pressable>
+					</Section>
+
 					{/* Photo Gallery */}
 					<Section title={images.length > 0 ? `Photos (${images.length})` : 'Photos'}>
 						{user && (

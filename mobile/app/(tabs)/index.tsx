@@ -73,23 +73,48 @@ export default function ExploreScreen() {
 			<OfflineBanner />
 			{/* Header */}
 			<View style={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 4 }}>
-				<Text
-					style={{
-						fontFamily: 'InstrumentSerif',
-						fontSize: 28,
-						color: colors.light.textPrimary
-					}}>
-					Explore
-				</Text>
-				<Text
-					style={{
-						fontFamily: 'Inter',
-						fontSize: 14,
-						color: colors.light.textMuted,
-						marginTop: 2
-					}}>
-					{peaks.length} Colorado 14ers
-				</Text>
+				<View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+					<View>
+						<Text
+							style={{
+								fontFamily: 'InstrumentSerif',
+								fontSize: 28,
+								color: colors.light.textPrimary
+							}}>
+							Explore
+						</Text>
+						<Text
+							style={{
+								fontFamily: 'Inter',
+								fontSize: 14,
+								color: colors.light.textMuted,
+								marginTop: 2
+							}}>
+							{peaks.length} Colorado 14ers
+						</Text>
+					</View>
+					<Pressable
+						onPress={() => router.push('/community' as any)}
+						style={{
+							flexDirection: 'row',
+							alignItems: 'center',
+							gap: 6,
+							backgroundColor: colors.accent.default + '15',
+							paddingHorizontal: 12,
+							paddingVertical: 7,
+							borderRadius: 16,
+							marginTop: 4
+						}}>
+						<SymbolView
+							name={{ ios: 'bubble.left.and.bubble.right', android: 'forum', web: 'forum' }}
+							tintColor={colors.accent.default}
+							size={16}
+						/>
+						<Text style={{ fontFamily: 'Inter-Medium', fontSize: 13, color: colors.accent.default }}>
+							Community
+						</Text>
+					</Pressable>
+				</View>
 			</View>
 
 			{/* Search bar */}

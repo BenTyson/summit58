@@ -100,6 +100,22 @@ function RootLayoutNav() {
                       name="users/[id]"
                       options={{ title: 'Profile' }}
                     />
+                    <Stack.Screen
+                      name="community/index"
+                      options={{ title: 'Community' }}
+                    />
+                    <Stack.Screen
+                      name="community/[category]"
+                      options={{ title: 'Topics' }}
+                    />
+                    <Stack.Screen
+                      name="community/topic/[id]"
+                      options={{ title: 'Discussion' }}
+                    />
+                    <Stack.Screen
+                      name="community/new-topic"
+                      options={{ title: 'New Topic', presentation: 'modal' }}
+                    />
                     <Stack.Screen name="+not-found" />
                   </Stack>
                   <SyncToast />
