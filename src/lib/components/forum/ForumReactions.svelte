@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
   import type { ForumReactionData } from '$lib/server/forumReactions';
 
   interface Props {
@@ -11,6 +12,12 @@
 
   let { postType, postId, reactions, isLoggedIn, class: className = '' }: Props = $props();
 
+  let localReactions = $state<ForumReactionData>({ ...reactions });
+
+  $effect(() => {
+    localReactions = { ...reactions };
+  });
+
   const reactionTypes = [
     { key: 'like', label: 'Like' },
     { key: 'helpful', label: 'Helpful' },
@@ -19,20 +26,41 @@
   ];
 
   const hasAny = $derived(
-    Object.values(reactions.counts).some((c) => c > 0) || isLoggedIn
+    Object.values(localReactions.counts).some((c) => c > 0) || isLoggedIn
   );
 </script>
 
 {#if hasAny}
   <div class="flex flex-wrap items-center gap-1.5 {className}">
     {#each reactionTypes as type}
-      {@const count = reactions.counts[type.key] ?? 0}
-      {@const isActive = reactions.userReactions.includes(type.key)}
+      {@const count = localReactions.counts[type.key] ?? 0}
+      {@const isActive = localReactions.userReactions.includes(type.key)}
       {@const showButton = count > 0 || isLoggedIn}
 
       {#if showButton}
         {#if isLoggedIn}
-          <form method="POST" action="?/toggleReaction" class="inline">
+          <form
+            method="POST"
+            action="?/toggleReaction"
+            class="inline"
+            use:enhance={() => {
+              const prev = { counts: { ...localReactions.counts }, userReactions: [...localReactions.userReactions] };
+              localReactions = {
+                counts: {
+                  ...prev.counts,
+                  [type.key]: (prev.counts[type.key] ?? 0) + (isActive ? -1 : 1)
+                },
+                userReactions: isActive
+                  ? prev.userReactions.filter((r) => r !== type.key)
+                  : [...prev.userReactions, type.key]
+              };
+              return async ({ result }) => {
+                if (result.type === 'failure') {
+                  localReactions = prev;
+                }
+              };
+            }}
+          >
             <input type="hidden" name="reactable_type" value={postType} />
             <input type="hidden" name="reactable_id" value={postId} />
             <input type="hidden" name="reaction_type" value={type.key} />

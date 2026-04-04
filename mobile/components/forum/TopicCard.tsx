@@ -1,6 +1,7 @@
 import { View, Text, Pressable } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
 import { ForumAuthorInfo } from './ForumAuthorInfo';
 import { PeakTag } from './PeakTag';
 import type { ForumTopic } from '@/lib/types/api';
@@ -22,15 +23,18 @@ function timeAgo(dateStr: string): string {
 }
 
 export function TopicCard({ topic, onPress }: TopicCardProps) {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
+
 	return (
 		<Pressable
 			onPress={onPress}
 			style={{
-				backgroundColor: colors.light.bgPrimary,
+				backgroundColor: theme.bgPrimary,
 				borderRadius: 12,
 				padding: 14,
 				borderWidth: 1,
-				borderColor: colors.light.border
+				borderColor: theme.border
 			}}>
 			{topic.is_pinned && (
 				<View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 6 }}>
@@ -49,7 +53,7 @@ export function TopicCard({ topic, onPress }: TopicCardProps) {
 				style={{
 					fontFamily: 'Inter-SemiBold',
 					fontSize: 16,
-					color: colors.light.textPrimary,
+					color: theme.textPrimary,
 					lineHeight: 22
 				}}
 				numberOfLines={2}>
@@ -60,7 +64,7 @@ export function TopicCard({ topic, onPress }: TopicCardProps) {
 				style={{
 					fontFamily: 'Inter',
 					fontSize: 14,
-					color: colors.light.textSecondary,
+					color: theme.textSecondary,
 					lineHeight: 20,
 					marginTop: 4
 				}}
@@ -87,25 +91,25 @@ export function TopicCard({ topic, onPress }: TopicCardProps) {
 					marginTop: 10,
 					paddingTop: 10,
 					borderTopWidth: 1,
-					borderTopColor: colors.light.border
+					borderTopColor: theme.border
 				}}>
 				<View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
 					<SymbolView
 						name={{ ios: 'bubble.left', android: 'chat_bubble', web: 'chat_bubble' }}
-						tintColor={colors.light.textMuted}
+						tintColor={theme.textMuted}
 						size={14}
 					/>
-					<Text style={{ fontFamily: 'Inter', fontSize: 12, color: colors.light.textMuted }}>
+					<Text style={{ fontFamily: 'Inter', fontSize: 12, color: theme.textMuted }}>
 						{topic.reply_count}
 					</Text>
 				</View>
 				<View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
 					<SymbolView
 						name={{ ios: 'eye', android: 'visibility', web: 'visibility' }}
-						tintColor={colors.light.textMuted}
+						tintColor={theme.textMuted}
 						size={14}
 					/>
-					<Text style={{ fontFamily: 'Inter', fontSize: 12, color: colors.light.textMuted }}>
+					<Text style={{ fontFamily: 'Inter', fontSize: 12, color: theme.textMuted }}>
 						{topic.view_count}
 					</Text>
 				</View>
@@ -113,16 +117,16 @@ export function TopicCard({ topic, onPress }: TopicCardProps) {
 					<View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
 						<SymbolView
 							name={{ ios: 'heart', android: 'favorite_border', web: 'favorite_border' }}
-							tintColor={colors.light.textMuted}
+							tintColor={theme.textMuted}
 							size={14}
 						/>
-						<Text style={{ fontFamily: 'Inter', fontSize: 12, color: colors.light.textMuted }}>
+						<Text style={{ fontFamily: 'Inter', fontSize: 12, color: theme.textMuted }}>
 							{topic.reaction_count}
 						</Text>
 					</View>
 				)}
 				<View style={{ flex: 1 }} />
-				<Text style={{ fontFamily: 'Inter', fontSize: 12, color: colors.light.textMuted }}>
+				<Text style={{ fontFamily: 'Inter', fontSize: 12, color: theme.textMuted }}>
 					{timeAgo(topic.last_reply_at || topic.created_at)}
 				</Text>
 			</View>

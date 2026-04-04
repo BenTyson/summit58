@@ -26,6 +26,11 @@
   );
 
   let bookmarkSubmitting = $state(false);
+  let localBookmarked = $state(isBookmarked);
+
+  $effect(() => {
+    localBookmarked = isBookmarked;
+  });
   let editing = $state(false);
   let editTitle = $state('');
   let editBody = $state('');
@@ -125,9 +130,13 @@
           action="?/toggleBookmark"
           use:enhance={() => {
             bookmarkSubmitting = true;
-            return async ({ update }) => {
-              await update();
+            const prev = localBookmarked;
+            localBookmarked = !localBookmarked;
+            return async ({ result }) => {
               bookmarkSubmitting = false;
+              if (result.type === 'failure') {
+                localBookmarked = prev;
+              }
             };
           }}
         >
@@ -138,13 +147,13 @@
             class="
               flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-lg
               transition-all duration-200
-              {isBookmarked
+              {localBookmarked
                 ? 'text-accent bg-accent/10 hover:bg-accent/20'
                 : 'text-slate-400 hover:text-accent hover:bg-slate-100 dark:text-slate-500 dark:hover:bg-slate-700'}
             "
-            aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark this topic'}
+            aria-label={localBookmarked ? 'Remove bookmark' : 'Bookmark this topic'}
           >
-            <svg class="h-5 w-5" fill={isBookmarked ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5" fill={localBookmarked ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
             </svg>
           </button>

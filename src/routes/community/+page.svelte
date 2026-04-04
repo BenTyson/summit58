@@ -19,6 +19,15 @@
   const categorySlugMap = $derived(
     new Map(categories.map((c) => [c.id, c.slug]))
   );
+  const topicViews = $derived(data.topicViews ?? {} as Record<string, string>);
+
+  function isUnread(topic: { id: string; last_reply_at?: string | null; updated_at?: string; created_at: string }): boolean {
+    if (!data.isLoggedIn) return false;
+    const viewedAt = topicViews[topic.id];
+    if (!viewedAt) return true;
+    const lastActivity = topic.last_reply_at || topic.updated_at || topic.created_at;
+    return new Date(lastActivity) > new Date(viewedAt);
+  }
 </script>
 
 <svelte:head>
@@ -68,9 +77,11 @@
     <!-- Categories Grid -->
     <section>
       <h2 class="heading-section text-slate-900 dark:text-white mb-6">Categories</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
         {#each categories as category (category.id)}
-          <CategoryCard {category} />
+          <div class="will-animate animate-fade-in-up">
+            <CategoryCard {category} />
+          </div>
         {/each}
       </div>
     </section>
@@ -86,17 +97,19 @@
           Recent
         </h2>
         {#if recentTopics.length > 0}
-          <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-3 stagger-children">
             {#each recentTopics as topic (topic.id)}
-              <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} />
+              <div class="will-animate animate-fade-in-up">
+                <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} isUnread={isUnread(topic)} />
+              </div>
             {/each}
           </div>
         {:else}
           <div class="rounded-xl border border-dashed border-slate-300 dark:border-slate-600 p-8 text-center">
             <svg class="h-10 w-10 mx-auto text-slate-300 dark:text-slate-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p class="text-slate-500 dark:text-slate-400 text-sm">No discussions yet. Be the first to start one!</p>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">No discussions yet. Pick a category above and start the first one!</p>
           </div>
         {/if}
       </section>
@@ -111,9 +124,11 @@
           Popular
         </h2>
         {#if popularTopics.length > 0}
-          <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-3 stagger-children">
             {#each popularTopics as topic (topic.id)}
-              <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} />
+              <div class="will-animate animate-fade-in-up">
+                <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} isUnread={isUnread(topic)} />
+              </div>
             {/each}
           </div>
         {:else}
@@ -138,7 +153,7 @@
         </h2>
         <div class="grid lg:grid-cols-2 gap-3">
           {#each bookmarkedTopics as topic (topic.id)}
-            <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} />
+            <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} isUnread={isUnread(topic)} />
           {/each}
         </div>
       </section>

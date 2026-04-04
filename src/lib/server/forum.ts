@@ -690,3 +690,17 @@ export async function recordTopicView(
 			{ onConflict: 'topic_id,user_id' }
 		);
 }
+
+export async function getUserTopicViewTimestamps(
+	supabase: SupabaseClient<Database>,
+	userId: string,
+	topicIds: string[]
+): Promise<Record<string, string>> {
+	if (!topicIds.length) return {};
+	const { data } = await db(supabase)
+		.from('forum_topic_views')
+		.select('topic_id, last_viewed_at')
+		.eq('user_id', userId)
+		.in('topic_id', topicIds);
+	return Object.fromEntries((data ?? []).map((v) => [v.topic_id, v.last_viewed_at]));
+}

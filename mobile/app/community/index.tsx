@@ -4,9 +4,11 @@ import { Stack, router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
 import { apiFetch } from '@/lib/api';
-import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { CategoryCardSkeleton } from '@/components/forum/CategoryCardSkeleton';
+import { TopicCardSkeleton } from '@/components/forum/TopicCardSkeleton';
 import { CategoryCard } from '@/components/forum/CategoryCard';
 import { TopicCard } from '@/components/forum/TopicCard';
 import { ForumSearch } from '@/components/forum/ForumSearch';
@@ -19,6 +21,8 @@ import type {
 } from '@/lib/types/api';
 
 export default function CommunityScreen() {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 	const [categories, setCategories] = useState<ForumCategory[]>([]);
 	const [recentTopics, setRecentTopics] = useState<ForumTopic[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -75,7 +79,7 @@ export default function CommunityScreen() {
 
 	if (showSearch) {
 		return (
-			<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+			<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 				<Stack.Screen
 					options={{
 						title: 'Search',
@@ -95,16 +99,27 @@ export default function CommunityScreen() {
 
 	if (loading) {
 		return (
-			<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+			<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 				<Stack.Screen options={{ title: 'Community' }} />
-				<LoadingState message="Loading community..." />
+				<View style={{ padding: 16, gap: 8 }}>
+					{[0, 1, 2].map((i) => (
+						<View key={i} style={{ paddingVertical: 4 }}>
+							<CategoryCardSkeleton />
+						</View>
+					))}
+					{[0, 1].map((i) => (
+						<View key={`t-${i}`} style={{ paddingVertical: 4 }}>
+							<TopicCardSkeleton />
+						</View>
+					))}
+				</View>
 			</View>
 		);
 	}
 
 	if (error) {
 		return (
-			<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+			<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 				<Stack.Screen options={{ title: 'Community' }} />
 				<ErrorState message={error} onRetry={load} />
 			</View>
@@ -119,7 +134,7 @@ export default function CommunityScreen() {
 	];
 
 	return (
-		<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+		<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 			<Stack.Screen
 				options={{
 					title: 'Community',
@@ -149,7 +164,7 @@ export default function CommunityScreen() {
 									style={{
 										fontFamily: 'InstrumentSerif',
 										fontSize: 24,
-										color: colors.light.textPrimary
+										color: theme.textPrimary
 									}}>
 									Discussion Categories
 								</Text>
@@ -157,7 +172,7 @@ export default function CommunityScreen() {
 									style={{
 										fontFamily: 'Inter',
 										fontSize: 14,
-										color: colors.light.textMuted,
+										color: theme.textMuted,
 										marginTop: 2
 									}}>
 									Join the conversation with fellow 14er hikers
@@ -184,7 +199,7 @@ export default function CommunityScreen() {
 									style={{
 										fontFamily: 'Inter-SemiBold',
 										fontSize: 18,
-										color: colors.light.textPrimary
+										color: theme.textPrimary
 									}}>
 									Recent Discussions
 								</Text>

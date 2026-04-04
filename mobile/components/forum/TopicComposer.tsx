@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
 import type { ForumCategory } from '@/lib/types/api';
 
 interface TopicComposerProps {
@@ -17,6 +18,8 @@ interface TopicComposerProps {
 }
 
 export function TopicComposer({ categories, initialCategoryId, initialPeak, onSubmit }: TopicComposerProps) {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
 	const [categoryId, setCategoryId] = useState(initialCategoryId || categories[0]?.id || '');
@@ -46,41 +49,41 @@ export function TopicComposer({ categories, initialCategoryId, initialPeak, onSu
 
 	return (
 		<ScrollView
-			style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}
+			style={{ flex: 1, backgroundColor: theme.bgPrimary }}
 			contentContainerStyle={{ padding: 20, gap: 16 }}
 			keyboardShouldPersistTaps="handled">
 			{/* Title */}
 			<View>
-				<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: colors.light.textPrimary, marginBottom: 6 }}>
+				<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: theme.textPrimary, marginBottom: 6 }}>
 					Title
 				</Text>
 				<TextInput
 					style={{
 						fontFamily: 'Inter',
 						fontSize: 16,
-						color: colors.light.textPrimary,
-						backgroundColor: colors.light.bgSecondary,
+						color: theme.textPrimary,
+						backgroundColor: theme.bgSecondary,
 						borderRadius: 10,
 						paddingHorizontal: 14,
 						paddingVertical: 12,
 						borderWidth: 1,
-						borderColor: colors.light.border
+						borderColor: theme.border
 					}}
 					placeholder="What's on your mind?"
-					placeholderTextColor={colors.light.textMuted}
+					placeholderTextColor={theme.textMuted}
 					value={title}
 					onChangeText={setTitle}
 					maxLength={200}
 					autoFocus
 				/>
-				<Text style={{ fontFamily: 'Inter', fontSize: 11, color: colors.light.textMuted, textAlign: 'right', marginTop: 4 }}>
+				<Text style={{ fontFamily: 'Inter', fontSize: 11, color: theme.textMuted, textAlign: 'right', marginTop: 4 }}>
 					{title.length}/200
 				</Text>
 			</View>
 
 			{/* Category picker */}
 			<View>
-				<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: colors.light.textPrimary, marginBottom: 6 }}>
+				<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: theme.textPrimary, marginBottom: 6 }}>
 					Category
 				</Text>
 				<ScrollView
@@ -95,15 +98,15 @@ export function TopicComposer({ categories, initialCategoryId, initialPeak, onSu
 								paddingHorizontal: 14,
 								paddingVertical: 8,
 								borderRadius: 16,
-								backgroundColor: categoryId === cat.id ? colors.accent.default : colors.light.bgSecondary,
+								backgroundColor: categoryId === cat.id ? colors.accent.default : theme.bgSecondary,
 								borderWidth: 1,
-								borderColor: categoryId === cat.id ? colors.accent.default : colors.light.border
+								borderColor: categoryId === cat.id ? colors.accent.default : theme.border
 							}}>
 							<Text
 								style={{
 									fontFamily: 'Inter-Medium',
 									fontSize: 13,
-									color: categoryId === cat.id ? '#ffffff' : colors.light.textSecondary
+									color: categoryId === cat.id ? '#ffffff' : theme.textSecondary
 								}}>
 								{cat.name}
 							</Text>
@@ -136,31 +139,31 @@ export function TopicComposer({ categories, initialCategoryId, initialPeak, onSu
 
 			{/* Body */}
 			<View>
-				<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: colors.light.textPrimary, marginBottom: 6 }}>
+				<Text style={{ fontFamily: 'Inter-Medium', fontSize: 14, color: theme.textPrimary, marginBottom: 6 }}>
 					Body
 				</Text>
 				<TextInput
 					style={{
 						fontFamily: 'Inter',
 						fontSize: 15,
-						color: colors.light.textPrimary,
-						backgroundColor: colors.light.bgSecondary,
+						color: theme.textPrimary,
+						backgroundColor: theme.bgSecondary,
 						borderRadius: 10,
 						paddingHorizontal: 14,
 						paddingVertical: 12,
 						minHeight: 160,
 						textAlignVertical: 'top',
 						borderWidth: 1,
-						borderColor: colors.light.border
+						borderColor: theme.border
 					}}
 					placeholder="Share your thoughts, ask a question, or report conditions..."
-					placeholderTextColor={colors.light.textMuted}
+					placeholderTextColor={theme.textMuted}
 					value={body}
 					onChangeText={setBody}
 					multiline
 					maxLength={10000}
 				/>
-				<Text style={{ fontFamily: 'Inter', fontSize: 11, color: colors.light.textMuted, textAlign: 'right', marginTop: 4 }}>
+				<Text style={{ fontFamily: 'Inter', fontSize: 11, color: theme.textMuted, textAlign: 'right', marginTop: 4 }}>
 					{body.length}/10000
 				</Text>
 			</View>
@@ -176,7 +179,7 @@ export function TopicComposer({ categories, initialCategoryId, initialPeak, onSu
 				onPress={handleSubmit}
 				disabled={!canSubmit}
 				style={{
-					backgroundColor: canSubmit ? colors.accent.default : colors.light.bgTertiary,
+					backgroundColor: canSubmit ? colors.accent.default : theme.bgTertiary,
 					paddingVertical: 14,
 					borderRadius: 10,
 					alignItems: 'center',
@@ -191,7 +194,7 @@ export function TopicComposer({ categories, initialCategoryId, initialPeak, onSu
 						style={{
 							fontFamily: 'Inter-SemiBold',
 							fontSize: 16,
-							color: canSubmit ? '#ffffff' : colors.light.textMuted
+							color: canSubmit ? '#ffffff' : theme.textMuted
 						}}>
 						Post Topic
 					</Text>

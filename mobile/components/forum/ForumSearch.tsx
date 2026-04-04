@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import { View, Text, TextInput, FlatList, Pressable, ActivityIndicator } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
 import { apiFetch } from '@/lib/api';
 import type { ForumSearchResult, ForumSearchResponse } from '@/lib/types/api';
 
@@ -10,6 +11,8 @@ interface ForumSearchProps {
 }
 
 export function ForumSearch({ onResultPress }: ForumSearchProps) {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 	const [query, setQuery] = useState('');
 	const [results, setResults] = useState<ForumSearchResult[]>([]);
 	const [loading, setLoading] = useState(false);
@@ -47,18 +50,18 @@ export function ForumSearch({ onResultPress }: ForumSearchProps) {
 				style={{
 					flexDirection: 'row',
 					alignItems: 'center',
-					backgroundColor: colors.light.bgSecondary,
+					backgroundColor: theme.bgSecondary,
 					borderRadius: 10,
 					paddingHorizontal: 12,
 					height: 40,
 					marginHorizontal: 16,
 					marginVertical: 8,
 					borderWidth: 1,
-					borderColor: colors.light.border
+					borderColor: theme.border
 				}}>
 				<SymbolView
 					name={{ ios: 'magnifyingglass', android: 'search', web: 'search' }}
-					tintColor={colors.light.textMuted}
+					tintColor={theme.textMuted}
 					size={18}
 				/>
 				<TextInput
@@ -66,11 +69,11 @@ export function ForumSearch({ onResultPress }: ForumSearchProps) {
 						flex: 1,
 						fontFamily: 'Inter',
 						fontSize: 15,
-						color: colors.light.textPrimary,
+						color: theme.textPrimary,
 						marginLeft: 8
 					}}
 					placeholder="Search discussions..."
-					placeholderTextColor={colors.light.textMuted}
+					placeholderTextColor={theme.textMuted}
 					value={query}
 					onChangeText={handleChange}
 					autoCorrect={false}
@@ -85,7 +88,7 @@ export function ForumSearch({ onResultPress }: ForumSearchProps) {
 						hitSlop={8}>
 						<SymbolView
 							name={{ ios: 'xmark.circle.fill', android: 'cancel', web: 'cancel' }}
-							tintColor={colors.light.textMuted}
+							tintColor={theme.textMuted}
 							size={18}
 						/>
 					</Pressable>
@@ -107,20 +110,20 @@ export function ForumSearch({ onResultPress }: ForumSearchProps) {
 						style={{
 							padding: 14,
 							borderBottomWidth: 1,
-							borderBottomColor: colors.light.border
+							borderBottomColor: theme.border
 						}}>
 						<View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 }}>
 							<Text
 								style={{
 									fontFamily: 'Inter',
 									fontSize: 11,
-									color: colors.light.textMuted,
+									color: theme.textMuted,
 									textTransform: 'uppercase'
 								}}>
 								{item.result_type}
 							</Text>
-							<Text style={{ color: colors.light.textMuted }}>&#183;</Text>
-							<Text style={{ fontFamily: 'Inter', fontSize: 11, color: colors.light.textMuted }}>
+							<Text style={{ color: theme.textMuted }}>&#183;</Text>
+							<Text style={{ fontFamily: 'Inter', fontSize: 11, color: theme.textMuted }}>
 								{item.category_slug}
 							</Text>
 						</View>
@@ -128,7 +131,7 @@ export function ForumSearch({ onResultPress }: ForumSearchProps) {
 							style={{
 								fontFamily: 'Inter-SemiBold',
 								fontSize: 15,
-								color: colors.light.textPrimary
+								color: theme.textPrimary
 							}}
 							numberOfLines={1}>
 							{item.topic_title}
@@ -137,7 +140,7 @@ export function ForumSearch({ onResultPress }: ForumSearchProps) {
 							style={{
 								fontFamily: 'Inter',
 								fontSize: 13,
-								color: colors.light.textSecondary,
+								color: theme.textSecondary,
 								marginTop: 2,
 								lineHeight: 18
 							}}
@@ -149,7 +152,7 @@ export function ForumSearch({ onResultPress }: ForumSearchProps) {
 				ListEmptyComponent={
 					query.trim() && !loading ? (
 						<View style={{ padding: 40, alignItems: 'center' }}>
-							<Text style={{ fontFamily: 'Inter', fontSize: 14, color: colors.light.textMuted }}>
+							<Text style={{ fontFamily: 'Inter', fontSize: 14, color: theme.textMuted }}>
 								No results found
 							</Text>
 						</View>

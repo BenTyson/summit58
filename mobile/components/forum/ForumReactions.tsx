@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Text, Pressable, ScrollView } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
+import * as Haptics from 'expo-haptics';
 import { apiFetch } from '@/lib/api';
 import type { ForumReactionData } from '@/lib/types/api';
 
@@ -27,11 +29,14 @@ interface ForumReactionsProps {
 }
 
 export function ForumReactions({ reactableType, reactableId, data, onUpdate }: ForumReactionsProps) {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 	const [reactionData, setReactionData] = useState(data);
 	const [toggling, setToggling] = useState<string | null>(null);
 
 	const handleToggle = async (reactionType: string) => {
 		if (toggling) return;
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 		setToggling(reactionType);
 
 		const prev = reactionData;
@@ -87,11 +92,11 @@ export function ForumReactions({ reactableType, reactableId, data, onUpdate }: F
 								paddingHorizontal: 8,
 								paddingVertical: 4,
 								borderRadius: 14,
-								backgroundColor: colors.light.bgSecondary
+								backgroundColor: theme.bgSecondary
 							}}>
 							<SymbolView
 								name={{ ios: reaction.ios as any, android: reaction.android as any, web: reaction.android as any }}
-								tintColor={colors.light.textMuted}
+								tintColor={theme.textMuted}
 								size={14}
 							/>
 						</Pressable>
@@ -109,7 +114,7 @@ export function ForumReactions({ reactableType, reactableId, data, onUpdate }: F
 							paddingHorizontal: 10,
 							paddingVertical: 5,
 							borderRadius: 14,
-							backgroundColor: isActive ? colors.accent.default + '20' : colors.light.bgSecondary,
+							backgroundColor: isActive ? colors.accent.default + '20' : theme.bgSecondary,
 							borderWidth: isActive ? 1 : 0,
 							borderColor: colors.accent.default + '40'
 						}}>
@@ -119,7 +124,7 @@ export function ForumReactions({ reactableType, reactableId, data, onUpdate }: F
 								android: reaction.android as any,
 								web: reaction.android as any
 							}}
-							tintColor={isActive ? colors.accent.default : colors.light.textMuted}
+							tintColor={isActive ? colors.accent.default : theme.textMuted}
 							size={14}
 						/>
 						{count > 0 && (
@@ -127,7 +132,7 @@ export function ForumReactions({ reactableType, reactableId, data, onUpdate }: F
 								style={{
 									fontFamily: 'Inter-Medium',
 									fontSize: 12,
-									color: isActive ? colors.accent.default : colors.light.textMuted
+									color: isActive ? colors.accent.default : theme.textMuted
 								}}>
 								{count}
 							</Text>

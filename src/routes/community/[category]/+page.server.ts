@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { createSupabaseServerClient } from '$lib/server/supabase';
-import { getCategoryBySlug, getTopicsByCategory } from '$lib/server/forum';
+import { getCategoryBySlug, getTopicsByCategory, getUserTopicViewTimestamps } from '$lib/server/forum';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const supabase = createSupabaseServerClient(cookies);
@@ -13,9 +13,25 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
 	const { topics, nextCursor } = await getTopicsByCategory(supabase, category.id, { limit: 20 });
 
+	const {
+		data: { session }
+	} = await supabase.auth.getSession();
+	const userId = session?.user?.id ?? null;
+
+	let topicViews: Record<string, string> = {};
+	if (userId && topics.length > 0) {
+		topicViews = await getUserTopicViewTimestamps(
+			supabase,
+			userId,
+			topics.map((t) => t.id)
+		);
+	}
+
 	return {
 		category,
 		topics,
-		nextCursor
+		nextCursor,
+		topicViews,
+		isLoggedIn: !!session
 	};
 };

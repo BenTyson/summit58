@@ -4,14 +4,17 @@ import { useLocalSearchParams, Stack, router } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
 import { apiFetch } from '@/lib/api';
 import { useSession } from '@/lib/auth/AuthProvider';
-import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { TopicCardSkeleton } from '@/components/forum/TopicCardSkeleton';
 import { TopicCard } from '@/components/forum/TopicCard';
 import type { ForumTopic, ForumTopicsResponse } from '@/lib/types/api';
 
 export default function CategoryScreen() {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 	const { category: slug } = useLocalSearchParams<{ category: string }>();
 	const { user } = useSession();
 	const [topics, setTopics] = useState<ForumTopic[]>([]);
@@ -78,16 +81,20 @@ export default function CategoryScreen() {
 
 	if (loading) {
 		return (
-			<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+			<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 				<Stack.Screen options={{ title: categoryTitle }} />
-				<LoadingState />
+				<View style={{ padding: 16, gap: 8 }}>
+					{[0, 1, 2, 3].map((i) => (
+						<TopicCardSkeleton key={i} />
+					))}
+				</View>
 			</View>
 		);
 	}
 
 	if (error) {
 		return (
-			<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+			<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 				<Stack.Screen options={{ title: categoryTitle }} />
 				<ErrorState message={error} onRetry={() => loadTopics()} />
 			</View>
@@ -95,7 +102,7 @@ export default function CategoryScreen() {
 	}
 
 	return (
-		<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+		<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 			<Stack.Screen options={{ title: categoryTitle }} />
 
 			<FlatList
@@ -119,14 +126,14 @@ export default function CategoryScreen() {
 					<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 60 }}>
 						<SymbolView
 							name={{ ios: 'bubble.left.and.bubble.right', android: 'forum', web: 'forum' }}
-							tintColor={colors.light.textMuted}
+							tintColor={theme.textMuted}
 							size={48}
 						/>
 						<Text
 							style={{
 								fontFamily: 'Inter-Medium',
 								fontSize: 16,
-								color: colors.light.textPrimary,
+								color: theme.textPrimary,
 								marginTop: 16,
 								textAlign: 'center'
 							}}>
@@ -136,7 +143,7 @@ export default function CategoryScreen() {
 							style={{
 								fontFamily: 'Inter',
 								fontSize: 14,
-								color: colors.light.textMuted,
+								color: theme.textMuted,
 								marginTop: 6,
 								textAlign: 'center',
 								paddingHorizontal: 40
@@ -148,7 +155,7 @@ export default function CategoryScreen() {
 				ListFooterComponent={
 					loadingMore ? (
 						<View style={{ padding: 16, alignItems: 'center' }}>
-							<Text style={{ fontFamily: 'Inter', fontSize: 13, color: colors.light.textMuted }}>
+							<Text style={{ fontFamily: 'Inter', fontSize: 13, color: theme.textMuted }}>
 								Loading more...
 							</Text>
 						</View>

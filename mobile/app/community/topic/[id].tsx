@@ -3,10 +3,12 @@ import { View, Text, FlatList, RefreshControl } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
 import { apiFetch } from '@/lib/api';
 import { useSession } from '@/lib/auth/AuthProvider';
-import { LoadingState } from '@/components/ui/LoadingState';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { TopicCardSkeleton } from '@/components/forum/TopicCardSkeleton';
+import { SkeletonBlock } from '@/components/forum/SkeletonBlock';
 import { ForumAuthorInfo } from '@/components/forum/ForumAuthorInfo';
 import { PeakTag } from '@/components/forum/PeakTag';
 import { ForumReactions } from '@/components/forum/ForumReactions';
@@ -21,6 +23,8 @@ import type {
 } from '@/lib/types/api';
 
 export default function TopicDetailScreen() {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 	const { id } = useLocalSearchParams<{ id: string }>();
 	const { user } = useSession();
 	const [topic, setTopic] = useState<ForumTopicDetail | null>(null);
@@ -106,16 +110,36 @@ export default function TopicDetailScreen() {
 
 	if (loading) {
 		return (
-			<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+			<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 				<Stack.Screen options={{ title: '' }} />
-				<LoadingState />
+				<View style={{ padding: 16, gap: 12 }}>
+					{/* Topic header skeleton */}
+					<View style={{ backgroundColor: theme.bgPrimary, borderRadius: 12, padding: 16, borderWidth: 1, borderColor: theme.border }}>
+						<SkeletonBlock width={80} height={12} borderRadius={4} />
+						<View style={{ marginTop: 10 }}>
+							<SkeletonBlock width="85%" height={22} borderRadius={4} />
+						</View>
+						<View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 14 }}>
+							<SkeletonBlock width={36} height={36} borderRadius={18} />
+							<SkeletonBlock width={100} height={14} borderRadius={4} />
+						</View>
+						<View style={{ marginTop: 14, gap: 6 }}>
+							<SkeletonBlock width="100%" height={14} borderRadius={4} />
+							<SkeletonBlock width="100%" height={14} borderRadius={4} />
+							<SkeletonBlock width="70%" height={14} borderRadius={4} />
+						</View>
+					</View>
+					{/* Reply skeletons */}
+					<TopicCardSkeleton />
+					<TopicCardSkeleton />
+				</View>
 			</View>
 		);
 	}
 
 	if (error || !topic) {
 		return (
-			<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+			<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 				<Stack.Screen options={{ title: 'Topic' }} />
 				<ErrorState message={error || 'Topic not found'} onRetry={loadTopic} />
 			</View>
@@ -131,7 +155,7 @@ export default function TopicDetailScreen() {
 				style={{
 					fontFamily: 'Inter',
 					fontSize: 12,
-					color: colors.light.textMuted,
+					color: theme.textMuted,
 					textTransform: 'uppercase',
 					letterSpacing: 0.5,
 					marginBottom: 6
@@ -143,7 +167,7 @@ export default function TopicDetailScreen() {
 				style={{
 					fontFamily: 'InstrumentSerif',
 					fontSize: 24,
-					color: colors.light.textPrimary,
+					color: theme.textPrimary,
 					lineHeight: 30
 				}}>
 				{topic.title}
@@ -164,7 +188,7 @@ export default function TopicDetailScreen() {
 				style={{
 					fontFamily: 'Inter',
 					fontSize: 15,
-					color: colors.light.textSecondary,
+					color: theme.textSecondary,
 					lineHeight: 24,
 					marginTop: 16
 				}}>
@@ -172,7 +196,7 @@ export default function TopicDetailScreen() {
 			</Text>
 
 			{/* Reactions */}
-			<View style={{ marginTop: 16, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: colors.light.border }}>
+			<View style={{ marginTop: 16, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: theme.border }}>
 				<ForumReactions
 					reactableType="topic"
 					reactableId={topic.id}
@@ -187,7 +211,7 @@ export default function TopicDetailScreen() {
 					style={{
 						fontFamily: 'Inter-SemiBold',
 						fontSize: 16,
-						color: colors.light.textPrimary,
+						color: theme.textPrimary,
 						marginTop: 16,
 						marginBottom: 4
 					}}>
@@ -198,7 +222,7 @@ export default function TopicDetailScreen() {
 	);
 
 	return (
-		<View style={{ flex: 1, backgroundColor: colors.light.bgPrimary }}>
+		<View style={{ flex: 1, backgroundColor: theme.bgPrimary }}>
 			<Stack.Screen options={{ title: topic.category.name }} />
 
 			<FlatList
@@ -224,7 +248,7 @@ export default function TopicDetailScreen() {
 				ListFooterComponent={
 					loadingMore ? (
 						<View style={{ padding: 16, alignItems: 'center' }}>
-							<Text style={{ fontFamily: 'Inter', fontSize: 13, color: colors.light.textMuted }}>
+							<Text style={{ fontFamily: 'Inter', fontSize: 13, color: theme.textMuted }}>
 								Loading more...
 							</Text>
 						</View>

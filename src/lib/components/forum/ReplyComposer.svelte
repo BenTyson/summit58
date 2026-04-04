@@ -71,13 +71,22 @@
           transition-colors
         "
         maxlength="5000"
+        onkeydown={(e) => {
+          if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && canSubmit) {
+            e.preventDefault();
+            e.currentTarget.closest('form')?.requestSubmit();
+          }
+        }}
       ></textarea>
 
       <!-- Footer: char count + submit -->
       <div class="mt-3 flex items-center justify-between">
-        <span class="text-xs text-slate-400 dark:text-slate-500 {charCount > 4500 ? 'text-semantic-warning' : ''}">
-          {charCount.toLocaleString()} / 5,000
-        </span>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-slate-400 dark:text-slate-500 {charCount > 4500 ? 'text-semantic-warning' : ''}">
+            {charCount.toLocaleString()} / 5,000
+          </span>
+          <span class="hidden sm:inline text-xs text-slate-300 dark:text-slate-600">Cmd+Enter to submit</span>
+        </div>
         <button
           type="submit"
           disabled={!canSubmit}

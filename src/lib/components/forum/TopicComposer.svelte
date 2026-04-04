@@ -213,11 +213,17 @@
           resize-y min-h-[200px]
           transition-colors
         "
+        onkeydown={(e) => {
+          if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && canSubmit) {
+            e.preventDefault();
+            e.currentTarget.closest('form')?.requestSubmit();
+          }
+        }}
       ></textarea>
     {/if}
 
     <div class="mt-1 flex justify-between text-xs text-slate-400 dark:text-slate-500">
-      <span>Markdown supported</span>
+      <span>Markdown supported <span class="hidden sm:inline ml-2 text-slate-300 dark:text-slate-600">Cmd+Enter to submit</span></span>
       <span class={bodyCharCount > 9000 ? 'text-semantic-warning' : ''}>
         {bodyCharCount.toLocaleString()} / 10,000
       </span>

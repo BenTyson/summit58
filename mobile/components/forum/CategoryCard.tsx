@@ -1,6 +1,7 @@
 import { View, Text, Pressable } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
 import type { ForumCategory } from '@/lib/types/api';
 
 const COLOR_MAP: Record<string, string> = {
@@ -27,6 +28,8 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ category, onPress }: CategoryCardProps) {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 	const accentColor = COLOR_MAP[category.color] ?? colors.mountain.blueLight;
 	const iconSpec = ICON_MAP[category.icon] ?? { ios: 'bubble.left', android: 'chat_bubble', web: 'chat_bubble' };
 
@@ -34,11 +37,11 @@ export function CategoryCard({ category, onPress }: CategoryCardProps) {
 		<Pressable
 			onPress={onPress}
 			style={{
-				backgroundColor: colors.light.bgPrimary,
+				backgroundColor: theme.bgPrimary,
 				borderRadius: 12,
 				padding: 14,
 				borderWidth: 1,
-				borderColor: colors.light.border,
+				borderColor: theme.border,
 				borderLeftWidth: 3,
 				borderLeftColor: accentColor
 			}}>
@@ -59,7 +62,7 @@ export function CategoryCard({ category, onPress }: CategoryCardProps) {
 						style={{
 							fontFamily: 'Inter-SemiBold',
 							fontSize: 15,
-							color: colors.light.textPrimary
+							color: theme.textPrimary
 						}}>
 						{category.name}
 					</Text>
@@ -67,7 +70,7 @@ export function CategoryCard({ category, onPress }: CategoryCardProps) {
 						style={{
 							fontFamily: 'Inter',
 							fontSize: 13,
-							color: colors.light.textMuted,
+							color: theme.textMuted,
 							marginTop: 1
 						}}
 						numberOfLines={1}>
@@ -78,7 +81,7 @@ export function CategoryCard({ category, onPress }: CategoryCardProps) {
 					style={{
 						fontFamily: 'Inter',
 						fontSize: 12,
-						color: colors.light.textMuted
+						color: theme.textMuted
 					}}>
 					{category.topic_count} topic{category.topic_count !== 1 ? 's' : ''}
 				</Text>

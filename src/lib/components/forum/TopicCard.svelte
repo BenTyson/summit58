@@ -6,10 +6,11 @@
   interface Props {
     topic: ForumTopicWithAuthor;
     categorySlug: string;
+    isUnread?: boolean;
     class?: string;
   }
 
-  let { topic, categorySlug, class: className = '' }: Props = $props();
+  let { topic, categorySlug, isUnread = false, class: className = '' }: Props = $props();
 
   const bodyPreview = $derived(
     topic.body.replace(/[#*`>\[\]!_~]/g, '').slice(0, 140) + (topic.body.length > 140 ? '...' : '')
@@ -44,7 +45,10 @@
     {className}
   "
 >
-  <div class="p-4 sm:p-5">
+  <div class="relative p-4 sm:p-5">
+    {#if isUnread}
+      <span class="absolute top-3 right-3 h-2 w-2 rounded-full bg-accent" aria-label="Unread"></span>
+    {/if}
     <!-- Header: Author + Pinned badge -->
     <div class="flex items-center justify-between gap-3 mb-2.5">
       <ForumAuthorInfo author={topic.author} size="sm" />

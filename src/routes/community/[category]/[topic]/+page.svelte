@@ -4,6 +4,7 @@
   import TopicDetailComponent from '$lib/components/forum/TopicDetail.svelte';
   import ReplyCard from '$lib/components/forum/ReplyCard.svelte';
   import ReplyComposer from '$lib/components/forum/ReplyComposer.svelte';
+  import TopicCardSkeleton from '$lib/components/forum/TopicCardSkeleton.svelte';
   import type { ForumReplyWithAuthor } from '$lib/server/forum';
   import type { ForumReactionData } from '$lib/server/forumReactions';
   import type { PageData } from './$types';
@@ -15,11 +16,14 @@
   let { data }: Props = $props();
 
   const topic = $derived(data.topic);
+  const ogDescription = $derived(topic.body.replace(/[#*`>\[\]!_~]/g, '').slice(0, 200));
+  const canonicalUrl = $derived(`https://saltgoat.co/community/${topic.category.slug}/${topic.slug}`);
 
   let replies = $state<ForumReplyWithAuthor[]>(data.replies);
   let nextCursor = $state<string | null>(data.nextCursor);
   let replyReactions = $state<Record<string, ForumReactionData>>(data.replyReactions);
   let loading = $state(false);
+  let initialReplyCount = $state(data.replies.length);
 
   // Reply-to context for composer
   let replyTo = $state<{ id: string; authorName: string | null; body: string } | null>(null);
@@ -30,6 +34,7 @@
     nextCursor = data.nextCursor;
     replyReactions = data.replyReactions;
     replyTo = null;
+    initialReplyCount = data.replies.length;
   });
 
   function handleReplyTo(reply: ForumReplyWithAuthor) {
@@ -77,7 +82,33 @@
 
 <svelte:head>
   <title>{topic.title} | {topic.category.name} | SaltGoat Community</title>
-  <meta name="description" content={topic.body.slice(0, 160)} />
+  <meta name="description" content={ogDescription} />
+  <link rel="canonical" href={canonicalUrl} />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:title" content="{topic.title} | SaltGoat Community" />
+  <meta property="og:description" content={ogDescription} />
+  <meta property="og:site_name" content="SaltGoat" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={topic.title} />
+  <meta name="twitter:description" content={ogDescription} />
+
+  {@html `<script type="application/ld+json">${JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "DiscussionForumPosting",
+    "headline": topic.title,
+    "text": topic.body.slice(0, 300),
+    "datePublished": topic.created_at,
+    "dateModified": topic.updated_at,
+    "author": { "@type": "Person", "name": topic.author.display_name || "Anonymous" },
+    "interactionStatistic": [
+      { "@type": "InteractionCounter", "interactionType": "https://schema.org/CommentAction", "userInteractionCount": topic.reply_count },
+      { "@type": "InteractionCounter", "interactionType": "https://schema.org/ViewAction", "userInteractionCount": topic.view_count }
+    ],
+    "url": canonicalUrl
+  })}</script>`}
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
@@ -109,27 +140,25 @@
       </h2>
 
       {#if replies.length > 0}
-        <div class="flex flex-col gap-3">
-          {#each replies as reply (reply.id)}
-            <ReplyCard
-              {reply}
-              reactions={replyReactions[reply.id] ?? { counts: {}, userReactions: [] }}
-              isLoggedIn={data.isLoggedIn}
-              currentUserId={data.currentUserId}
-              onReplyTo={handleReplyTo}
-            />
+        <div class="flex flex-col gap-3 stagger-children">
+          {#each replies as reply, i (reply.id)}
+            <div class={i < initialReplyCount ? 'will-animate animate-fade-in-up' : ''}>
+              <ReplyCard
+                {reply}
+                reactions={replyReactions[reply.id] ?? { counts: {}, userReactions: [] }}
+                isLoggedIn={data.isLoggedIn}
+                currentUserId={data.currentUserId}
+                onReplyTo={handleReplyTo}
+              />
+            </div>
           {/each}
         </div>
 
         {#if loading}
-          <div class="flex justify-center py-8">
-            <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-              <svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Loading more replies...
-            </div>
+          <div class="flex flex-col gap-3 mt-3">
+            {#each Array(2) as _}
+              <TopicCardSkeleton />
+            {/each}
           </div>
         {/if}
       {:else if !topic.is_locked}

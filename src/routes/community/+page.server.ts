@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
-import { getCategories, getRecentTopics, getPopularTopics } from '$lib/server/forum';
+import { getCategories, getRecentTopics, getPopularTopics, getUserTopicViewTimestamps } from '$lib/server/forum';
 import { getUserBookmarks } from '$lib/server/forumBookmarks';
 
 export const load: PageServerLoad = async ({ cookies }) => {
@@ -17,9 +17,17 @@ export const load: PageServerLoad = async ({ cookies }) => {
 	]);
 
 	let bookmarkedTopics: Awaited<ReturnType<typeof getUserBookmarks>>['topics'] = [];
+	let topicViews: Record<string, string> = {};
 	if (session?.user) {
-		const result = await getUserBookmarks(supabase, session.user.id, { limit: 5 });
-		bookmarkedTopics = result.topics;
+		const allTopicIds = [...recentTopics, ...popularTopics].map((t) => t.id);
+		const [bookmarkResult, views] = await Promise.all([
+			getUserBookmarks(supabase, session.user.id, { limit: 5 }),
+			allTopicIds.length > 0
+				? getUserTopicViewTimestamps(supabase, session.user.id, allTopicIds)
+				: {} as Record<string, string>
+		]);
+		bookmarkedTopics = bookmarkResult.topics;
+		topicViews = views;
 	}
 
 	return {
@@ -27,6 +35,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		recentTopics,
 		popularTopics,
 		bookmarkedTopics,
+		topicViews,
 		isLoggedIn: !!session
 	};
 };

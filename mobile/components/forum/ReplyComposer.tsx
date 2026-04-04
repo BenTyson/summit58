@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
 import { QuoteBlock } from './QuoteBlock';
 
 interface ReplyComposerProps {
@@ -12,6 +13,8 @@ interface ReplyComposerProps {
 }
 
 export function ReplyComposer({ onSubmit, quotedReply, onClearQuote, isLocked }: ReplyComposerProps) {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 	const [body, setBody] = useState('');
 	const [submitting, setSubmitting] = useState(false);
 
@@ -21,11 +24,11 @@ export function ReplyComposer({ onSubmit, quotedReply, onClearQuote, isLocked }:
 				style={{
 					padding: 16,
 					borderTopWidth: 1,
-					borderTopColor: colors.light.border,
-					backgroundColor: colors.light.bgSecondary,
+					borderTopColor: theme.border,
+					backgroundColor: theme.bgSecondary,
 					alignItems: 'center'
 				}}>
-				<Text style={{ fontFamily: 'Inter', fontSize: 14, color: colors.light.textMuted }}>
+				<Text style={{ fontFamily: 'Inter', fontSize: 14, color: theme.textMuted }}>
 					This topic is locked
 				</Text>
 			</View>
@@ -52,20 +55,20 @@ export function ReplyComposer({ onSubmit, quotedReply, onClearQuote, isLocked }:
 			<View
 				style={{
 					borderTopWidth: 1,
-					borderTopColor: colors.light.border,
-					backgroundColor: colors.light.bgPrimary,
+					borderTopColor: theme.border,
+					backgroundColor: theme.bgPrimary,
 					padding: 12
 				}}>
 				{quotedReply && (
 					<View style={{ marginBottom: 8 }}>
 						<View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-							<Text style={{ fontFamily: 'Inter-Medium', fontSize: 12, color: colors.light.textMuted }}>
+							<Text style={{ fontFamily: 'Inter-Medium', fontSize: 12, color: theme.textMuted }}>
 								Replying to
 							</Text>
 							<Pressable onPress={onClearQuote} hitSlop={8}>
 								<SymbolView
 									name={{ ios: 'xmark.circle.fill', android: 'cancel', web: 'cancel' }}
-									tintColor={colors.light.textMuted}
+									tintColor={theme.textMuted}
 									size={16}
 								/>
 							</Pressable>
@@ -74,23 +77,36 @@ export function ReplyComposer({ onSubmit, quotedReply, onClearQuote, isLocked }:
 					</View>
 				)}
 
+				{body.length > 0 && (
+					<Text
+						style={{
+							fontFamily: 'Inter',
+							fontSize: 11,
+							color: body.length > 4500 ? colors.semantic.warning : theme.textMuted,
+							textAlign: 'right',
+							marginBottom: 4
+						}}>
+						{body.length.toLocaleString()}/5,000
+					</Text>
+				)}
+
 				<View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8 }}>
 					<TextInput
 						style={{
 							flex: 1,
 							fontFamily: 'Inter',
 							fontSize: 15,
-							color: colors.light.textPrimary,
-							backgroundColor: colors.light.bgSecondary,
+							color: theme.textPrimary,
+							backgroundColor: theme.bgSecondary,
 							borderRadius: 10,
 							paddingHorizontal: 14,
 							paddingVertical: 10,
 							maxHeight: 100,
 							borderWidth: 1,
-							borderColor: colors.light.border
+							borderColor: theme.border
 						}}
 						placeholder="Write a reply..."
-						placeholderTextColor={colors.light.textMuted}
+						placeholderTextColor={theme.textMuted}
 						value={body}
 						onChangeText={setBody}
 						multiline
@@ -103,7 +119,7 @@ export function ReplyComposer({ onSubmit, quotedReply, onClearQuote, isLocked }:
 							width: 40,
 							height: 40,
 							borderRadius: 20,
-							backgroundColor: body.trim() ? colors.accent.default : colors.light.bgTertiary,
+							backgroundColor: body.trim() ? colors.accent.default : theme.bgTertiary,
 							alignItems: 'center',
 							justifyContent: 'center'
 						}}>
@@ -112,7 +128,7 @@ export function ReplyComposer({ onSubmit, quotedReply, onClearQuote, isLocked }:
 						) : (
 							<SymbolView
 								name={{ ios: 'arrow.up', android: 'arrow_upward', web: 'arrow_upward' }}
-								tintColor={body.trim() ? '#ffffff' : colors.light.textMuted}
+								tintColor={body.trim() ? '#ffffff' : theme.textMuted}
 								size={18}
 							/>
 						)}

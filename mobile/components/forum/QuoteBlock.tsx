@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { colors } from '@/lib/theme/colors';
+import { useColorScheme } from '@/components/useColorScheme';
 
 interface QuoteBlockProps {
 	authorName: string | null;
@@ -7,12 +8,14 @@ interface QuoteBlockProps {
 }
 
 export function QuoteBlock({ authorName, body }: QuoteBlockProps) {
+	const colorScheme = useColorScheme();
+	const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 	return (
 		<View
 			style={{
 				borderLeftWidth: 3,
 				borderLeftColor: colors.accent.default,
-				backgroundColor: colors.light.bgSecondary,
+				backgroundColor: theme.bgSecondary,
 				paddingHorizontal: 10,
 				paddingVertical: 8,
 				borderRadius: 4,
@@ -23,7 +26,7 @@ export function QuoteBlock({ authorName, body }: QuoteBlockProps) {
 					style={{
 						fontFamily: 'Inter-SemiBold',
 						fontSize: 12,
-						color: colors.light.textMuted,
+						color: theme.textMuted,
 						marginBottom: 2
 					}}>
 					{authorName}
@@ -33,7 +36,7 @@ export function QuoteBlock({ authorName, body }: QuoteBlockProps) {
 				style={{
 					fontFamily: 'Inter',
 					fontSize: 13,
-					color: colors.light.textSecondary,
+					color: theme.textSecondary,
 					lineHeight: 18
 				}}
 				numberOfLines={3}>
