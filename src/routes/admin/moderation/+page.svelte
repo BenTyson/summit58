@@ -12,8 +12,18 @@
   const pendingFlags = $derived(data.pendingFlags);
   const recentPhotos = $derived(data.recentPhotos);
   const resolvedFlags = $derived(data.resolvedFlags);
+  const forumCategories = $derived(data.forumCategories);
+  const recentForumTopics = $derived(data.recentForumTopics);
 
   let showResolved = $state(false);
+
+  const categoryMap = $derived(
+    new Map(forumCategories.map((c: any) => [c.id, c]))
+  );
+
+  function formatForumDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
 </script>
 
 <svelte:head>
@@ -238,5 +248,110 @@
         {/each}
       </div>
     {/if}
+  {/if}
+</section>
+
+<!-- Forum Moderation -->
+<section class="mb-10">
+  <h2 class="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+    <svg class="h-5 w-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+    Forum Topics
+    <span class="text-sm font-normal text-slate-500 dark:text-slate-400">({recentForumTopics.length})</span>
+  </h2>
+
+  {#if recentForumTopics.length === 0}
+    <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-6 text-center">
+      <p class="text-sm text-slate-500 dark:text-slate-400">No forum topics yet.</p>
+    </div>
+  {:else}
+    <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-card">
+      <div class="divide-y divide-slate-100 dark:divide-slate-700">
+        {#each recentForumTopics as topic}
+          {@const cat = categoryMap.get(topic.category_id)}
+          <div class="p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+            <!-- Topic info -->
+            <div class="flex-1 min-w-0">
+              <a
+                href="/community/{cat?.slug ?? 'general'}/{topic.slug}"
+                class="font-medium text-sm text-slate-900 dark:text-white hover:text-accent transition-colors truncate block"
+              >
+                {topic.title}
+              </a>
+              <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-400 dark:text-slate-500">
+                <span>{topic.author.display_name || 'Anonymous'}</span>
+                <span>{cat?.name ?? 'Unknown'}</span>
+                <span>{formatForumDate(topic.created_at)}</span>
+                <span>{topic.reply_count} replies</span>
+                <span>{topic.view_count} views</span>
+                {#if topic.is_pinned}
+                  <span class="text-accent font-medium">Pinned</span>
+                {/if}
+                {#if topic.is_locked}
+                  <span class="text-semantic-warning font-medium">Locked</span>
+                {/if}
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <form method="POST" action="?/pinForumTopic" use:enhance>
+                <input type="hidden" name="topic_id" value={topic.id} />
+                <input type="hidden" name="pinned" value={topic.is_pinned ? 'false' : 'true'} />
+                <button
+                  type="submit"
+                  class="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors {topic.is_pinned ? 'bg-accent/10 text-accent hover:bg-accent/20' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'}"
+                  title={topic.is_pinned ? 'Unpin' : 'Pin'}
+                >
+                  {topic.is_pinned ? 'Unpin' : 'Pin'}
+                </button>
+              </form>
+
+              <form method="POST" action="?/lockForumTopic" use:enhance>
+                <input type="hidden" name="topic_id" value={topic.id} />
+                <input type="hidden" name="locked" value={topic.is_locked ? 'false' : 'true'} />
+                <button
+                  type="submit"
+                  class="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors {topic.is_locked ? 'bg-semantic-warning/10 text-semantic-warning hover:bg-semantic-warning/20' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'}"
+                  title={topic.is_locked ? 'Unlock' : 'Lock'}
+                >
+                  {topic.is_locked ? 'Unlock' : 'Lock'}
+                </button>
+              </form>
+
+              <form method="POST" action="?/moveForumTopic" use:enhance class="flex items-center gap-1">
+                <input type="hidden" name="topic_id" value={topic.id} />
+                <select
+                  name="category_id"
+                  class="text-xs rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-2 py-1.5"
+                >
+                  {#each forumCategories as c}
+                    <option value={c.id} selected={c.id === topic.category_id}>{c.name}</option>
+                  {/each}
+                </select>
+                <button
+                  type="submit"
+                  class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600 transition-colors"
+                >
+                  Move
+                </button>
+              </form>
+
+              <form method="POST" action="?/deleteForumTopic" use:enhance>
+                <input type="hidden" name="topic_id" value={topic.id} />
+                <button
+                  type="submit"
+                  class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-semantic-danger/10 text-semantic-danger hover:bg-semantic-danger/20 transition-colors"
+                  onclick={(e) => { if (!confirm('Delete this topic and all replies?')) e.preventDefault(); }}
+                >
+                  Delete
+                </button>
+              </form>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </div>
   {/if}
 </section>

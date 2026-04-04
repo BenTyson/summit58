@@ -22,6 +22,7 @@ import { getConditionsForPeak, getForecastForPeak } from '$lib/server/conditions
 import { getRecentTrailReports, createTrailReport } from '$lib/server/trailReports';
 import { checkAndAwardAchievements } from '$lib/server/achievements';
 import { isOnWatchlist, addToWatchlist, removeFromWatchlist } from '$lib/server/watchlist';
+import { getTopicsForPeak } from '$lib/server/forum';
 import { error, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
@@ -52,14 +53,15 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     ]);
   }
 
-  const [reviews, reviewStats, images, conditions, trailReports, relatedPeaks, forecast] = await Promise.all([
+  const [reviews, reviewStats, images, conditions, trailReports, relatedPeaks, forecast, peakDiscussions] = await Promise.all([
     getPeakReviews(supabase, peak.id),
     getPeakReviewStats(supabase, peak.id),
     getImagesForPeak(supabase, peak.id),
     getConditionsForPeak(supabase, peak.id),
     getRecentTrailReports(supabase, peak.id),
     getRelatedPeaks(supabase, peak.id, peak.range, peak.elevation),
-    getForecastForPeak(supabase, peak.id, { name: peak.name, slug: peak.slug, elevation: peak.elevation })
+    getForecastForPeak(supabase, peak.id, { name: peak.name, slug: peak.slug, elevation: peak.elevation }),
+    getTopicsForPeak(supabase, peak.id, 5)
   ]);
 
   return {
@@ -78,7 +80,8 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     relatedPeaks,
     summitLimit,
     isWatched,
-    forecast
+    forecast,
+    peakDiscussions
   };
 };
 

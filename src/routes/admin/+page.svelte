@@ -9,6 +9,7 @@
   let { data }: Props = $props();
 
   const stats = $derived(data.stats);
+  const forumStats = $derived(data.forumStats);
   const pendingTotal = $derived(stats.pendingFlags + stats.flaggedImages);
 </script>
 
@@ -35,6 +36,13 @@
   <StatCard label="Reviews" value={stats.totalReviews.toLocaleString()} />
   <StatCard label="Photos" value={stats.totalPhotos.toLocaleString()} />
   <StatCard label="Trail Reports" value={stats.totalTrailReports.toLocaleString()} />
+</div>
+
+<!-- Forum Stats -->
+<div class="mt-6 grid grid-cols-2 lg:grid-cols-3 gap-4">
+  <StatCard label="Forum Topics" value={forumStats.topicCount.toLocaleString()} variant="accent" />
+  <StatCard label="Forum Replies" value={forumStats.replyCount.toLocaleString()} />
+  <StatCard label="Forum Active (7d)" value={forumStats.activeUsers7d} variant="success" />
 </div>
 
 <!-- Alerts + Recent Signups -->

@@ -408,111 +408,131 @@ New directory: `mobile/components/forum/`
 - `npm run build` passes
 - Manual verification: 6 categories seeded, RLS policies correct via Supabase dashboard
 
-### Phase 2: Web Community Hub + Topic Lists
+### Phase 2: Web Community Hub + Topic Lists [COMPLETE]
+
+**Completed:** 2026-04-04
 
 **Scope:** Main community page, category pages, topic listing with pagination.
 
-**Create:**
-- `src/routes/community/+page.server.ts` — load categories, recent, popular
-- `src/routes/community/+page.svelte` — hub layout: hero, category grid, recent/popular columns
-- `src/routes/community/[category]/+page.server.ts` — load category + paginated topics
-- `src/routes/community/[category]/+page.svelte` — topic list with infinite scroll
-- `src/lib/components/forum/CategoryCard.svelte`
-- `src/lib/components/forum/TopicCard.svelte`
-- `src/lib/components/forum/ForumAuthorInfo.svelte`
-- `src/lib/components/forum/PeakTag.svelte`
-- `src/lib/components/forum/ForumBreadcrumb.svelte`
+**Created:**
+- `src/routes/community/+page.server.ts` — loads categories, recent topics, popular topics, user bookmarks
+- `src/routes/community/+page.svelte` — hero section, 6-card category grid, recent/popular columns, bookmarks section
+- `src/routes/community/[category]/+page.server.ts` — loads category + first page of topics
+- `src/routes/community/[category]/+page.svelte` — topic list with scroll-based infinite loading
+- `src/routes/api/v1/forum/categories/[slug]/topics/+server.ts` — GET endpoint for cursor-based pagination (powers infinite scroll)
+- `src/lib/components/forum/CategoryCard.svelte` — icon, name, description, topic count, accent color border, hover lift
+- `src/lib/components/forum/TopicCard.svelte` — title, author info, body preview, peak tag, reply/view/reaction counts, timestamps
+- `src/lib/components/forum/ForumAuthorInfo.svelte` — avatar, display name, summit count badge
+- `src/lib/components/forum/PeakTag.svelte` — linked badge with peak name
+- `src/lib/components/forum/ForumBreadcrumb.svelte` — Community > Category breadcrumb nav
 
-**Modify:**
-- `src/routes/+layout.svelte` or nav component — add "Community" to main navigation
+**Modified:**
+- `src/lib/components/layout/Header.svelte` — added "Community" link to navLinks array
 
-**Verify:**
-- `/community` renders with 6 category cards
-- `/community/trip-reports` renders topic list (empty state initially)
+**Verified:**
+- `/community` renders with 6 category cards, hero section, recent/popular columns
+- `/community/trip-reports` renders topic list with empty state
 - Dark mode works on all new components
-- Responsive: mobile, tablet, desktop layouts
+- Responsive: mobile (1-col), tablet (2-col), desktop (3-col category grid)
 - `npm run build` passes
 
-### Phase 3: Web Topic Detail + Replies
+### Phase 3: Web Topic Detail + Replies [COMPLETE]
+
+**Completed:** 2026-04-04
 
 **Scope:** Topic view, reply display, reactions, bookmarks, view tracking.
 
-**Create:**
-- `src/routes/community/[category]/[topic]/+page.server.ts` — load topic, replies, reactions, bookmark status, record view
-- `src/routes/community/[category]/[topic]/+page.svelte` — topic detail page
-- `src/lib/components/forum/TopicDetail.svelte`
-- `src/lib/components/forum/ReplyCard.svelte`
-- `src/lib/components/forum/ReplyComposer.svelte`
-- `src/lib/components/forum/ForumReactions.svelte`
-- `src/lib/components/forum/QuoteBlock.svelte`
+**Created:**
+- `src/routes/community/[category]/[topic]/+page.server.ts` — loads topic via getTopicBySlug, replies, reactions for topic+replies, bookmark status, records view. Form actions: createReply, toggleReaction, toggleBookmark, deleteTopic, deleteReply
+- `src/routes/community/[category]/[topic]/+page.svelte` — full topic detail page with reply infinite scroll
+- `src/routes/api/v1/forum/topics/[id]/replies/+server.ts` — GET endpoint for cursor-based reply pagination (includes reaction data)
+- `src/lib/components/forum/TopicDetail.svelte` — rendered markdown body, author card, peak/route tags, reactions bar, bookmark button, delete control (own + within window)
+- `src/lib/components/forum/ReplyCard.svelte` — author info, rendered markdown, quote block, reactions, reply-to/delete actions
+- `src/lib/components/forum/ReplyComposer.svelte` — markdown textarea, char count, quote context preview, form action submission
+- `src/lib/components/forum/ForumReactions.svelte` — 4-type reaction bar (like/helpful/fire/summit) with toggle via form action, active state highlighting
+- `src/lib/components/forum/QuoteBlock.svelte` — styled blockquote for quoted replies
+- `src/lib/utils/markdown.ts` — shared markdown renderer (marked + DOMPurify sanitization)
 
-**Modify:**
-- Topic detail page — form actions for `createReply`, `toggleReaction`, `toggleBookmark`
+**Modified:**
+- `tailwind.config.js` — added @tailwindcss/typography plugin for prose markdown styling
 
-**Verify:**
-- Topic detail renders with markdown body
-- Replies display chronologically with author info
-- Quote blocks render for replies with `reply_to_id`
-- Reactions toggle and update counts
-- Bookmark toggle works
-- View count increments on page load
-- Reply composer submits and reply appears
-- Dark mode correct
+**Dependencies Added:**
+- `marked` (markdown parsing), `isomorphic-dompurify` (HTML sanitization), `@tailwindcss/typography` (prose styling)
+
+**Verified:**
+- Topic detail page renders with sanitized markdown body
+- Replies display chronologically with author info and infinite scroll
+- Quote blocks render for replies with reply_to_id
+- Reactions toggle via form actions with active state UI
+- Bookmark toggle works for logged-in users
+- View tracking fires on page load for authenticated users
+- Reply composer submits with optional reply-to context
+- Locked topics show locked state, hide composer
+- Delete controls respect 30-min edit window
+- Dark mode correct on all new components
 - `npm run build` passes
 
-### Phase 4: Web Topic Creation + Search
+### Phase 4: Web Topic Creation + Search [COMPLETE]
 
-**Scope:** Topic composer, editing, deletion, full-text search, image upload.
+**Completed:** 2026-04-04
 
-**Create:**
-- `src/routes/community/[category]/new/+page.server.ts` — load category, peaks list
-- `src/routes/community/[category]/new/+page.svelte` — composer page
-- `src/routes/community/search/+page.server.ts` — search query handler
-- `src/routes/community/search/+page.svelte` — search results page
-- `src/lib/components/forum/TopicComposer.svelte`
-- `src/lib/components/forum/ForumSearch.svelte`
+**Scope:** Topic composer, editing, deletion, full-text search.
 
-**Modify:**
-- Topic/reply pages — add edit/delete form actions with window enforcement
-- Community hub — add search bar linking to `/community/search`
-- Topic composer — peak/route search picker (reuse existing peak search if available)
+**Created:**
+- `src/routes/community/[category]/new/+page.server.ts` — loads category + peaks list, createTopic form action with validation, redirects to new topic on success, auth guard
+- `src/routes/community/[category]/new/+page.svelte` — composer page with breadcrumb
+- `src/routes/community/search/+page.server.ts` — search handler with category filter using searchForum()
+- `src/routes/community/search/+page.svelte` — debounced search with category filter dropdown, result cards with snippets
+- `src/lib/components/forum/TopicComposer.svelte` — title input, peak picker with type-ahead search, markdown body with preview toggle, character counts, validation, submit with loading state
 
-**Verify:**
-- Create topic with title, body, category. Topic appears in category list.
-- Create topic linked to a peak. Peak tag displays correctly.
-- Edit topic within 30-min window. Edit blocked after window.
-- Delete topic within window.
-- Search returns relevant results ranked by relevance.
-- Image upload in topic/reply body works.
+**Modified:**
+- `src/routes/community/[category]/[topic]/+page.server.ts` — added updateTopic and updateReply form actions with validation
+- `src/lib/components/forum/TopicDetail.svelte` — added inline edit mode (title + body) with save/cancel, edit button shows within 30-min window + no replies
+- `src/lib/components/forum/ReplyCard.svelte` — added inline edit mode (body) with save/cancel, edit button shows within 30-min window
+- `src/routes/community/+page.svelte` — added search bar in hero section linking to /community/search
+- `src/routes/community/[category]/+page.svelte` — added "New Topic" button in category header
+
+**Note:** Image upload for forum post bodies deferred — the forum-images storage bucket exists but inline image upload in the composer can be added in Phase 7 (Polish) since it requires a separate upload endpoint and markdown image insertion logic. Topics can still reference images via markdown URLs.
+
+**Verified:**
+- Topic creation with title, body, category works; redirects to new topic
+- Peak picker search filters 58 peaks, pre-selects via ?peak= query param
+- Markdown preview toggle renders body correctly
+- Inline edit for topics (title + body) works within 30-min window
+- Inline edit for replies works within 30-min window
+- Search returns results with debounced input, category filter
+- New Topic button on category pages, search bar on community hub
 - `npm run build` passes
 
-### Phase 5: Integration + Admin
+### Phase 5: Integration + Admin [COMPLETE]
 
-**Scope:** Peak page discussions, activity feed integration, profile tab, admin moderation, content flagging.
+**Completed:** 2026-04-04
 
-**Create:**
-- `src/lib/components/forum/PeakDiscussions.svelte` — discussions section for peak pages
+**Scope:** Peak page discussions, profile discussions section, admin forum moderation.
 
-**Modify:**
-- `src/routes/peaks/[slug]/+page.server.ts` — add `getTopicsForPeak` to load
-- Peak detail component — add PeakDiscussions section
-- `src/lib/server/activity.ts` — add `forum_topic` activity type
-- `src/routes/users/[id]/+page.server.ts` — add user topics to load
-- User profile component — add "Discussions" tab
-- `src/routes/admin/+page.server.ts` — add forum stats to overview
-- `src/routes/admin/moderation/` — add forum moderation queue
-- Admin moderation component — pin/lock/move/delete controls
-- Content flags migration — extend CHECK constraint for forum content types
-- Topic/reply components — add flag buttons
+**Created:**
+- `src/lib/components/forum/PeakDiscussions.svelte` — recent discussions linked to a peak + "Start a discussion" CTA
 
-**Verify:**
-- Peak detail page shows linked discussions
-- "Start a discussion" from peak page pre-fills peak context
-- New topics from followed users appear in activity feed
-- User profile shows discussions tab with their topics
-- Admin can pin, lock, move, delete topics
-- Flagging a topic/reply works, shows in admin queue
-- Auto-hide at 3 flags works for forum content
+**Modified:**
+- `src/routes/peaks/[slug]/+page.server.ts` — added `getTopicsForPeak(peakId, 5)` to server load
+- `src/routes/peaks/[slug]/+page.svelte` — added PeakDiscussions section after Trail Reports
+- `src/routes/users/[id]/+page.server.ts` — added `getUserTopics(userId, { limit: 5 })` to server load
+- `src/routes/users/[id]/+page.svelte` — added Discussions section with user's recent topics
+- `src/routes/admin/+page.server.ts` — added `getForumStats()` to admin overview load
+- `src/routes/admin/+page.svelte` — added Forum Stats row (topics, replies, active users 7d)
+- `src/routes/admin/moderation/+page.server.ts` — added forum categories + recent topics to load, added 4 form actions: pinForumTopic, lockForumTopic, moveForumTopic, deleteForumTopic
+- `src/routes/admin/moderation/+page.svelte` — added Forum Topics moderation section with pin/lock/move/delete controls per topic
+
+**Deferred to Phase 7 (Polish):**
+- Activity feed integration (`forum_topic` as ActivityType) — requires significant changes to `src/lib/server/activity.ts` union types and feed queries
+- Content flags for forum content — requires migration to extend `content_type` CHECK constraint, plus flag buttons on topic/reply components
+
+**Verified:**
+- Peak detail page shows linked discussions section + "Start a discussion" CTA
+- CTA pre-fills peak context via ?peak= query param
+- User profile shows Discussions section with their topics
+- Admin overview shows forum stats (topics, replies, active 7d)
+- Admin moderation page shows recent topics with pin/lock/move/delete controls
 - `npm run build` passes
 
 ### Phase 6: Mobile API + Screens

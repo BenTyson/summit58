@@ -18,6 +18,7 @@
   import ImageUploader from '$lib/components/gallery/ImageUploader.svelte';
   import WeatherSummaryCard from '$lib/components/weather/WeatherSummaryCard.svelte';
   import TrailReportSection from '$lib/components/trail/TrailReportSection.svelte';
+  import PeakDiscussions from '$lib/components/forum/PeakDiscussions.svelte';
   import type { SummitFormData } from '$lib/components/summit/SummitModal.svelte';
   import type { ReviewFormData } from '$lib/components/review/ReviewForm.svelte';
   import type { TrailReportFormData } from '$lib/components/trail/TrailReportForm.svelte';
@@ -573,6 +574,13 @@
     reports={trailReports}
     {isLoggedIn}
     onSubmit={handleTrailReportSubmit}
+  />
+
+  <!-- Community Discussions -->
+  <PeakDiscussions
+    topics={data.peakDiscussions}
+    peakSlug={peak.slug}
+    peakName={peak.name}
   />
 </Container>
 

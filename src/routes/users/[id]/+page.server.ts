@@ -4,6 +4,7 @@ import { getUserAchievements } from '$lib/server/achievements';
 import { getSubscription, isPro } from '$lib/server/subscriptions';
 import { getReactionsForSummits, toggleReaction, type ReactionData } from '$lib/server/reactions';
 import { getCommentsForSummits, createComment, deleteComment, type CommentData } from '$lib/server/comments';
+import { getUserTopics } from '$lib/server/forum';
 import { error, redirect, fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
@@ -52,8 +53,12 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
   // Get recent summits (last 5)
   const recentSummits = summits?.slice(0, 5) || [];
 
-  // Get achievements
-  const achievements = await getUserAchievements(supabase, userId);
+  // Get achievements + forum topics
+  const [achievements, userTopicsResult] = await Promise.all([
+    getUserAchievements(supabase, userId),
+    getUserTopics(supabase, userId, { limit: 5 })
+  ]);
+  const userForumTopics = userTopicsResult.topics;
 
   // Calculate total elevation (from unique peaks)
   let totalElevation = 0;
@@ -130,7 +135,8 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     rangeStats: uniquePeakRanges,
     summitReactions,
     summitComments,
-    currentUserId
+    currentUserId,
+    userForumTopics
   };
 };
 

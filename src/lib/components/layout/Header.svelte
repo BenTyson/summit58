@@ -30,6 +30,7 @@
   const navLinks = [
     { href: '/peaks', label: 'Peaks' },
     { href: '/ranges', label: 'Ranges' },
+    { href: '/community', label: 'Community' },
     { href: '/leaderboard', label: 'Leaderboard' },
     { href: '/map', label: 'Map' },
     { href: '/learn', label: 'Learn' },
