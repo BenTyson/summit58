@@ -66,6 +66,17 @@ mobile/lib/             Supabase client, API client, auth provider, peaks contex
 
 All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as first param — portable between web form actions and API endpoints.
 
+## Adding a Feature
+
+New features follow this pattern across both platforms:
+
+1. **Database** — migration in `supabase/migrations/`, RLS policies, indexes. Run `supabase db push` then regenerate types
+2. **Server module** — `src/lib/server/feature.ts` accepting `SupabaseClient<Database>`. All business logic lives here
+3. **Web route** — `+page.server.ts` with load function + form actions. Components in `src/lib/components/feature/`
+4. **API endpoint** — thin wrapper in `src/routes/api/v1/` calling server module. Must validate all input server-side (DB CHECK constraints are a safety net, not primary validation)
+5. **Mobile** — types in `mobile/lib/types/api.ts`, screen in `mobile/app/`, components in `mobile/components/feature/`
+6. **Verify** — `npm run build` must pass. Test both platforms if the feature touches shared logic
+
 ## Web Patterns
 
 - **Svelte 5 runes:** `$props()`, `$state()`, `$derived()` throughout
@@ -153,7 +164,7 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | `profiles` | display_name, username, avatar_url, cover_image_url, bio, tagline, location, is_public |
 | `user_subscriptions` | plan (free/pro), status (active/canceled/past_due/trialing), stripe_customer_id |
 | `peak_images` | peak_id, storage_path, caption, category, status, is_private, flag_count |
-| `peak_forecasts` | peak_id, elevation_band (summit/mid/base), elevation_ft, forecast_date, time_period (morning/afternoon/night), temperature_f, feels_like_f, wind_speed_mph, wind_gust_mph, precipitation_in, snow_in, weather_code, freezing_level_ft, cloud_base_ft, uv_index, high_f, low_f, sunrise, sunset |
+| `peak_forecasts` | peak_id, elevation_band (summit/mid/base), forecast_date, time_period (morning/afternoon/night), temperature_f, wind_speed_mph, precipitation_in, snow_in, weather_code |
 
 ### RLS Summary
 
@@ -197,6 +208,10 @@ Other routes: `/`, `/peaks`, `/ranges`, `/ranges/[slug]`, `/map`, `/leaderboard`
 - **API changes** (`/api/v1/`) must maintain backward compatibility with deployed mobile clients
 - Keep `@saltgoat/shared` types in sync when regenerating Supabase types
 
+## Testing
+
+No test suite. Verification is `npm run build` + manual testing. When in doubt, build.
+
 ## Known Issues
 
 - GPX trail data removed (bad quality) — `routes.trail_geometry` is empty
@@ -208,14 +223,9 @@ Other routes: `/`, `/peaks`, `/ranges`, `/ranges/[slug]`, `/map`, `/leaderboard`
 - Open-Meteo free tier is non-commercial — need commercial key for production with paid subscriptions
 - Weather webhook cron not yet configured — see `docs/ben.md`
 
-## Remaining Web Roadmap
-
-All web phases (1-13) complete. Outstanding:
-- Phase 7: Affiliate partnerships (gear recs, guide listings) — not started
-- Phase 8 fragments: notifications system, email digests, rate limiting, accessibility audit
-
 ## Reference Docs
 
+- [Forum Spec](docs/forum.md) — community forum design, schema, phases, launch checklist
 - [Mobile Roadmap](docs/mobile_roadmap.md) — mobile development plan, phases, architecture decisions
 - [Manual Setup](docs/ben.md) — Stripe, GSC, Supabase ops tasks
 - [GPX Import](docs/gpx-import-guide.md) — CalTopo workflow for trail data
