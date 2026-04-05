@@ -1,7 +1,6 @@
 import type { RequestHandler } from './$types';
 import { createSupabaseApiClient, createSupabaseServerClient, requireAuth } from '$lib/server/supabase';
-import { getReplies, createReply } from '$lib/server/forum';
-import { getReactionsForPosts } from '$lib/server/forumReactions';
+import { getReplies, createReply, getReactionsForPosts } from '$lib/server/forum';
 
 /** GET /api/v1/forum/topics/[id]/replies — paginated replies */
 export const GET: RequestHandler = async ({ params, url, cookies, request }) => {
@@ -54,11 +53,19 @@ export const POST: RequestHandler = async ({ params, request }) => {
 		});
 	}
 
+	const trimmedBody = replyBody.trim();
+	if (trimmedBody.length < 1 || trimmedBody.length > 5000) {
+		return new Response(JSON.stringify({ error: 'Reply must be 1-5,000 characters' }), {
+			status: 400,
+			headers: { 'Content-Type': 'application/json' }
+		});
+	}
+
 	try {
 		const reply = await createReply(supabase, {
 			topicId: params.id,
 			authorId: user.id,
-			body: replyBody.trim(),
+			body: trimmedBody,
 			replyToId: reply_to_id || undefined
 		});
 

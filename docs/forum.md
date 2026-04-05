@@ -583,31 +583,48 @@ New directory: `mobile/components/forum/`
 - 10 mobile components + 4 screens + 13 types created
 - Community accessible from Explore tab header + peak detail CTA
 
-### Phase 7: Polish
+### Phase 7: Polish + Launch Review [COMPLETE]
 
-**Scope:** Empty states, loading skeletons, animations, dark mode audit, error handling, performance.
+**Completed:** 2026-04-04
 
-**Tasks:**
-- Empty state illustrations for categories with no topics
-- Loading skeleton components for topic lists and detail pages
-- Fade-in animations on topic/reply cards (match existing `animate-fade-in-up`)
-- Dark mode audit on all forum components (both platforms)
-- Error boundaries and retry states
-- Optimistic updates for reactions and bookmarks (both platforms)
-- Meta tags / OG images for topic pages (SEO)
-- Keyboard shortcuts on web: `Cmd+Enter` to submit, `Esc` to cancel
-- "Unread" indicators on topic cards (based on forum_topic_views)
-- Character count indicators on composers
-- Slug collision handling (append `-2`, `-3`, etc.)
-- Mobile: pull-to-refresh on all list screens
-- Mobile: haptic feedback on reaction toggle
+**Scope:** Code audit, modularization, deduplication, validation fixes, performance optimization, documentation.
 
-**Verify:**
-- All empty states display correctly
-- Loading states smooth, no layout shift
-- Dark mode perfect on both platforms
+**Done:**
+- Modularized `forum.ts` (700 lines, 20+ exports) into `src/lib/server/forum/` directory with focused modules: categories, topics, replies, search, views, utils, types, reactions, bookmarks, admin
+- Moved `forumReactions.ts`, `forumBookmarks.ts`, `forumAdmin.ts` into `forum/` directory with barrel re-export
+- Extracted `CategoryIcon.svelte` component (was duplicated 3x across web files)
+- Extracted `formatRelativeTime` to `src/lib/utils/time.ts` (was duplicated 4x on web) and `mobile/lib/time.ts` (was duplicated 2x on mobile)
+- Extracted `isTopicUnread` to `src/lib/utils/forum.ts` (was duplicated 2x on web)
+- Fixed missing input validation on all API endpoints: title (5-200), body (10-10000 for topics, 1-5000 for replies)
+- Fixed `createReply` form action missing min-length validation
+- Replaced `ScrollView` with `View` in mobile `ForumReactions.tsx` (4 fixed items don't need scroll)
+- Added content flags migration extending `content_type` CHECK to include `'forum_topic'` and `'forum_reply'`
+- Updated CLAUDE.md with forum tables, routes, endpoints, server modules
+- Updated forum.md with completion status and launch checklist
+
+**Not done (deferred):**
+- Activity feed integration (`forum_topic` as ActivityType)
+- Rate limiting on topic/reply creation endpoints
+- Seed content (3-5 topics per category)
+- Forum types in `@saltgoat/shared` (currently duplicated in web + mobile, shapes match)
+- `SkeletonBlock.tsx` shared animation driver (current per-instance Animated.loop is acceptable)
+- `useTheme()` hook for mobile (current `useColorScheme` pattern is verbose but works)
+
+**Verified:**
 - `npm run build` passes
-- Manual end-to-end walkthrough: create account, browse community, create topic, reply, react, bookmark, search, view from peak page
+- All imports resolve after modularization
+- Dark mode correct on all forum pages
+- No TypeScript errors
+
+## Launch Checklist
+
+- [ ] Push content flags migration: `supabase db push`
+- [ ] Regenerate types: `supabase gen types typescript --project-id seywnbufuewbiwoouwkk > src/lib/types/database.ts`
+- [ ] Seed 3-5 topics per category as "SaltGoat Team" (genuine content, not lorem ipsum)
+- [ ] Manual end-to-end: create account, browse community, create topic, reply, react, bookmark, search, view from peak page
+- [ ] Verify dark mode on all community pages
+- [ ] Deploy: `railway up -d`
+- [ ] Test mobile screens against deployed API
 
 ## Risks & Mitigations
 

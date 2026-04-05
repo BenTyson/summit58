@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, Pressable, ScrollView } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -72,10 +72,7 @@ export function ForumReactions({ reactableType, reactableId, data, onUpdate }: F
 	};
 
 	return (
-		<ScrollView
-			horizontal
-			showsHorizontalScrollIndicator={false}
-			contentContainerStyle={{ gap: 6 }}>
+		<View style={{ flexDirection: 'row', gap: 6 }}>
 			{REACTION_TYPES.map((reaction) => {
 				const count = reactionData.counts[reaction.type] ?? 0;
 				const isActive = reactionData.userReactions.includes(reaction.type);
@@ -140,6 +137,6 @@ export function ForumReactions({ reactableType, reactableId, data, onUpdate }: F
 					</Pressable>
 				);
 			})}
-		</ScrollView>
+		</View>
 	);
 }

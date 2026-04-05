@@ -23,10 +23,27 @@ export const POST: RequestHandler = async ({ request }) => {
 		);
 	}
 
+	const trimmedTitle = title.trim();
+	const trimmedBody = topicBody.trim();
+
+	if (trimmedTitle.length < 5 || trimmedTitle.length > 200) {
+		return new Response(
+			JSON.stringify({ error: 'Title must be 5-200 characters' }),
+			{ status: 400, headers: { 'Content-Type': 'application/json' } }
+		);
+	}
+
+	if (trimmedBody.length < 10 || trimmedBody.length > 10000) {
+		return new Response(
+			JSON.stringify({ error: 'Body must be 10-10,000 characters' }),
+			{ status: 400, headers: { 'Content-Type': 'application/json' } }
+		);
+	}
+
 	try {
 		const topic = await createTopic(supabase, {
-			title: title.trim(),
-			body: topicBody.trim(),
+			title: trimmedTitle,
+			body: trimmedBody,
 			categoryId: category_id,
 			authorId: user.id,
 			peakId: peak_id || undefined,

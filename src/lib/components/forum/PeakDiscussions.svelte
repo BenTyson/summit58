@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ForumTopicWithAuthor } from '$lib/server/forum';
+  import { formatRelativeTime } from '$lib/utils/time';
 
   interface Props {
     topics: ForumTopicWithAuthor[];
@@ -8,18 +9,6 @@
   }
 
   let { topics, peakSlug, peakName }: Props = $props();
-
-  function formatRelativeTime(dateStr: string): string {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffDays = Math.floor((now.getTime() - date.getTime()) / 86400000);
-
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays}d ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  }
 </script>
 
 <section class="mt-10 animate-fade-in-up" style="animation-delay: 325ms">

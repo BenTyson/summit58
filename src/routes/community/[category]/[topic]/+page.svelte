@@ -5,8 +5,7 @@
   import ReplyCard from '$lib/components/forum/ReplyCard.svelte';
   import ReplyComposer from '$lib/components/forum/ReplyComposer.svelte';
   import TopicCardSkeleton from '$lib/components/forum/TopicCardSkeleton.svelte';
-  import type { ForumReplyWithAuthor } from '$lib/server/forum';
-  import type { ForumReactionData } from '$lib/server/forumReactions';
+  import type { ForumReplyWithAuthor, ForumReactionData } from '$lib/server/forum';
   import type { PageData } from './$types';
 
   interface Props {

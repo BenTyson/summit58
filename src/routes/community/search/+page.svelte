@@ -2,6 +2,7 @@
   import { goto } from '$app/navigation';
   import Container from '$lib/components/ui/Container.svelte';
   import ForumBreadcrumb from '$lib/components/forum/ForumBreadcrumb.svelte';
+  import { formatRelativeTime } from '$lib/utils/time';
   import type { PageData } from './$types';
 
   interface Props {
@@ -46,15 +47,6 @@
     return body.replace(/[#*`>\[\]!_~]/g, '').slice(0, 160) + (body.length > 160 ? '...' : '');
   }
 
-  function formatTime(dateStr: string): string {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffDays = Math.floor((now.getTime() - date.getTime()) / 86400000);
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  }
 </script>
 
 <svelte:head>
@@ -135,7 +127,7 @@
                     {result.result_type === 'topic' ? 'Topic' : 'Reply'}
                   </span>
                   <span class="text-xs text-slate-400 dark:text-slate-500">
-                    {formatTime(result.created_at)}
+                    {formatRelativeTime(result.created_at)}
                   </span>
                 </div>
 

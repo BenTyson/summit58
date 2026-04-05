@@ -2,9 +2,7 @@ import type { RequestHandler } from './$types';
 import { createClient } from '@supabase/supabase-js';
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 import { createSupabaseApiClient, requireAuth } from '$lib/server/supabase';
-import { getTopicDetail, getReplies, updateTopic, deleteTopic, recordTopicView } from '$lib/server/forum';
-import { getReactionsForPosts } from '$lib/server/forumReactions';
-import { getBookmarkStatus } from '$lib/server/forumBookmarks';
+import { getTopicDetail, getReplies, updateTopic, deleteTopic, recordTopicView, getReactionsForPosts, getBookmarkStatus } from '$lib/server/forum';
 
 /** GET /api/v1/forum/topics/[id] — topic detail + first page of replies */
 export const GET: RequestHandler = async ({ params, request, url }) => {
@@ -73,6 +71,20 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 
 	if (Object.keys(updates).length === 0) {
 		return new Response(JSON.stringify({ error: 'No valid fields to update' }), {
+			status: 400,
+			headers: { 'Content-Type': 'application/json' }
+		});
+	}
+
+	if (updates.title && (updates.title.length < 5 || updates.title.length > 200)) {
+		return new Response(JSON.stringify({ error: 'Title must be 5-200 characters' }), {
+			status: 400,
+			headers: { 'Content-Type': 'application/json' }
+		});
+	}
+
+	if (updates.body && (updates.body.length < 10 || updates.body.length > 10000)) {
+		return new Response(JSON.stringify({ error: 'Body must be 10-10,000 characters' }), {
 			status: 400,
 			headers: { 'Content-Type': 'application/json' }
 		});

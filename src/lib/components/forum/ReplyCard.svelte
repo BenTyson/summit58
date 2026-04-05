@@ -1,8 +1,8 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import type { ForumReplyWithAuthor } from '$lib/server/forum';
-  import type { ForumReactionData } from '$lib/server/forumReactions';
+  import type { ForumReplyWithAuthor, ForumReactionData } from '$lib/server/forum';
   import { renderMarkdown } from '$lib/utils/markdown';
+  import { formatRelativeTime } from '$lib/utils/time';
   import ForumAuthorInfo from './ForumAuthorInfo.svelte';
   import ForumReactions from './ForumReactions.svelte';
   import QuoteBlock from './QuoteBlock.svelte';
@@ -43,25 +43,6 @@
     editBody.trim().length >= 1 && editBody.length <= 5000 && !editSubmitting
   );
 
-  function formatTime(dateStr: string): string {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
-    });
-  }
 </script>
 
 <div id="reply-{reply.id}" class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 shadow-card {className}">
@@ -70,7 +51,7 @@
     <div class="flex items-center justify-between gap-3 mb-3">
       <ForumAuthorInfo author={reply.author} size="sm" />
       <span class="text-xs text-slate-400 dark:text-slate-500 flex-shrink-0">
-        {formatTime(reply.created_at)}
+        {formatRelativeTime(reply.created_at)}
         {#if reply.updated_at !== reply.created_at}
           <span class="italic">(edited)</span>
         {/if}

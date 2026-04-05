@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import { requireAuth } from '$lib/server/supabase';
-import { toggleBookmark, getUserBookmarks } from '$lib/server/forumBookmarks';
+import { toggleBookmark, getUserBookmarks } from '$lib/server/forum';
 
 /** GET /api/v1/forum/bookmarks — user's bookmarked topics */
 export const GET: RequestHandler = async ({ request, url }) => {

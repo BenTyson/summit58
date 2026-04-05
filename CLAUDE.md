@@ -62,6 +62,7 @@ mobile/lib/             Supabase client, API client, auth provider, peaks contex
 | `activity.ts` | Unified activity feed |
 | `admin.ts` | `isAdmin()`, `assertAdmin()`, all admin dashboard queries |
 | `stripe.ts` | Stripe integration (stubbed) |
+| `forum/` | Community forum — modular directory (categories, topics, replies, search, views, reactions, bookmarks, admin) |
 
 All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as first param — portable between web form actions and API endpoints.
 
@@ -117,6 +118,18 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | `/api/v1/reactions` | POST | Required | Toggle summit reaction (`{ summit_id }`) |
 | `/api/v1/comments` | POST | Required | Create comment (`{ summit_id, body }`) |
 | `/api/v1/comments` | DELETE | Required | Delete own comment (`{ comment_id }`) |
+| `/api/v1/forum/categories` | GET | No | List forum categories with counts |
+| `/api/v1/forum/categories/[slug]/topics` | GET | Optional | Paginated topics for category (cursor-based) |
+| `/api/v1/forum/topics` | POST | Required | Create forum topic |
+| `/api/v1/forum/topics/[id]` | GET | Optional | Topic detail + first page replies + reactions + bookmarks |
+| `/api/v1/forum/topics/[id]` | PATCH | Required | Edit own topic |
+| `/api/v1/forum/topics/[id]` | DELETE | Required | Delete own topic |
+| `/api/v1/forum/topics/[id]/replies` | GET | Optional | Paginated replies with reactions |
+| `/api/v1/forum/topics/[id]/replies` | POST | Required | Create reply |
+| `/api/v1/forum/reactions` | POST | Required | Toggle forum reaction (like/helpful/fire/summit) |
+| `/api/v1/forum/bookmarks` | GET | Required | User's bookmarked topics |
+| `/api/v1/forum/bookmarks` | POST | Required | Toggle bookmark |
+| `/api/v1/forum/search` | GET | No | Full-text search with category filter |
 
 **Pattern:** endpoints are thin wrappers around server modules. Public endpoints: anon client fallback. Auth-required: `requireAuth(request)`. CORS in `hooks.server.ts`. Static image paths resolved to absolute URLs via `url.origin`.
 
@@ -126,7 +139,8 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 
 **Core (public read):** `peaks` (58), `routes` (66), `peak_conditions` (legacy 7-day weather), `peak_forecasts` (v2: 3-band x 3-period x 7-day forecasts)
 **User (RLS: own CRUD):** `profiles`, `user_summits`, `user_reviews`, `user_achievements`, `trail_reports`, `peak_images`, `user_follows`, `planned_trips`, `planned_trip_peaks`, `peak_watchlist`, `user_subscriptions`, `content_flags`, `summit_reactions`, `summit_comments`
-**Storage:** `peak-images` (gallery, authenticated write), `profile-images` (avatar/cover, own write)
+**Forum:** `forum_categories` (6, admin-seeded), `forum_topics`, `forum_replies`, `forum_reactions`, `forum_bookmarks`, `forum_topic_views`, `forum_mentions`
+**Storage:** `peak-images` (gallery, authenticated write), `profile-images` (avatar/cover, own write), `forum-images` (forum uploads, authenticated write)
 
 ### Key Fields
 
@@ -150,6 +164,10 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | Own read + write only | user_subscriptions, peak_watchlist |
 | Public read + admin write | peaks, routes |
 | Approved+public or own read | peak_images |
+| Public read, own CRUD (30-min window) | forum_topics, forum_replies |
+| Public read, own insert/delete | forum_reactions |
+| Own read + write only | forum_bookmarks, forum_topic_views |
+| Public read only | forum_categories |
 
 ## Key Routes
 
@@ -159,6 +177,11 @@ All modules live in `src/lib/server/` and accept `SupabaseClient<Database>` as f
 | `/peaks/[slug]/weather` | Full weather forecast (elevation bands, forecast table, insights) — Pro gated |
 | `/peaks/[slug]/[route]` | Route detail (trail map, elevation, parking, route weather strip) |
 | `/profile` | User dashboard (tabs: activity, photos, trips, buddies) |
+| `/community` | Community forum hub (categories, recent, popular, bookmarks) |
+| `/community/[category]` | Topic list for category (infinite scroll) |
+| `/community/[category]/[topic]` | Topic detail + replies + reactions |
+| `/community/[category]/new` | New topic composer |
+| `/community/search` | Forum full-text search |
 | `/admin` | Admin dashboard (overview, moderation, users, content, subscriptions) |
 | `/pricing` | Free vs Pro comparison |
 | `/learn/*` | Educational guides (6 pages) |

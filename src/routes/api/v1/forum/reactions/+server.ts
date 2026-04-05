@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import { requireAuth } from '$lib/server/supabase';
-import { toggleForumReaction } from '$lib/server/forumReactions';
+import { toggleForumReaction } from '$lib/server/forum';
 
 /** POST /api/v1/forum/reactions — toggle a forum reaction */
 export const POST: RequestHandler = async ({ request }) => {

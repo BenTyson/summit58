@@ -1,11 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '$lib/types/database';
-import type { ForumTopicWithAuthor } from './forum';
-import { enrichWithAuthors } from './forum';
-
-function db(supabase: SupabaseClient<Database>) {
-	return supabase as unknown as SupabaseClient;
-}
+import type { ForumTopicWithAuthor } from './types';
+import { db, enrichWithAuthors } from './utils';
 
 /** Toggle a bookmark on a forum topic. */
 export async function toggleBookmark(

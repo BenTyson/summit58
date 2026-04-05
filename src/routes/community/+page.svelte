@@ -2,6 +2,7 @@
   import Container from '$lib/components/ui/Container.svelte';
   import CategoryCard from '$lib/components/forum/CategoryCard.svelte';
   import TopicCard from '$lib/components/forum/TopicCard.svelte';
+  import { isTopicUnread } from '$lib/utils/forum';
   import type { PageData } from './$types';
 
   interface Props {
@@ -21,13 +22,6 @@
   );
   const topicViews = $derived(data.topicViews ?? {} as Record<string, string>);
 
-  function isUnread(topic: { id: string; last_reply_at?: string | null; updated_at?: string; created_at: string }): boolean {
-    if (!data.isLoggedIn) return false;
-    const viewedAt = topicViews[topic.id];
-    if (!viewedAt) return true;
-    const lastActivity = topic.last_reply_at || topic.updated_at || topic.created_at;
-    return new Date(lastActivity) > new Date(viewedAt);
-  }
 </script>
 
 <svelte:head>
@@ -100,7 +94,7 @@
           <div class="flex flex-col gap-3 stagger-children">
             {#each recentTopics as topic (topic.id)}
               <div class="will-animate animate-fade-in-up">
-                <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} isUnread={isUnread(topic)} />
+                <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} isUnread={isTopicUnread(topic, topicViews, data.isLoggedIn)} />
               </div>
             {/each}
           </div>
@@ -127,7 +121,7 @@
           <div class="flex flex-col gap-3 stagger-children">
             {#each popularTopics as topic (topic.id)}
               <div class="will-animate animate-fade-in-up">
-                <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} isUnread={isUnread(topic)} />
+                <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} isUnread={isTopicUnread(topic, topicViews, data.isLoggedIn)} />
               </div>
             {/each}
           </div>
@@ -153,7 +147,7 @@
         </h2>
         <div class="grid lg:grid-cols-2 gap-3">
           {#each bookmarkedTopics as topic (topic.id)}
-            <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} isUnread={isUnread(topic)} />
+            <TopicCard {topic} categorySlug={categorySlugMap.get(topic.category_id) ?? 'general'} isUnread={isTopicUnread(topic, topicViews, data.isLoggedIn)} />
           {/each}
         </div>
       </section>

@@ -1,7 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
-import { getCategories, getRecentTopics, getPopularTopics, getUserTopicViewTimestamps } from '$lib/server/forum';
-import { getUserBookmarks } from '$lib/server/forumBookmarks';
+import { getCategories, getRecentTopics, getPopularTopics, getUserTopicViewTimestamps, getUserBookmarks } from '$lib/server/forum';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const supabase = createSupabaseServerClient(cookies);

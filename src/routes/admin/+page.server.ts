@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { createSupabaseServerClient } from '$lib/server/supabase';
 import { getAdminOverviewStats } from '$lib/server/admin';
-import { getForumStats } from '$lib/server/forumAdmin';
+import { getForumStats } from '$lib/server/forum';
 
 export const load: PageServerLoad = async ({ cookies }) => {
   const supabase = createSupabaseServerClient(cookies);

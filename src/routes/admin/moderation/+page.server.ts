@@ -4,8 +4,7 @@ import { isAdmin } from '$lib/server/admin';
 import { getFlaggedImages, moderateImage, getImageUrl } from '$lib/server/images';
 import { getPendingFlags, resolveFlag } from '$lib/server/flags';
 import { getRecentPhotos, getResolvedFlags, adminDeleteReview, adminDeleteTrailReport } from '$lib/server/admin';
-import { getCategories, getRecentTopics } from '$lib/server/forum';
-import { pinTopic, lockTopic, moveTopic, adminDeleteTopic } from '$lib/server/forumAdmin';
+import { getCategories, getRecentTopics, pinTopic, lockTopic, moveTopic, adminDeleteTopic } from '$lib/server/forum';
 import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ cookies }) => {

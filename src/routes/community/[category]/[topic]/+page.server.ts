@@ -9,10 +9,12 @@ import {
 	updateReply,
 	deleteTopic,
 	deleteReply,
-	recordTopicView
+	recordTopicView,
+	getReactionsForPosts,
+	toggleForumReaction,
+	toggleBookmark,
+	getBookmarkStatus
 } from '$lib/server/forum';
-import { getReactionsForPosts, toggleForumReaction } from '$lib/server/forumReactions';
-import { toggleBookmark, getBookmarkStatus } from '$lib/server/forumBookmarks';
 
 export const load: PageServerLoad = async ({ params, cookies }) => {
 	const supabase = createSupabaseServerClient(cookies);
@@ -74,15 +76,16 @@ export const actions: Actions = {
 			return fail(400, { message: 'Reply body is required' });
 		}
 
-		if (body.length > 5000) {
-			return fail(400, { message: 'Reply must be under 5,000 characters' });
+		const trimmedBody = body.trim();
+		if (trimmedBody.length < 1 || trimmedBody.length > 5000) {
+			return fail(400, { message: 'Reply must be 1-5,000 characters' });
 		}
 
 		try {
 			await createReply(supabase, {
 				topicId,
 				authorId: session.user.id,
-				body: body.trim(),
+				body: trimmedBody,
 				replyToId
 			});
 		} catch (err) {

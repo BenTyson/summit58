@@ -2,6 +2,7 @@ import { View, Text, Pressable } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import { colors } from '@/lib/theme/colors';
 import { useColorScheme } from '@/components/useColorScheme';
+import { timeAgo } from '@/lib/time';
 import { ForumAuthorInfo } from './ForumAuthorInfo';
 import { PeakTag } from './PeakTag';
 import type { ForumTopic } from '@/lib/types/api';
@@ -9,17 +10,6 @@ import type { ForumTopic } from '@/lib/types/api';
 interface TopicCardProps {
 	topic: ForumTopic;
 	onPress: () => void;
-}
-
-function timeAgo(dateStr: string): string {
-	const diff = Date.now() - new Date(dateStr).getTime();
-	const mins = Math.floor(diff / 60000);
-	if (mins < 60) return `${mins}m`;
-	const hours = Math.floor(mins / 60);
-	if (hours < 24) return `${hours}h`;
-	const days = Math.floor(hours / 24);
-	if (days < 30) return `${days}d`;
-	return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 export function TopicCard({ topic, onPress }: TopicCardProps) {

@@ -1,12 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '$lib/types/database';
-
-// Admin forum operations. Callers should pass a service-role client
-// (createSupabaseServiceClient) to bypass RLS author/time restrictions.
-
-function db(supabase: SupabaseClient<Database>) {
-	return supabase as unknown as SupabaseClient;
-}
+import { db } from './utils';
 
 export async function pinTopic(
 	supabase: SupabaseClient<Database>,

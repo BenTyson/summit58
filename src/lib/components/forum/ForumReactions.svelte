@@ -1,6 +1,6 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import type { ForumReactionData } from '$lib/server/forumReactions';
+  import type { ForumReactionData } from '$lib/server/forum';
 
   interface Props {
     postType: 'topic' | 'reply';

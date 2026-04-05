@@ -1,7 +1,6 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
-  import type { TopicDetail } from '$lib/server/forum';
-  import type { ForumReactionData } from '$lib/server/forumReactions';
+  import type { TopicDetail, ForumReactionData } from '$lib/server/forum';
   import { renderMarkdown } from '$lib/utils/markdown';
   import ForumAuthorInfo from './ForumAuthorInfo.svelte';
   import PeakTag from './PeakTag.svelte';
