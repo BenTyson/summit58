@@ -5,7 +5,7 @@ import {
   Camera,
   ShapeSource,
   LineLayer,
-  PointAnnotation,
+  CircleLayer,
   type CameraRef,
 } from '@maplibre/maplibre-react-native';
 import { colors } from '@/lib/theme/colors';
@@ -417,49 +417,44 @@ export function TerrainViewer3D({
           </ShapeSource>
         )}
 
-        <PointAnnotation
-          id="summit"
-          coordinate={[summitCoords.lng, summitCoords.lat]}
-          title={peakName}
+        <ShapeSource
+          id="summit-point"
+          shape={{
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: [summitCoords.lng, summitCoords.lat] },
+            properties: {},
+          }}
         >
-          <View style={{
-            width: 32,
-            height: 32,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <View style={{
-              width: 0,
-              height: 0,
-              borderLeftWidth: 12,
-              borderRightWidth: 12,
-              borderBottomWidth: 20,
-              borderLeftColor: 'transparent',
-              borderRightColor: 'transparent',
-              borderBottomColor: colors.accent.default,
-            }} />
-          </View>
-        </PointAnnotation>
+          <CircleLayer
+            id="summit-outer"
+            style={{
+              circleRadius: 10,
+              circleColor: colors.accent.default,
+              circleStrokeColor: '#ffffff',
+              circleStrokeWidth: 2,
+            }}
+          />
+        </ShapeSource>
 
         {trailheadCoord && (
-          <PointAnnotation
-            id="trailhead"
-            coordinate={trailheadCoord}
-            title="Trailhead"
+          <ShapeSource
+            id="trailhead-point"
+            shape={{
+              type: 'Feature',
+              geometry: { type: 'Point', coordinates: trailheadCoord },
+              properties: {},
+            }}
           >
-            <View style={{
-              width: 28,
-              height: 28,
-              borderRadius: 14,
-              backgroundColor: '#3A8168',
-              borderWidth: 2,
-              borderColor: '#ffffff',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <Text style={{ color: '#ffffff', fontFamily: 'Inter-Bold', fontSize: 13 }}>P</Text>
-            </View>
-          </PointAnnotation>
+            <CircleLayer
+              id="trailhead-circle"
+              style={{
+                circleRadius: 10,
+                circleColor: '#3A8168',
+                circleStrokeColor: '#ffffff',
+                circleStrokeWidth: 2,
+              }}
+            />
+          </ShapeSource>
         )}
       </MapView>
 
