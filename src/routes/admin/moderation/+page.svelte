@@ -190,9 +190,23 @@
             {/if}
           </div>
           <div class="p-3">
-            <a href="/peaks/{photo.peak_slug}" class="text-xs font-medium text-accent hover:text-accent-warm transition-colors">
-              {photo.peak_name}
-            </a>
+            <div class="flex items-center justify-between gap-1">
+              <a href="/peaks/{photo.peak_slug}" class="text-xs font-medium text-accent hover:text-accent-warm transition-colors truncate">
+                {photo.peak_name}
+              </a>
+              {#if photo.status === 'approved'}
+                <form method="POST" action="?/flagImage" use:enhance>
+                  <input type="hidden" name="image_id" value={photo.id} />
+                  <button
+                    type="submit"
+                    class="px-2 py-0.5 rounded text-[10px] font-medium text-semantic-danger hover:bg-semantic-danger/10 transition-colors"
+                    title="Flag for review"
+                  >
+                    Flag
+                  </button>
+                </form>
+              {/if}
+            </div>
             <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
               {photo.uploader_name ?? 'Unknown'} &middot; {photo.created_at ? new Date(photo.created_at).toLocaleDateString() : ''}
             </p>

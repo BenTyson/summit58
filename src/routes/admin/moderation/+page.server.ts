@@ -187,6 +187,29 @@ export const actions: Actions = {
     }
   },
 
+  flagImage: async ({ request, cookies }) => {
+    const supabase = createSupabaseServerClient(cookies);
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user || !isAdmin(session.user.id)) {
+      return fail(403, { message: 'Admin access required' });
+    }
+
+    const formData = await request.formData();
+    const imageId = formData.get('image_id') as string;
+
+    try {
+      await supabase
+        .from('peak_images')
+        .update({ status: 'flagged' })
+        .eq('id', imageId);
+      return { success: true };
+    } catch (e) {
+      console.error('Error flagging image:', e);
+      return fail(500, { message: 'Failed to flag image' });
+    }
+  },
+
   deleteForumTopic: async ({ request, cookies }) => {
     const supabase = createSupabaseServerClient(cookies);
     const { data: { session } } = await supabase.auth.getSession();
