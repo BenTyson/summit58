@@ -29,7 +29,7 @@
   const ranges = $derived([...new Set(peaks.map(p => p.range))].sort());
 
   // Filtered peaks
-  const filteredPeaks = $derived(() => {
+  const filteredPeaks = $derived.by(() => {
     return peaks.filter(peak => {
       if (showSummitedOnly && !summitedPeakIds.has(peak.id)) return false;
       if (selectedClass !== null && peak.difficultyClass !== selectedClass) return false;
@@ -176,7 +176,7 @@
         {/if}
 
         <span class="text-sm text-slate-500 dark:text-slate-400 ml-auto">
-          Showing {filteredPeaks().length} peaks
+          Showing {filteredPeaks.length} peaks
         </span>
       </div>
     </Container>
@@ -187,7 +187,7 @@
     {#if browser}
       {#await import('$lib/components/map/PeakMap.svelte') then { default: PeakMap }}
         <PeakMap
-          peaks={filteredPeaks()}
+          peaks={filteredPeaks}
           {summitedPeakIds}
           {trails}
           {showTrails}

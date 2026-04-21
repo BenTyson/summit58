@@ -78,6 +78,30 @@
   let loading3D = $state(false);
   let webglSupported = $state(false);
 
+  // Fullscreen
+  let isFullscreen = $state(false);
+  let sectionEl: HTMLElement;
+
+  function toggleFullscreen() {
+    if (!sectionEl) return;
+    if (!document.fullscreenElement) {
+      sectionEl.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  $effect(() => {
+    if (typeof window === 'undefined') return;
+    function onFsChange() {
+      isFullscreen = !!document.fullscreenElement;
+      // Trigger resize so canvas-based children (ElevationProfile) recalculate dimensions
+      setTimeout(() => window.dispatchEvent(new Event('resize')), 100);
+    }
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => document.removeEventListener('fullscreenchange', onFsChange);
+  });
+
   // Shared hover state
   let hoveredIndex = $state<number | null>(null);
 
@@ -159,7 +183,7 @@
 </script>
 
 {#if hasTrail}
-  <section class="animate-fade-in-up" style="animation-delay: 175ms">
+  <section class="animate-fade-in-up {isFullscreen ? 'fullscreen-section' : ''}" style="animation-delay: 175ms" bind:this={sectionEl}>
     <div class="flex items-center justify-between mb-4">
       <h2 class="heading-section text-slate-900 dark:text-white flex items-center gap-2">
         <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,12 +191,35 @@
         </svg>
         Trail Map & Elevation
       </h2>
-      {#if webglSupported}
-        <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} {loading3D} />
-      {/if}
+      <div class="flex items-center gap-2">
+        {#if webglSupported}
+          <ViewModeToggle mode={viewMode} onChange={handleViewModeChange} {loading3D} />
+        {/if}
+        <button
+          onclick={toggleFullscreen}
+          class="p-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:border-accent hover:text-accent transition-colors"
+          title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+        >
+          {#if isFullscreen}
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="4 14 10 14 10 20" />
+              <polyline points="20 10 14 10 14 4" />
+              <line x1="14" y1="10" x2="21" y2="3" />
+              <line x1="3" y1="21" x2="10" y2="14" />
+            </svg>
+          {:else}
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 3 21 3 21 9" />
+              <polyline points="9 21 3 21 3 15" />
+              <line x1="21" y1="3" x2="14" y2="10" />
+              <line x1="3" y1="21" x2="10" y2="14" />
+            </svg>
+          {/if}
+        </button>
+      </div>
     </div>
 
-    <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-card">
+    <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-card {isFullscreen ? 'flex-1 flex flex-col overflow-visible' : 'overflow-hidden'}">
       {#if isLoading}
         <!-- Loading skeleton -->
         <div class="grid lg:grid-cols-5 gap-0">
@@ -188,9 +235,9 @@
           </div>
         </div>
       {:else if TrailMap && ElevationProfile && activeGeometry}
-        <div class="grid lg:grid-cols-5 gap-0">
+        <div class="grid lg:grid-cols-5 gap-0 {isFullscreen ? 'flex-1' : ''}"  style={isFullscreen ? 'grid-template-rows: 1fr' : ''}>
           <!-- Map (60% on desktop) -->
-          <div class="lg:col-span-3 h-[350px] lg:h-[400px] relative">
+          <div class="lg:col-span-3 {isFullscreen ? 'h-full' : 'h-[350px] lg:h-[400px]'} relative">
             {#if viewMode === '2d'}
               <div class="absolute inset-0" transition:fade={{ duration: 200 }}>
                 <TrailMap
@@ -422,3 +469,18 @@
     </div>
   </section>
 {/if}
+
+<style>
+  :global(.fullscreen-section) {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    padding: 1rem;
+    background: var(--bg, #f8fafc);
+  }
+
+  :global(.dark .fullscreen-section) {
+    background: #0f172a;
+  }
+</style>

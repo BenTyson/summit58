@@ -71,7 +71,7 @@
 
   // Colorado 14ers center point
   const COLORADO_CENTER: [number, number] = [39.1, -106.2];
-  const DEFAULT_ZOOM = 9;
+  const DEFAULT_ZOOM = 11;
   const SINGLE_PEAK_ZOOM = 12;
 
   // Difficulty class colors
@@ -341,8 +341,11 @@
     });
   }
 
-  // React to summit status changes
+  // React to peaks/summit changes — read reactive props before the guard
+  // so Svelte tracks them as dependencies even though map/L aren't $state
   $effect(() => {
+    const _peaks = peaks;
+    const _summited = summitedPeakIds;
     if (map && L) {
       updateMarkers();
     }
@@ -350,13 +353,16 @@
 
   // React to selected peak changes
   $effect(() => {
-    if (selectedPeakId && map) {
-      flyToPeak(selectedPeakId);
+    const _id = selectedPeakId;
+    if (_id && map) {
+      flyToPeak(_id);
     }
   });
 
   // React to showTrails changes
   $effect(() => {
+    const _trails = trails;
+    const _show = showTrails;
     if (map && L) {
       updateTrailOverlays();
     }

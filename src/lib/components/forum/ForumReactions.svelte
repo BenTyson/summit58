@@ -94,6 +94,8 @@
               {/if}
               {#if count > 0}
                 <span>{count}</span>
+              {:else}
+                <span>{type.label}</span>
               {/if}
             </button>
           </form>
