@@ -15,7 +15,8 @@
     { id: 'moderation', label: 'Moderation', href: '/admin/moderation', count: data.moderationCount },
     { id: 'users', label: 'Users', href: '/admin/users' },
     { id: 'content', label: 'Content', href: '/admin/content' },
-    { id: 'subscriptions', label: 'Subscriptions', href: '/admin/subscriptions' }
+    { id: 'subscriptions', label: 'Subscriptions', href: '/admin/subscriptions' },
+    { id: 'contact', label: 'Contact', href: '/admin/contact' }
   ]);
 </script>
 

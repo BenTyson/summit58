@@ -195,6 +195,7 @@ New features follow this pattern across both platforms:
 | `/community/search` | Forum full-text search |
 | `/admin` | Admin dashboard (overview, moderation, users, content, subscriptions) |
 | `/pricing` | Free vs Pro comparison |
+| `/contact` | Contact form → hello@saltgoat.co |
 | `/learn/*` | Educational guides (6 pages) |
 | `/blog/*` | Blog hub + posts |
 
@@ -222,6 +223,21 @@ No test suite. Verification is `npm run build` + manual testing. When in doubt, 
 - Legacy `peak_conditions` still dual-written — deprecation timeline in `src/lib/server/conditions.ts`
 - Open-Meteo free tier is non-commercial — need commercial key for production with paid subscriptions
 - Weather webhook cron not yet configured — see `docs/ben.md`
+
+## Email (Sparrow)
+
+Sparrow is a self-hosted email gateway (Listmonk + Postmark) at `https://sparrow-production-b53e.up.railway.app`.
+
+- **Env vars:** `SPARROW_URL`, `SPARROW_API_KEY` (Railway)
+- **Server module:** `src/lib/server/sparrow.ts` — `subscribe()`, `sendRaw()`, `sendTransactional()`
+- **Auth header:** `x-api-key` (not Bearer)
+- **Sending domain:** `hello@saltgoat.co` (verified in Postmark)
+- **Newsletter list:** `saltgoat-newsletter` in Listmonk
+- **Subscribe endpoint:** `POST /api/v1/subscribe` — for mobile and web
+- **Welcome email:** fired by `POST /api/webhooks/user-signup` (Supabase DB webhook on `profiles` INSERT). Also subscribes user to newsletter.
+  - Configure in Supabase dashboard → Database → Webhooks → `public.profiles` INSERT → URL: `https://saltgoat.co/api/webhooks/user-signup`, Header: `Authorization: Bearer <SUPABASE_WEBHOOK_SECRET>`
+- **Pro upgrade email:** fired in `src/routes/api/webhooks/revenuecat` on `INITIAL_PURCHASE`
+- **Contact form:** `POST /contact` → `sendRaw` to `hello@saltgoat.co` with `reply_to` set to sender
 
 ## Reference Docs
 

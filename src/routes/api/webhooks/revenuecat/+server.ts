@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types';
 import { createSupabaseServiceClient } from '$lib/server/supabase';
+import { sendRaw } from '$lib/server/sparrow';
 
 interface RevenueCatEvent {
 	type: string;
@@ -62,6 +63,11 @@ export const POST: RequestHandler = async ({ request }) => {
 				},
 				{ onConflict: 'user_id' }
 			);
+
+			// Send Pro upgrade email — non-blocking, failure doesn't affect webhook response
+			sendProUpgradeEmail(supabase, userId).catch((err) =>
+				console.error('Pro upgrade email failed:', err)
+			);
 			break;
 		}
 		case 'RENEWAL': {
@@ -114,3 +120,43 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	return json({ received: true });
 };
+
+async function sendProUpgradeEmail(
+	supabase: ReturnType<typeof createSupabaseServiceClient>,
+	userId: string
+): Promise<void> {
+	const {
+		data: { user }
+	} = await supabase.auth.admin.getUserById(userId);
+	if (!user?.email) return;
+
+	const { data: profile } = await supabase
+		.from('profiles')
+		.select('display_name')
+		.eq('id', userId)
+		.single();
+
+	await sendRaw({
+		to: user.email,
+		from: 'SaltGoat <hello@saltgoat.co>',
+		subject: "You're on SaltGoat Pro",
+		html: proUpgradeHtml(profile?.display_name ?? undefined)
+	});
+}
+
+function proUpgradeHtml(name?: string): string {
+	const thanks = name ? `Thanks, ${name}.` : 'Thanks for upgrading.';
+	return `<div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:560px;margin:0 auto;padding:48px 32px;color:#0f172a;background:#ffffff;">
+  <p style="font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;margin:0 0 32px;">SaltGoat</p>
+  <h1 style="font-size:26px;font-weight:700;margin:0 0 20px;line-height:1.25;">You&rsquo;re on Pro.</h1>
+  <p style="font-size:16px;line-height:1.65;color:#334155;margin:0 0 16px;">${thanks} You now have access to:</p>
+  <ul style="font-size:15px;line-height:1.9;color:#334155;margin:0 0 24px;padding-left:20px;">
+    <li>7-day elevation-band weather forecasts for every 14er</li>
+    <li>Unlimited summit logging</li>
+    <li>All Pro features as they ship</li>
+  </ul>
+  <a href="https://saltgoat.co/peaks" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;padding:13px 26px;border-radius:8px;font-size:15px;font-weight:600;">Explore peaks &rarr;</a>
+  <hr style="border:none;border-top:1px solid #e2e8f0;margin:48px 0 24px;">
+  <p style="font-size:12px;color:#94a3b8;margin:0;"><a href="https://saltgoat.co" style="color:#94a3b8;text-decoration:none;">saltgoat.co</a></p>
+</div>`;
+}
