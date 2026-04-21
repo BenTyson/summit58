@@ -2,7 +2,6 @@
   import Container from '$lib/components/ui/Container.svelte';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
   import { createBrowserClient } from '@supabase/ssr';
-  import { goto } from '$app/navigation';
   import { page } from '$app/stores';
 
   const redirectTo = $derived($page.url.searchParams.get('redirectTo') || '/');
@@ -41,7 +40,7 @@
       if (authError) {
         error = authError.message;
       } else {
-        goto(redirectTo);
+        window.location.href = redirectTo;
       }
     } else {
       const { error: authError } = await supabase.auth.signUp({
